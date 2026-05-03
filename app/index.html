@@ -24,6 +24,139 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+      @media (max-width: 720px) {
+        html { scroll-padding-top: 88px !important; }
+        body { overflow-x: hidden; }
+        #home, #services, #projects, #skills, #contact { scroll-margin-top: 88px !important; }
+        .container { width: min(100% - 28px, 1160px) !important; }
+        .top { padding: 8px 12px !important; }
+        .nav {
+          min-height: 64px !important;
+          padding: 8px 12px !important;
+          border-radius: 24px !important;
+          box-shadow: 0 10px 34px rgba(0,0,0,.34) !important;
+          backdrop-filter: blur(12px) !important;
+          -webkit-backdrop-filter: blur(12px) !important;
+        }
+        .brand { gap: 9px !important; }
+        .brand span { width: 38px !important; height: 38px !important; border-radius: 15px !important; font-size: 18px !important; }
+        .brand b { font-size: 17px !important; line-height: 1.05 !important; }
+        .brand b small { font-size: 12px !important; margin-top: 1px !important; }
+        .toggle { width: 38px !important; height: 38px !important; border-radius: 15px !important; }
+        .hero {
+          padding-top: 94px !important;
+          min-height: auto !important;
+          gap: 18px !important;
+        }
+        .hero h1 {
+          font-size: clamp(32px, 10.4vw, 44px) !important;
+          line-height: 1.18 !important;
+          margin-top: 16px !important;
+          letter-spacing: -.7px !important;
+        }
+        .hero p, .title p, .about p, .card p, .project p, .contact p, .modal-card p, .cta-panel p, .outcome-card p, .before-after p {
+          font-size: 16px !important;
+          line-height: 1.75 !important;
+        }
+        em, .title span {
+          padding: 8px 12px !important;
+          font-size: 13px !important;
+        }
+        .actions { gap: 10px !important; margin-top: 20px !important; }
+        .primary, .secondary, .whatsapp-btn {
+          min-height: 48px !important;
+          padding: 11px 14px !important;
+          border-radius: 16px !important;
+          font-size: 15px !important;
+        }
+        .metrics { grid-template-columns: repeat(2, 1fr) !important; gap: 9px !important; margin-top: 22px !important; }
+        .metrics div { padding: 14px !important; border-radius: 22px !important; }
+        .metrics b { font-size: 21px !important; }
+        .metrics span { font-size: 12px !important; }
+        .about, .contact, .cta-panel, .before-after {
+          padding: 18px !important;
+          border-radius: 28px !important;
+          gap: 16px !important;
+        }
+        .about h2, .contact h2, .title h2, .cta-panel h2, .before-after h2 {
+          font-size: clamp(25px, 7.7vw, 34px) !important;
+          line-height: 1.25 !important;
+        }
+        .section { padding: 48px 0 !important; }
+        .title { margin-bottom: 22px !important; }
+        .card, .outcome-card, .step {
+          padding: 18px !important;
+          border-radius: 24px !important;
+        }
+        .card h3, .outcome-card h3 { font-size: 22px !important; line-height: 1.35 !important; }
+        .project {
+          padding: 12px !important;
+          border-radius: 26px !important;
+        }
+        .project-mockup {
+          height: 178px !important;
+          border-radius: 22px !important;
+          padding: 12px !important;
+        }
+        .mock-content { height: 112px !important; border-radius: 18px !important; }
+        .mock-footer { gap: 6px !important; margin-top: 8px !important; }
+        .mock-footer em { height: 24px !important; border-radius: 11px !important; }
+        .project-body { padding: 13px 2px 2px !important; }
+        .project h3 {
+          font-size: 25px !important;
+          line-height: 1.25 !important;
+          margin: 10px 0 7px !important;
+        }
+        .project p { font-size: 15.5px !important; line-height: 1.7 !important; }
+        .chips { gap: 6px !important; margin-top: 12px !important; }
+        .chips span { padding: 6px 9px !important; font-size: 11px !important; }
+        .chips span:nth-child(n+4) { display: none !important; }
+        .project-actions {
+          grid-template-columns: 1fr 1fr !important;
+          gap: 8px !important;
+          margin-top: 13px !important;
+        }
+        .project-actions .whatsapp-btn {
+          grid-column: 1 / -1 !important;
+          min-height: 44px !important;
+          box-shadow: none !important;
+          background: linear-gradient(135deg, rgba(57,149,212,.24), rgba(31,135,154,.18)) !important;
+          border-color: rgba(189,239,255,.28) !important;
+        }
+        .ba-grid article { min-height: 0 !important; padding: 18px !important; border-radius: 24px !important; }
+        .ba-grid p { margin-top: 18px !important; font-size: 17px !important; }
+        .step p { font-size: 15.5px !important; }
+        .bottom {
+          left: 14px !important;
+          right: 14px !important;
+          bottom: max(10px, env(safe-area-inset-bottom)) !important;
+          padding: 6px !important;
+          border-radius: 21px !important;
+          min-height: 58px !important;
+        }
+        .bottom a {
+          padding: 9px 2px !important;
+          font-size: 11px !important;
+          border-radius: 15px !important;
+        }
+        .float-whatsapp {
+          width: 46px !important;
+          height: 46px !important;
+          border-radius: 17px !important;
+          left: 18px !important;
+          bottom: calc(76px + env(safe-area-inset-bottom)) !important;
+          box-shadow: 0 12px 34px rgba(20,184,166,.34), 0 0 0 6px rgba(34,197,94,.08) !important;
+        }
+        main { padding-bottom: 110px !important; }
+        footer { padding-bottom: 98px !important; }
+      }
+      @media (max-width: 380px) {
+        .hero h1 { font-size: 31px !important; }
+        .brand b { font-size: 15px !important; }
+        .bottom a { font-size: 10px !important; }
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

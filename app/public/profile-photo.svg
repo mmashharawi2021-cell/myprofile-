@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 960" width="720" height="960">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3995D4"/><stop offset="1" stop-color="#1F879A"/></linearGradient>
+    <clipPath id="clip"><rect x="24" y="24" width="672" height="912" rx="56"/></clipPath>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="32" stdDeviation="34" flood-color="#031D36" flood-opacity="0.35"/></filter>
+  </defs>
+  <rect width="720" height="960" fill="transparent"/>
+  <rect x="12" y="12" width="696" height="936" rx="66" fill="url(#g)" opacity="0.55" filter="url(#shadow)"/>
+  <image x="24" y="24" width="672" height="912" href="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAOAAqgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqs7S1tre4ubrCw8TFxsfIycqS09TV1tfY2dri4+Tl5ufo6erx8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD0KiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKK//9k=" preserveAspectRatio="xMidYMid slice" clip-path="url(#clip)"/>
+  <rect x="24" y="24" width="672" height="912" rx="56" fill="url(#g)" opacity="0.10"/>
+  <rect x="24" y="24" width="672" height="912" rx="56" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="3"/>
+</svg>

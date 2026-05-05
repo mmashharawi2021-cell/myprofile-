@@ -1,0 +1,9 @@
+.project-shots{background-size:cover!important;background-position:top center!important;background-repeat:no-repeat!important;min-height:280px!important}
+.project-shots img{display:none!important}
+.project:nth-child(1) .project-shots{background-image:url('https://raw.githubusercontent.com/mmashharawi2021-cell/myprofile-/main/app/public/assets/projects/file_0000000012a07243b51fe65c5143b888.png')!important}
+.project:nth-child(2) .project-shots{background-image:url('https://raw.githubusercontent.com/mmashharawi2021-cell/myprofile-/main/app/public/assets/projects/file_0000000025f871f4aac987298e629519.png')!important}
+.project:nth-child(3) .project-shots{background-image:url('https://raw.githubusercontent.com/mmashharawi2021-cell/myprofile-/main/app/public/assets/projects/file_0000000016cc71f4bc47e5a9dea3e6f6.png')!important}
+.project:nth-child(4) .project-shots{background-image:url('https://raw.githubusercontent.com/mmashharawi2021-cell/myprofile-/main/app/public/assets/projects/file_00000000e884724686e466809884cba7.png')!important}
+.project:nth-child(5) .project-shots{background-image:url('https://raw.githubusercontent.com/mmashharawi2021-cell/myprofile-/main/app/public/assets/projects/file_00000000358471f4bced956d6ea882e5.png')!important}
+.project-shots:empty,.project-shots:not(:has(img)){background:linear-gradient(135deg,rgba(57,149,212,.28),rgba(31,135,154,.16))!important}
+@media(max-width:720px){.project-shots{min-height:215px!important;background-size:cover!important}}

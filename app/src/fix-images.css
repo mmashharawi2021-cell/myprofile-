@@ -1,43 +1,55 @@
-/* Final image containment fix.
-   The old temporary raw-background patch is removed.
-   Project screenshots are now local numbered files: /assets/projects/01.png ... 14.png
+/* Project screenshot display fix.
+   Important: use contain, not cover. Cover was cropping the top of wide screenshots
+   and made them look like white strips.
 */
-.project-image{
+.project-image,
+.project-shots,
+.project-visual{
   position:relative!important;
   width:100%!important;
-  height:260px!important;
+  height:300px!important;
   overflow:hidden!important;
   border-radius:26px!important;
   border:1px solid rgba(189,239,255,.24)!important;
-  background:rgba(3,29,54,.72)!important;
+  background-color:rgba(3,29,54,.86)!important;
+  background-size:contain!important;
+  background-position:center!important;
+  background-repeat:no-repeat!important;
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)!important;
 }
-.project-image.large{
-  height:360px!important;
+.project-image.large,
+.project-visual.large{
+  height:390px!important;
 }
-.project-image img{
+.project-image img,
+.project-shots img{
   display:block!important;
   width:100%!important;
   height:100%!important;
   max-width:100%!important;
   max-height:100%!important;
-  object-fit:cover!important;
-  object-position:top center!important;
+  object-fit:contain!important;
+  object-position:center!important;
   border:0!important;
   border-radius:0!important;
-  background:transparent!important;
+  background:rgba(3,29,54,.86)!important;
 }
-.project-image.large img{
-  object-fit:cover!important;
+.project-shots{
+  display:block!important;
+  padding:0!important;
 }
-.image-number{
+.project-shots img:not(:first-child){
+  display:none!important;
+}
+.image-number,
+.visual-label{
   position:absolute!important;
   top:12px!important;
   right:12px!important;
-  z-index:2!important;
+  z-index:3!important;
   padding:7px 11px!important;
   border-radius:999px!important;
-  background:rgba(3,29,54,.72)!important;
+  background:rgba(3,29,54,.76)!important;
   color:#fff!important;
   border:1px solid rgba(255,255,255,.22)!important;
   font-size:12px!important;
@@ -46,7 +58,7 @@
 }
 .project-feature{
   display:grid!important;
-  grid-template-columns:1.15fr .85fr!important;
+  grid-template-columns:1.1fr .9fr!important;
   gap:22px!important;
   align-items:center!important;
   overflow:hidden!important;
@@ -57,7 +69,8 @@
 .projects-grid{
   grid-template-columns:repeat(2,minmax(0,1fr))!important;
 }
-.project-card{
+.project-card,
+.project{
   overflow:hidden!important;
   border-radius:30px!important;
   padding:14px!important;
@@ -65,21 +78,36 @@
 .project-body{
   padding:16px 4px 4px!important;
 }
-.modal-card .project-image.large{
+.modal-card .project-image.large,
+.modal-card .project-visual.large{
   height:min(58vh,520px)!important;
 }
 .modal-card .project-image.large img{
   object-fit:contain!important;
-  background:rgba(3,29,54,.85)!important;
+  background:rgba(3,29,54,.92)!important;
 }
 @media(max-width:900px){
   .project-feature{grid-template-columns:1fr!important;}
   .projects-grid{grid-template-columns:1fr!important;}
-  .project-image.large{height:280px!important;}
+  .project-image.large,.project-visual.large{height:300px!important;}
 }
 @media(max-width:720px){
-  .project-image{height:210px!important;border-radius:22px!important;}
-  .project-image.large{height:230px!important;}
-  .project-feature,.project-card{padding:12px!important;border-radius:26px!important;}
-  .modal-card .project-image.large{height:300px!important;}
+  .project-image,
+  .project-shots,
+  .project-visual{
+    height:260px!important;
+    border-radius:22px!important;
+  }
+  .project-image.large,
+  .project-visual.large{
+    height:280px!important;
+  }
+  .project-feature,.project-card,.project{
+    padding:12px!important;
+    border-radius:26px!important;
+  }
+  .modal-card .project-image.large,
+  .modal-card .project-visual.large{
+    height:320px!important;
+  }
 }

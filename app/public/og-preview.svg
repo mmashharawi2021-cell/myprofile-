@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#031D36"/>
+      <stop offset="0.55" stop-color="#071720"/>
+      <stop offset="1" stop-color="#151F20"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3995D4"/>
+      <stop offset="1" stop-color="#1F879A"/>
+    </linearGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="35"/></filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="260" cy="90" r="190" fill="#3995D4" opacity="0.22" filter="url(#blur)"/>
+  <circle cx="950" cy="80" r="210" fill="#1F879A" opacity="0.25" filter="url(#blur)"/>
+  <g opacity="0.12" stroke="#ffffff">
+    <path d="M0 90H1200M0 180H1200M0 270H1200M0 360H1200M0 450H1200M0 540H1200"/>
+    <path d="M90 0V630M180 0V630M270 0V630M360 0V630M450 0V630M540 0V630M630 0V630M720 0V630M810 0V630M900 0V630M990 0V630M1080 0V630"/>
+  </g>
+  <rect x="72" y="72" width="1056" height="486" rx="46" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-opacity="0.22"/>
+  <circle cx="986" cy="186" r="82" fill="#67D6E5" opacity="0.18" stroke="#67D6E5" stroke-opacity="0.55"/>
+  <rect x="830" y="316" width="174" height="118" rx="28" fill="#3995D4" opacity="0.20" stroke="#67D6E5" stroke-opacity="0.40" transform="rotate(9 917 375)"/>
+  <circle cx="900" cy="284" r="14" fill="#67D6E5"/>
+  <text x="96" y="164" fill="#BDEFFF" font-family="Arial, sans-serif" font-size="30" font-weight="700">GIS / Dashboards / Web Systems</text>
+  <text x="96" y="260" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="66" font-weight="900">Mohanad Al-Mashharawi</text>
+  <text x="96" y="330" fill="#EEEEF0" font-family="Arial, sans-serif" font-size="44" font-weight="700">مهندس GIS ومطور أنظمة ويب</text>
+  <text x="96" y="406" fill="#FFFFFF" opacity="0.78" font-family="Arial, sans-serif" font-size="30">أنظمة عملية، داشبوردات، خرائط تفاعلية، وتقارير واضحة</text>
+  <rect x="96" y="462" width="278" height="62" rx="22" fill="url(#accent)"/>
+  <text x="132" y="503" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="25" font-weight="800">ابدأ مشروعك بوضوح</text>
+</svg>

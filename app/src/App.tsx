@@ -1,221 +1,565 @@
-import { useState } from 'react';
-import { ArrowLeft, ExternalLink, Mail, MessageCircle, Moon, Sun, X } from 'lucide-react';
+import { useEffect, useRef, useState } from "react";
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowUpLeft,
+  Braces,
+  Check,
+  Database,
+  ExternalLink,
+  Github,
+  Layers,
+  Mail,
+  Map,
+  Menu,
+  MessageCircle,
+  Moon,
+  Sun,
+  X,
+} from "lucide-react";
+import {
+  base,
+  email,
+  generalWhatsApp,
+  imagePath,
+  nav,
+  projects,
+  services,
+  skills,
+  whatsapp,
+  type Project,
+} from "./data";
 
-type Project = {
-  title: string;
-  type: string;
-  status: string;
-  imageNo: string;
-  desc: string;
-  value: string;
-  tech: string[];
-  link?: string;
-};
+const serviceIcons = [Braces, Layers, Map, ArrowUpLeft, Database, Check];
+const filters = ["الكل", "GIS والخرائط", "أنظمة الويب", "مواقع ومنصات"];
 
-const email = 'mmashharawi2021@gmail.com';
-const whatsappNumber = '970568876261';
-const base = import.meta.env.BASE_URL || '/';
-const imagePath = (imageNo: string) => `${base}assets/projects/${imageNo}.webp`;
-const whatsapp = (message: string) => `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-const generalWhatsApp = whatsapp('مرحبًا مهند، شاهدت موقعك الشخصي وأرغب بمناقشة فكرة مشروع.');
-
-const nav = [
-  ['#home', 'الرئيسية'],
-  ['#services', 'الخدمات'],
-  ['#projects', 'الأعمال'],
-  ['#skills', 'المهارات'],
-  ['#contact', 'تواصل']
-];
-
-// لتبديل الصور يدويًا غيّر imageNo فقط. الصور موجودة هنا: app/public/assets/projects/01.webp ... 14.webp
-const projects: Project[] = [
-  {
-    title: 'نظام تقارير تشغيل وضخ المياه',
-    type: 'Web System',
-    status: 'قيد التطوير',
-    imageNo: '01',
-    desc: 'نظام عربي لإدارة تقارير التشغيل اليومية، الوقود، الإنتاج، الفحوصات، الجهات المستفيدة، والأرشيف.',
-    value: 'تحويل التقارير اليومية من نصوص وملفات متفرقة إلى لوحة تشغيل قابلة للتصدير والمتابعة.',
-    tech: ['React', 'TypeScript', 'Firebase', 'Reports'],
-    link: 'https://fridge-oracle-sza.web.app/'
-  },
-  {
-    title: 'لوحة متابعة الحصر الميداني GIS',
-    type: 'GIS Platform',
-    status: 'مكتمل / خاص',
-    imageNo: '03',
-    desc: 'خريطة تفاعلية لمتابعة المناطق والمباني ونسب الإنجاز مع فلاتر وإحصائيات وتصدير.',
-    value: 'تحويل البيانات الميدانية إلى رؤية مكانية واضحة للإدارة.',
-    tech: ['GIS', 'Maps', 'Analytics', 'Leaflet']
-  },
-  {
-    title: 'AmanCare',
-    type: 'Storefront',
-    status: 'نموذج أولي',
-    imageNo: '06',
-    desc: 'واجهة متجر عربية لعرض المنتجات بطريقة هادئة ومنظمة مع تجربة طلب واضحة ومباشرة.',
-    value: 'واجهة تجارية تركّز على الخصوصية والثقة وسهولة الطلب.',
-    tech: ['Storefront', 'RTL', 'UX', 'Products']
-  },
-  {
-    title: 'منصة الساعي للخير',
-    type: 'Charity Platform',
-    status: 'نموذج أولي',
-    imageNo: '08',
-    desc: 'منصة خيرية عربية/إنجليزية لعرض فكرة الكفالة والتبرع بواجهة واضحة ومؤثرة.',
-    value: 'بناء الثقة وتسهيل قرار التبرع من أول زيارة.',
-    tech: ['Charity', 'Landing', 'Bilingual', 'Dark/Light']
-  },
-  {
-    title: 'تجربة GIS متقدمة',
-    type: 'GIS UX',
-    status: 'مكتمل / خاص',
-    imageNo: '11',
-    desc: 'شاشات دخول وتحميل ومحرر خرائط وتحكم فني مصممة لتجربة نظام GIS أكثر احترافية.',
-    value: 'النظام لا يقتصر على الخريطة؛ بل يقدم تجربة كاملة من الدخول حتى التحليل.',
-    tech: ['Login', 'Map Editor', 'Field Data', 'UX']
-  }
-];
-
-const services = [
-  ['أنظمة ويب مخصصة', 'إدخال بيانات، أرشفة، صلاحيات، بحث، تقارير، وتصدير.'],
-  ['داشبوردات تشغيل وإدارة', 'لوحات تحكم تعرض المؤشرات المهمة بسرعة.'],
-  ['خرائط GIS تفاعلية', 'خرائط ويب تعرض الطبقات والبيانات المكانية بطريقة سهلة.'],
-  ['واجهات عربية RTL', 'تصميم عربي واضح وسريع يناسب الجوال.'],
-  ['Firebase وقواعد بيانات', 'تسجيل دخول، Firestore، صلاحيات، واستضافة.'],
-  ['تحسين أنظمة موجودة', 'إعادة ترتيب الواجهة وتحسين الأداء وتجربة الاستخدام.']
-];
-
-const skills = [
-  ['واجهات وتطبيقات ويب', 'React, TypeScript, Vite, CSS'],
-  ['خرائط و GIS', 'ArcGIS Pro, GeoJSON, MapLibre'],
-  ['سحابة وقواعد بيانات', 'Firebase, Firestore, Auth, Hosting'],
-  ['جودة وتجربة استخدام', 'RTL UX, Responsive, Performance']
-];
-
-function projectMessage(project: Project) {
-  return whatsapp(`مرحبًا مهند، شاهدت مشروع "${project.title}" في موقعك وأرغب بتنفيذ مشروع مشابه.\n\nالفكرة باختصار:\nالبيانات المتوفرة:\nالمخرجات المطلوبة:`);
-}
-
-function Chips({ items }: { items: string[] }) {
-  return <div className="chips">{items.map((item) => <span key={item}>{item}</span>)}</div>;
-}
-
-function ProjectImage({ project, large = false }: { project: Project; large?: boolean }) {
+function ProjectDialog({
+  project,
+  onClose,
+}: {
+  project: Project;
+  onClose: () => void;
+}) {
+  const dialog = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    dialog.current?.showModal();
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = overflow;
+    };
+  }, []);
   return (
-    <div className={large ? 'project-image large' : 'project-image'}>
-      <span className="image-number">صورة {project.imageNo}</span>
-      <img src={imagePath(project.imageNo)} alt={project.title} loading="lazy" />
-    </div>
-  );
-}
-
-function Modal({ project, onClose }: { project: Project; onClose: () => void }) {
-  return (
-    <div className="modal" onClick={onClose}>
-      <article className="modal-card glass" onClick={(e) => e.stopPropagation()}>
-        <button className="close" onClick={onClose} aria-label="إغلاق"><X size={20} /></button>
-        <ProjectImage project={project} large />
-        <div className="modal-content">
-          <b className="pill">{project.type} / {project.status}</b>
-          <h2>{project.title}</h2>
-          <p>{project.desc}</p>
-          <p className="value">القيمة: {project.value}</p>
-          <Chips items={project.tech} />
-          <div className="actions">
-            {project.link && <a className="secondary" href={project.link} target="_blank">فتح المعاينة <ExternalLink size={17} /></a>}
-            <a className="whatsapp-btn" href={projectMessage(project)} target="_blank">اطلب مشروع مشابه <MessageCircle size={17} /></a>
-          </div>
+    <dialog
+      ref={dialog}
+      className="project-dialog"
+      aria-labelledby="project-title"
+      onCancel={onClose}
+      onClick={(e) => {
+        if (e.target === dialog.current) onClose();
+      }}
+    >
+      <button
+        className="icon-button dialog-close"
+        onClick={onClose}
+        aria-label="إغلاق تفاصيل المشروع"
+      >
+        <X />
+      </button>
+      <img src={imagePath(project.imageNo)} alt={`واجهة ${project.title}`} />
+      <div className="dialog-body">
+        <span className="eyebrow">
+          {project.type} · {project.status}
+        </span>
+        <h2 id="project-title">{project.title}</h2>
+        <p>{project.desc}</p>
+        <p>{project.value}</p>
+        <div className="tags">
+          {project.tech.map((tech) => (
+            <span key={tech}>{tech}</span>
+          ))}
         </div>
-      </article>
-    </div>
+        <div className="actions">
+          {project.link && (
+            <a
+              className="button primary"
+              href={project.link}
+              target="_blank"
+              rel="noreferrer"
+            >
+              معاينة المشروع <ExternalLink size={17} />
+            </a>
+          )}
+          <a
+            className="button secondary"
+            href={whatsapp(
+              `مرحبًا مهند، أرغب بمناقشة مشروع مشابه لـ ${project.title}.`,
+            )}
+            target="_blank"
+            rel="noreferrer"
+          >
+            ناقش مشروعًا مشابهًا <MessageCircle size={17} />
+          </a>
+        </div>
+      </div>
+    </dialog>
   );
-}
-
-function Title({ label, title, desc }: { label: string; title: string; desc?: string }) {
-  return <div className="section-title"><span>{label}</span><h2>{title}</h2>{desc && <p>{desc}</p>}</div>;
 }
 
 export default function App() {
-  const [light, setLight] = useState(false);
+  const [theme, setTheme] = useState(() => {
+    try {
+      return localStorage.getItem("portfolio-theme") === "light"
+        ? "light"
+        : "dark";
+    } catch {
+      return "dark";
+    }
+  });
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [filter, setFilter] = useState("الكل");
   const [selected, setSelected] = useState<Project | null>(null);
-
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    try {
+      localStorage.setItem("portfolio-theme", theme);
+    } catch {
+      /* Storage is optional. */
+    }
+  }, [theme]);
+  const visibleProjects = projects.filter(
+    (p) =>
+      filter === "الكل" ||
+      (filter === "GIS والخرائط"
+        ? p.type.startsWith("GIS")
+        : filter === "أنظمة الويب"
+          ? p.type === "Web System"
+          : !p.type.startsWith("GIS") && p.type !== "Web System"),
+  );
   return (
-    <div className={light ? 'app light' : 'app'}>
-      <header className="topbar">
-        <div className="container nav glass">
-          <a className="brand" href="#home"><span>م</span><b>مهند المشهراوي<small>GIS / Web Systems</small></b></a>
-          <nav>{nav.map(([href, label]) => <a key={href} href={href}>{label}</a>)}</nav>
-          <div className="nav-actions">
-            <a className="whatsapp-mini" href={generalWhatsApp} target="_blank">واتساب</a>
-            <button className="theme" onClick={() => setLight(!light)}>{light ? <Moon /> : <Sun />}</button>
+    <>
+      <a className="skip-link" href="#main">
+        انتقل إلى المحتوى
+      </a>
+      <header className="site-header">
+        <div className="container header-inner">
+          <a
+            href="#home"
+            className="brand"
+            aria-label="مهند المشهراوي — الرئيسية"
+          >
+            <span className="brand-symbol">
+              <Layers size={25} />
+            </span>
+            <span>
+              مهند المشهراوي<small>GIS & WEB DEVELOPER</small>
+            </span>
+          </a>
+          <nav
+            id="main-navigation"
+            className={menuOpen ? "desktop-nav is-open" : "desktop-nav"}
+            aria-label="القائمة الرئيسية"
+          >
+            {nav.map(([href, label]) => (
+              <a href={href} key={href} onClick={() => setMenuOpen(false)}>
+                {label}
+              </a>
+            ))}
+          </nav>
+          <div className="header-actions">
+            <button
+              className="icon-button"
+              aria-label={
+                theme === "dark" ? "تفعيل الوضع الفاتح" : "تفعيل الوضع الداكن"
+              }
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            >
+              {theme === "dark" ? <Sun size={19} /> : <Moon size={19} />}
+            </button>
+            <a className="button small primary header-cta" href="#contact">
+              لنتحدث <ArrowUpLeft size={16} />
+            </a>
+            <button
+              className="icon-button menu-toggle"
+              aria-expanded={menuOpen}
+              aria-controls="main-navigation"
+              aria-label={menuOpen ? "إغلاق القائمة" : "فتح القائمة"}
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              {menuOpen ? <X /> : <Menu />}
+            </button>
           </div>
         </div>
       </header>
-
-      <main>
+      <main id="main">
         <section id="home" className="container hero">
           <div className="hero-copy">
-            <span className="pill">GIS / Dashboards / Web Systems</span>
-            <h1>أنا مهند المشهراوي<br /><strong>مهندس GIS ومطور أنظمة ويب</strong></h1>
-            <p>أساعد المؤسسات والأفراد على تحويل الملفات والجداول والتقارير اليومية إلى أنظمة واضحة، سريعة، وقابلة للاستخدام الحقيقي.</p>
-            <div className="actions"><a className="primary" href="#projects">شاهد الأعمال <ArrowLeft size={18} /></a><a className="whatsapp-btn" href={generalWhatsApp} target="_blank">تواصل واتساب <MessageCircle size={18} /></a></div>
-            <div className="hero-tags"><span>GIS وخرائط وبيانات</span><span>RTL واجهات عربية</span><span>Cloud Firebase ونشر</span><span>Systems حلول عملية</span></div>
+            <span className="eyebrow">
+              <span className="status-dot" /> من البيانات إلى حلول تصنع فرقًا
+            </span>
+            <p className="hello">مرحبًا، أنا مهند المشهراوي</p>
+            <h1>
+              أربط البيانات.
+              <br />
+              أبني الأنظمة.
+              <br />
+              <span>وأُبسّط التعقيد.</span>
+            </h1>
+            <p className="hero-description">
+              مهندس نظم معلومات جغرافية ومطور أنظمة ويب. أحوّل البيانات والخرائط
+              وإجراءات العمل إلى تجارب رقمية واضحة، وعملية.
+            </p>
+            <div className="actions">
+              <a className="button primary" href="#projects">
+                استكشف أعمالي <ArrowLeft size={18} />
+              </a>
+              <a
+                className="text-link"
+                href={generalWhatsApp}
+                target="_blank"
+                rel="noreferrer"
+              >
+                عندك فكرة مشروع؟ <ArrowUpLeft size={18} />
+              </a>
+            </div>
+            <div className="hero-specialties">
+              <span>GIS & Mapping</span>
+              <i />
+              <span>Web Systems</span>
+              <i />
+              <span>Dashboards</span>
+            </div>
           </div>
-          <aside className="hero-panel glass"><h3>GIS Operations Console</h3><div className="fake-map"><i /><b /></div></aside>
+          <div className="hero-visual">
+            <div className="visual-coordinate" dir="ltr">
+              31° N / 34° E <span>SPATIAL THINKING</span>
+            </div>
+            <div className="orbit orbit-one" />
+            <div className="orbit orbit-two" />
+            <svg
+              className="terrain"
+              viewBox="0 0 520 520"
+              fill="none"
+              aria-hidden="true"
+            >
+              <g stroke="currentColor" strokeWidth="1">
+                <path d="M-40 230Q70 20 250 95T560 10M-40 255Q80 50 250 120T560 35M-40 280Q90 80 250 145T560 60M-40 305Q100 110 250 170T560 85M-40 330Q110 140 250 195T560 110M-40 355Q120 170 250 220T560 135M-40 380Q130 200 250 245T560 160M-40 405Q140 230 250 270T560 185M-40 430Q150 260 250 295T560 210M-40 455Q160 290 250 320T560 235M-40 480Q170 320 250 345T560 260M-40 505Q180 350 250 370T560 285M-40 530Q190 380 250 395T560 310" />
+              </g>
+            </svg>
+            <div className="identity-card">
+              <span className="card-kicker">THE HUMAN BEHIND THE DATA</span>
+              <img
+                className="portrait"
+                src={`${base}profile-photo.svg`}
+                alt="مهند المشهراوي"
+              />
+              <div className="identity-caption">
+                <h2>مهند المشهراوي</h2>
+                <p>GIS Engineer · Web Developer</p>
+              </div>
+              <span className="identity-mark">
+                <ArrowUpLeft size={22} />
+              </span>
+            </div>
+            <div className="floating-label label-map">
+              <Map size={20} />
+              <span>
+                رؤية مكانية<small>Spatial intelligence</small>
+              </span>
+            </div>
+            <div className="floating-label label-code">
+              <Braces size={21} />
+              <span>
+                حلول عملية<small>Built for real work</small>
+              </span>
+            </div>
+            <span className="visual-bottom">DATA → INSIGHT → IMPACT</span>
+          </div>
+          <a className="scroll-cue" href="#projects">
+            <ArrowDown size={16} /> اكتشف المزيد
+          </a>
         </section>
-
-        <section className="container about glass">
-          <span className="pill">من أنا</span>
-          <h2>لا أصمم واجهات جميلة فقط؛ أبني أنظمة تحل مشكلة واضحة.</h2>
-          <p>قيمة الموقع أو النظام ليست في الشكل وحده، بل في قدرته على تقليل الوقت، تنظيم البيانات، وتقديم صورة احترافية أمام المستخدم أو العميل.</p>
-          <div className="mini-grid"><b>GIS والخرائط والتحليل المكاني</b><b>React وTypeScript وواجهات RTL</b><b>Firebase وFirestore والاستضافة</b><b>تصميم عملي يركز على الثقة والسرعة</b></div>
-        </section>
-
-        <section id="services" className="container section">
-          <Title label="الخدمات" title="حلول رقمية واضحة بدل العمل اليدوي المتعب" desc="أركز على الأنظمة التي تخدم العمل اليومي فعلًا: إدخال بيانات، متابعة، خرائط، تقارير، وتصدير." />
-          <div className="grid cards">{services.map(([title, desc]) => <article className="card glass" key={title}><h3>{title}</h3><p>{desc}</p></article>)}</div>
-        </section>
-
-        <section className="container business glass">
-          <span className="pill">حلول للأعمال والمؤسسات</span>
-          <h2>حوّل عملك من ملفات ورسائل متفرقة إلى نظام واضح يدير بياناتك وتقاريرك.</h2>
-          <p>رجل الأعمال لا يحتاج موقعًا جميلًا فقط. يحتاج نظامًا يقلل الفوضى، يختصر الوقت، ويجعل المتابعة والإدارة أوضح.</p>
-          <a className="whatsapp-btn wide" href={generalWhatsApp} target="_blank">اطلب تصورًا مبدئيًا</a>
-          <div className="solution-table"><div><b>تقارير يومية على واتساب</b><span>نظام تقارير وأرشفة مع تصدير ومتابعة</span></div><div><b>ملفات Excel كثيرة</b><span>داشبورد إداري يعرض المؤشرات المهمة</span></div><div><b>مواقع أو فروع أو مناطق</b><span>خريطة GIS تفاعلية تعرض البيانات مكانيًا</span></div><div><b>بيانات مبعثرة</b><span>قاعدة بيانات منظمة قابلة للبحث والتوسع</span></div></div>
-        </section>
-
+        <div className="expertise-strip">
+          <div className="container">
+            <span>تقنيات أعمل بها</span>
+            <div dir="ltr">
+              <b>React</b>
+              <b>TypeScript</b>
+              <b>ArcGIS Pro</b>
+              <b>Firebase</b>
+              <b>MapLibre</b>
+              <b>GeoJSON</b>
+            </div>
+          </div>
+        </div>
         <section id="projects" className="container section">
-          <Title label="الأعمال" title="أعمال فعلية داخل الواجهة وبصور مرقمة" desc="كل صورة الآن لها رقم واضح. بعد نجاح العرض يمكن تبديل الأرقام بسهولة من الكود." />
-          <div className="project-feature glass">
-            <ProjectImage project={projects[0]} large />
-            <div><b className="pill">{projects[0].type}</b><h3>{projects[0].title}</h3><p>{projects[0].desc}</p><p className="value">القيمة: {projects[0].value}</p><Chips items={projects[0].tech} /><div className="actions"><button className="secondary" onClick={() => setSelected(projects[0])}>تفاصيل المشروع</button><a className="whatsapp-btn" href={projectMessage(projects[0])} target="_blank">اطلب مشروع مشابه</a></div></div>
+          <div className="section-heading">
+            <div>
+              <span className="eyebrow">01 / أعمال مختارة</span>
+              <h2>
+                حلول ملموسة.
+                <br />
+                <span>لكل مشروع حكاية.</span>
+              </h2>
+            </div>
+            <p>
+              من إدارة التشغيل إلى التحليل المكاني،
+              <br />
+              هذه نماذج مما أبنيه بالبيانات والكود.
+            </p>
           </div>
-          <div className="grid projects-grid">{projects.slice(1).map((project) => <article className="project-card glass" key={project.title}><ProjectImage project={project} /><div className="project-body"><b className="pill small">{project.type}</b><h3>{project.title}</h3><p>{project.desc}</p><p className="value">القيمة: {project.value}</p><Chips items={project.tech} /><div className="actions stacked"><button className="secondary" onClick={() => setSelected(project)}>تفاصيل المشروع</button><a className="whatsapp-btn" href={projectMessage(project)} target="_blank">اطلب مشابه</a></div></div></article>)}</div>
+          <div className="filters" role="group" aria-label="تصفية المشاريع">
+            {filters.map((item) => (
+              <button
+                key={item}
+                className={filter === item ? "active" : ""}
+                aria-pressed={filter === item}
+                onClick={() => setFilter(item)}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+          <div className="projects-grid">
+            {visibleProjects.map((project, index) => (
+              <article
+                key={project.title}
+                className={`project-card ${filter === "الكل" && index === 0 ? "featured" : ""}`}
+              >
+                <button
+                  className="project-preview"
+                  onClick={() => setSelected(project)}
+                  aria-label={`عرض تفاصيل ${project.title}`}
+                >
+                  <img
+                    src={imagePath(project.imageNo)}
+                    alt={`واجهة ${project.title}`}
+                    loading="lazy"
+                  />
+                  <span className="preview-action">
+                    <ArrowUpLeft size={24} />
+                  </span>
+                  <span className="project-status">{project.status}</span>
+                </button>
+                <div className="project-info">
+                  <span className="eyebrow" dir="ltr">
+                    {project.type}
+                  </span>
+                  <h3>
+                    <button onClick={() => setSelected(project)}>
+                      {project.title}
+                      <ArrowUpLeft size={23} />
+                    </button>
+                  </h3>
+                  <p>{project.desc}</p>
+                  <div className="tags">
+                    {project.tech.slice(0, 3).map((tech) => (
+                      <span key={tech}>{tech}</span>
+                    ))}
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
         </section>
-
-        <section id="skills" className="container section">
-          <Title label="المهارات" title="مزيج عملي بين GIS، الواجهة، وقواعد البيانات" />
-          <div className="grid skills-grid">{skills.map(([title, desc]) => <article className="card glass" key={title}><h3>{title}</h3><p>{desc}</p></article>)}</div>
+        <section id="services" className="services-section">
+          <div className="container section">
+            <div className="section-heading">
+              <div>
+                <span className="eyebrow">02 / كيف أساعدك</span>
+                <h2>
+                  بياناتك تستحق
+                  <br />
+                  <span>أكثر من جدول.</span>
+                </h2>
+              </div>
+              <p>
+                حلول مصممة حول طريقة عملك،
+                <br />
+                من الفكرة إلى نظام قابل للاستخدام.
+              </p>
+            </div>
+            <div className="services-grid">
+              {services.map(([title, description], index) => {
+                const Icon = serviceIcons[index];
+                return (
+                  <article className="service" key={title}>
+                    <div className="service-top">
+                      <Icon size={26} strokeWidth={1.5} />
+                      <span>0{index + 1}</span>
+                    </div>
+                    <h3>{title}</h3>
+                    <p>{description}</p>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
         </section>
-
-        <section className="container lead glass">
-          <span className="pill">طلب سريع</span>
-          <h2>أرسل تفاصيل أولية وسأعود لك بتصور أوضح.</h2>
-          <p>النموذج يجهز رسالة واتساب منظمة.</p>
-          <form onSubmit={(e) => { e.preventDefault(); const data = new FormData(e.currentTarget); const msg = `مرحبًا مهند، أريد تصورًا مبدئيًا لنظام عمل.\n\nالاسم/الجهة: ${data.get('name') || '-'}\nنوع النشاط: ${data.get('business') || '-'}\nالمشكلة الحالية: ${data.get('problem') || '-'}\nالأدوات الحالية: ${data.get('tools') || '-'}`; window.open(whatsapp(msg), '_blank'); }}><label>الاسم أو اسم الجهة<input name="name" placeholder="مثال: شركة / مؤسسة / اسم شخص" /></label><label>نوع النشاط<input name="business" placeholder="تشغيل، تجارة، جمعية، مكتب هندسي" /></label><label>المشكلة الحالية<textarea name="problem" placeholder="اشرح أين الفوضى أو التأخير الحالي" /></label><label>هل تستخدم Excel أو واتساب؟<input name="tools" placeholder="مثال: نعم، Excel وواتساب" /></label><button className="whatsapp-btn wide" type="submit">إرسال الطلب عبر واتساب</button></form>
+        <section id="skills" className="container section about-section">
+          <div className="about-intro">
+            <span className="eyebrow">03 / خلف الحلول</span>
+            <h2>
+              أفهم البيانات،
+              <br />
+              <span>وأفكر بالمستخدم.</span>
+            </h2>
+            <p>
+              أجمع بين التحليل المكاني وتطوير الويب لبناء أنظمة تخدم العمل
+              اليومي. أبدأ بفهم المشكلة، ثم أنظم البيانات وأصمم تجربة تسهّل
+              الوصول إلى المعلومة واتخاذ القرار.
+            </p>
+            <a
+              className="text-link"
+              href="https://github.com/mmashharawi2021-cell"
+              target="_blank"
+              rel="noreferrer"
+            >
+              تابع عملي على GitHub <Github size={18} />
+            </a>
+          </div>
+          <div className="skills-list">
+            {skills.map(([title, description], index) => (
+              <div className="skill-row" key={title}>
+                <span className="skill-number">0{index + 1}</span>
+                <div>
+                  <h3>{title}</h3>
+                  <p dir="ltr">{description}</p>
+                </div>
+                <ArrowUpLeft size={20} />
+              </div>
+            ))}
+          </div>
         </section>
-
-        <section id="contact" className="container contact glass">
-          <div><span className="pill">تواصل</span><h2>لديك فكرة نظام، خريطة، أو داشبورد؟</h2><p>أرسل الفكرة باختصار: ما المشكلة؟ ما البيانات المتوفرة؟ وما النتيجة التي تريدها؟</p><div className="actions"><a className="whatsapp-btn" href={generalWhatsApp} target="_blank">تواصل واتساب</a><a className="secondary" href={`mailto:${email}`}>البريد <Mail size={18} /></a></div></div>
-          <div className="contact-list"><a href={generalWhatsApp} target="_blank">WhatsApp<strong>+970 568 876 261</strong></a><a href={`mailto:${email}`}>Email<strong>{email}</strong></a><a href="https://github.com/mmashharawi2021-cell" target="_blank">GitHub<strong>mmashharawi2021-cell</strong></a></div>
+        <section className="container process-section">
+          <span className="eyebrow">من الفكرة إلى التنفيذ</span>
+          <div className="process-grid">
+            {[
+              ["نفهم التحدي", "نحدد المشكلة والبيانات والنتيجة المطلوبة."],
+              ["نرسم الحل", "نرتب البيانات ونصمم تجربة واضحة."],
+              ["نبني ونختبر", "نطور النظام ونتحقق من سيناريوهات العمل."],
+              ["نطلق ونحسّن", "نسلّم تجربة قابلة للاستخدام والتطوير."],
+            ].map(([title, description], index) => (
+              <article key={title}>
+                <span>0{index + 1}</span>
+                <h3>{title}</h3>
+                <p>{description}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+        <section id="contact" className="container section">
+          <div className="contact-panel">
+            <div className="contact-copy">
+              <span className="eyebrow">
+                <span className="status-dot" /> لنبدأ بشيء مفيد
+              </span>
+              <h2>
+                عندك بيانات.
+                <br />
+                عندك تحدّي.
+                <br />
+                <span>خلّينا نوجد الحل.</span>
+              </h2>
+              <p>
+                احكِ لي عن فكرتك، أو عن إجراء يأخذ من وقتك كل يوم. نبدأ من هناك.
+              </p>
+              <a className="email-link" href={`mailto:${email}`}>
+                {email}
+                <ArrowUpLeft size={19} />
+              </a>
+              <div className="contact-social">
+                <a href={generalWhatsApp} target="_blank" rel="noreferrer">
+                  <MessageCircle size={18} /> واتساب
+                </a>
+                <a
+                  href="https://github.com/mmashharawi2021-cell"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Github size={18} /> GitHub
+                </a>
+                <a href={`mailto:${email}`}>
+                  <Mail size={18} /> البريد
+                </a>
+              </div>
+            </div>
+            <form
+              className="contact-form"
+              onSubmit={(e) => {
+                e.preventDefault();
+                const data = new FormData(e.currentTarget);
+                window.open(
+                  whatsapp(
+                    `مرحبًا مهند، أرغب بمناقشة مشروع.\n\nالاسم / الجهة: ${data.get("name")}\nنوع المشروع: ${data.get("type")}\nالفكرة والتحدي: ${data.get("message")}`,
+                  ),
+                  "_blank",
+                  "noopener,noreferrer",
+                );
+              }}
+            >
+              <h3>احكِ لي عن مشروعك</h3>
+              <label htmlFor="name">
+                اسمك أو اسم الجهة
+                <input
+                  id="name"
+                  name="name"
+                  autoComplete="name"
+                  placeholder="كيف أناديك؟"
+                  required
+                  maxLength={120}
+                />
+              </label>
+              <label htmlFor="type">
+                ما الذي تحتاجه؟
+                <select id="type" name="type">
+                  <option>نظام ويب مخصص</option>
+                  <option>خريطة GIS تفاعلية</option>
+                  <option>داشبورد وتقارير</option>
+                  <option>موقع أو منصة</option>
+                  <option>لدي فكرة أخرى</option>
+                </select>
+              </label>
+              <label htmlFor="message">
+                فكرتك باختصار
+                <textarea
+                  id="message"
+                  name="message"
+                  placeholder="ما التحدي الذي تريد حله؟"
+                  required
+                  rows={4}
+                  maxLength={2000}
+                />
+              </label>
+              <button type="submit" className="button primary">
+                نبدأ المحادثة <ArrowUpLeft size={19} />
+              </button>
+              <small>يفتح واتساب برسالتك لتراجعها وترسلها.</small>
+            </form>
+          </div>
         </section>
       </main>
-
-      <a className="float-whatsapp" href={generalWhatsApp} target="_blank"><MessageCircle size={22} /></a>
-      <nav className="bottom-nav">{nav.map(([href, label]) => <a key={href} href={href}>{label}</a>)}</nav>
-      <footer>© 2026 Mohanad Al-Mashharawi. Premium GIS / Web Systems Portfolio.</footer>
-      {selected && <Modal project={selected} onClose={() => setSelected(null)} />}
-    </div>
+      <footer className="container footer">
+        <a className="brand" href="#home">
+          <span className="brand-symbol">
+            <Layers size={21} />
+          </span>
+          <span>مهند المشهراوي</span>
+        </a>
+        <span>صُنع بعناية، من البيانات إلى التفاصيل.</span>
+        <small>© {new Date().getFullYear()} جميع الحقوق محفوظة</small>
+      </footer>
+      <nav className="mobile-bottom" aria-label="روابط سريعة">
+        <a href="#home">الرئيسية</a>
+        <a href="#projects">الأعمال</a>
+        <a href="#services">الخدمات</a>
+        <a href="#contact">
+          لنتحدث <ArrowUpLeft size={14} />
+        </a>
+      </nav>
+      {selected && (
+        <ProjectDialog project={selected} onClose={() => setSelected(null)} />
+      )}
+    </>
   );
 }

@@ -1,0 +1,347 @@
+{
+  "identity": {
+    "name": "مهند المشهراوي",
+    "subtitle": "GIS & WEB DEVELOPER",
+    "portrait": "profile-photo.svg",
+    "email": "mmashharawi2021@gmail.com",
+    "whatsapp": "970568876261",
+    "github": "https://github.com/mmashharawi2021-cell",
+    "whatsappMessage": "مرحبًا مهند، شاهدت موقعك وأرغب بمناقشة فكرة مشروع."
+  },
+  "theme": {
+    "defaultMode": "light",
+    "accent": "#0066cc",
+    "radius": 24,
+    "fontSize": 16,
+    "font": "Tajawal"
+  },
+  "navigation": [
+    {
+      "id": "nav-0",
+      "href": "#home",
+      "label": "الرئيسية"
+    },
+    {
+      "id": "nav-1",
+      "href": "#services",
+      "label": "الخدمات"
+    },
+    {
+      "id": "nav-2",
+      "href": "#projects",
+      "label": "الأعمال"
+    },
+    {
+      "id": "nav-3",
+      "href": "#skills",
+      "label": "المهارات"
+    },
+    {
+      "id": "nav-4",
+      "href": "#contact",
+      "label": "تواصل"
+    }
+  ],
+  "sections": [
+    {
+      "id": "home",
+      "visible": true
+    },
+    {
+      "id": "expertise",
+      "visible": true
+    },
+    {
+      "id": "projects",
+      "visible": true
+    },
+    {
+      "id": "services",
+      "visible": true
+    },
+    {
+      "id": "skills",
+      "visible": true
+    },
+    {
+      "id": "process",
+      "visible": true
+    },
+    {
+      "id": "contact",
+      "visible": true
+    }
+  ],
+  "hero": {
+    "badge": "مهندس GIS ومطور أنظمة ويب",
+    "greeting": "مرحبًا، أنا مهند المشهراوي",
+    "title": "أفكار معقّدة.",
+    "accent": "تجارب ببساطة.",
+    "description": "مهندس نظم معلومات جغرافية ومطور أنظمة ويب. أحوّل البيانات والخرائط وإجراءات العمل إلى تجارب رقمية واضحة، وعملية.",
+    "primaryLabel": "استكشف أعمالي",
+    "primaryLink": "#projects",
+    "secondaryLabel": "عندك فكرة مشروع؟",
+    "specialties": [
+      "GIS & Mapping",
+      "Web Systems",
+      "Dashboards"
+    ],
+    "windowLabel": "من البيانات إلى القرار",
+    "openLabel": "استكشف المشروع",
+    "mapTitle": "بيانات أوضح.",
+    "mapText": "منظور مكاني أوسع.",
+    "role": "GIS · Web · Dashboards",
+    "caption": "صُمّمت لتخدم العمل. وبُنيت لتُبسّطه.",
+    "scrollLabel": "اكتشف المزيد"
+  },
+  "expertise": {
+    "label": "تقنيات أعمل بها",
+    "items": [
+      "React",
+      "TypeScript",
+      "ArcGIS Pro",
+      "Firebase",
+      "MapLibre",
+      "GeoJSON"
+    ]
+  },
+  "projectsHeading": {
+    "label": "أعمال مختارة",
+    "title": "التفاصيل تصنع الفرق.",
+    "accent": "والأعمال تحكي الباقي.",
+    "description": "أنظمة وخرائط وتجارب ويب. استكشف الفكرة، والواجهة، والقيمة وراء كل مشروع.",
+    "note": "بعض الأعمال خاصة أو قيد التطوير. حالة كل مشروع موضّحة على بطاقته.",
+    "detailsLabel": "اكتشف التفاصيل"
+  },
+  "projects": [
+    {
+      "id": "project-1",
+      "title": "نظام تقارير تشغيل وضخ المياه",
+      "type": "Web System",
+      "category": "أنظمة الويب",
+      "status": "قيد التطوير",
+      "image": "assets/projects/01.webp",
+      "desc": "نظام عربي لإدارة تقارير التشغيل اليومية، الوقود، الإنتاج، الفحوصات، الجهات المستفيدة، والأرشيف.",
+      "value": "تحويل التقارير اليومية من نصوص وملفات متفرقة إلى لوحة تشغيل قابلة للتصدير والمتابعة.",
+      "tech": [
+        "React",
+        "TypeScript",
+        "Firebase",
+        "Reports"
+      ],
+      "link": "https://fridge-oracle-sza.web.app/"
+    },
+    {
+      "id": "project-2",
+      "title": "لوحة متابعة الحصر الميداني GIS",
+      "type": "GIS Platform",
+      "category": "GIS والخرائط",
+      "status": "مكتمل / خاص",
+      "image": "assets/projects/03.webp",
+      "desc": "خريطة تفاعلية لمتابعة المناطق والمباني ونسب الإنجاز مع فلاتر وإحصائيات وتصدير.",
+      "value": "تحويل البيانات الميدانية إلى رؤية مكانية واضحة للإدارة.",
+      "tech": [
+        "GIS",
+        "Maps",
+        "Analytics",
+        "Leaflet"
+      ],
+      "link": ""
+    },
+    {
+      "id": "project-3",
+      "title": "AmanCare",
+      "type": "Storefront",
+      "category": "مواقع ومنصات",
+      "status": "نموذج أولي",
+      "image": "assets/projects/06.webp",
+      "desc": "واجهة متجر عربية لعرض المنتجات بطريقة هادئة ومنظمة مع تجربة طلب واضحة ومباشرة.",
+      "value": "واجهة تجارية تركّز على الخصوصية والثقة وسهولة الطلب.",
+      "tech": [
+        "Storefront",
+        "RTL",
+        "UX",
+        "Products"
+      ],
+      "link": ""
+    },
+    {
+      "id": "project-4",
+      "title": "منصة الساعي للخير",
+      "type": "Charity Platform",
+      "category": "مواقع ومنصات",
+      "status": "نموذج أولي",
+      "image": "assets/projects/08.webp",
+      "desc": "منصة خيرية عربية/إنجليزية لعرض فكرة الكفالة والتبرع بواجهة واضحة ومؤثرة.",
+      "value": "بناء الثقة وتسهيل قرار التبرع من أول زيارة.",
+      "tech": [
+        "Charity",
+        "Landing",
+        "Bilingual",
+        "Dark/Light"
+      ],
+      "link": ""
+    },
+    {
+      "id": "project-5",
+      "title": "تجربة GIS متقدمة",
+      "type": "GIS UX",
+      "category": "GIS والخرائط",
+      "status": "مكتمل / خاص",
+      "image": "assets/projects/11.webp",
+      "desc": "شاشات دخول وتحميل ومحرر خرائط وتحكم فني مصممة لتجربة نظام GIS أكثر احترافية.",
+      "value": "النظام لا يقتصر على الخريطة؛ بل يقدم تجربة كاملة من الدخول حتى التحليل.",
+      "tech": [
+        "Login",
+        "Map Editor",
+        "Field Data",
+        "UX"
+      ],
+      "link": ""
+    }
+  ],
+  "projectDetails": {
+    "label": "نظرة أقرب",
+    "idea": "الفكرة",
+    "value": "القيمة التي يقدّمها",
+    "technologies": "التقنيات والمجالات",
+    "ctaTitle": "نفكّر بحل يناسب عملك؟",
+    "ctaText": "نبدأ من التحدّي، ونبني ما تحتاجه.",
+    "preview": "المعاينة المباشرة",
+    "contact": "ناقش فكرتك",
+    "privateNote": "هذا المشروع خاص؛ المعروض هنا للتعريف بالفكرة والواجهة.",
+    "unavailableNote": "المعاينة المباشرة غير متاحة لهذا المشروع حاليًا.",
+    "more": "استكشف المزيد من الأعمال"
+  },
+  "servicesHeading": {
+    "label": "كيف أساعدك",
+    "title": "بياناتك تستحق",
+    "accent": "أكثر من جدول.",
+    "description": "حلول مصممة حول طريقة عملك، من الفكرة إلى نظام قابل للاستخدام."
+  },
+  "services": [
+    {
+      "id": "service-0",
+      "title": "أنظمة ويب مخصصة",
+      "description": "إدخال بيانات، أرشفة، صلاحيات، بحث، تقارير، وتصدير.",
+      "icon": "code"
+    },
+    {
+      "id": "service-1",
+      "title": "داشبوردات تشغيل وإدارة",
+      "description": "لوحات تحكم تعرض المؤشرات المهمة بسرعة.",
+      "icon": "layers"
+    },
+    {
+      "id": "service-2",
+      "title": "خرائط GIS تفاعلية",
+      "description": "خرائط ويب تعرض الطبقات والبيانات المكانية بطريقة سهلة.",
+      "icon": "map"
+    },
+    {
+      "id": "service-3",
+      "title": "واجهات عربية RTL",
+      "description": "تصميم عربي واضح وسريع يناسب الجوال.",
+      "icon": "arrow"
+    },
+    {
+      "id": "service-4",
+      "title": "Firebase وقواعد بيانات",
+      "description": "تسجيل دخول، Firestore، صلاحيات، واستضافة.",
+      "icon": "database"
+    },
+    {
+      "id": "service-5",
+      "title": "تحسين أنظمة موجودة",
+      "description": "إعادة ترتيب الواجهة وتحسين الأداء وتجربة الاستخدام.",
+      "icon": "check"
+    }
+  ],
+  "about": {
+    "label": "خلف الحلول",
+    "title": "أفهم البيانات،",
+    "accent": "وأفكر بالمستخدم.",
+    "description": "أجمع بين التحليل المكاني وتطوير الويب لبناء أنظمة تخدم العمل اليومي. أبدأ بفهم المشكلة، ثم أنظم البيانات وأصمم تجربة تسهّل الوصول إلى المعلومة واتخاذ القرار.",
+    "linkLabel": "تابع عملي على GitHub"
+  },
+  "skills": [
+    {
+      "id": "skill-0",
+      "title": "واجهات وتطبيقات ويب",
+      "description": "React, TypeScript, Vite, CSS"
+    },
+    {
+      "id": "skill-1",
+      "title": "خرائط و GIS",
+      "description": "ArcGIS Pro, GeoJSON, MapLibre"
+    },
+    {
+      "id": "skill-2",
+      "title": "سحابة وقواعد بيانات",
+      "description": "Firebase, Firestore, Auth, Hosting"
+    },
+    {
+      "id": "skill-3",
+      "title": "جودة وتجربة استخدام",
+      "description": "RTL UX, Responsive, Performance"
+    }
+  ],
+  "process": {
+    "label": "من الفكرة إلى التنفيذ",
+    "steps": [
+      {
+        "id": "step-0",
+        "title": "نفهم التحدي",
+        "description": "نحدد المشكلة والبيانات والنتيجة المطلوبة."
+      },
+      {
+        "id": "step-1",
+        "title": "نرسم الحل",
+        "description": "نرتب البيانات ونصمم تجربة واضحة."
+      },
+      {
+        "id": "step-2",
+        "title": "نبني ونختبر",
+        "description": "نطور النظام ونتحقق من سيناريوهات العمل."
+      },
+      {
+        "id": "step-3",
+        "title": "نطلق ونحسّن",
+        "description": "نسلّم تجربة قابلة للاستخدام والتطوير."
+      }
+    ]
+  },
+  "contact": {
+    "label": "لنبدأ بشيء مفيد",
+    "title": "عندك بيانات.\nعندك تحدّي.",
+    "accent": "خلّينا نوجد الحل.",
+    "description": "احكِ لي عن فكرتك، أو عن إجراء يأخذ من وقتك كل يوم. نبدأ من هناك.",
+    "formTitle": "احكِ لي عن مشروعك",
+    "nameLabel": "اسمك أو اسم الجهة",
+    "namePlaceholder": "كيف أناديك؟",
+    "typeLabel": "ما الذي تحتاجه؟",
+    "types": [
+      "نظام ويب مخصص",
+      "خريطة GIS تفاعلية",
+      "داشبورد وتقارير",
+      "موقع أو منصة",
+      "لدي فكرة أخرى"
+    ],
+    "messageLabel": "فكرتك باختصار",
+    "messagePlaceholder": "ما التحدي الذي تريد حله؟",
+    "submitLabel": "نبدأ المحادثة",
+    "note": "يفتح واتساب برسالتك لتراجعها وترسلها.",
+    "whatsappLabel": "واتساب",
+    "githubLabel": "GitHub",
+    "emailLabel": "البريد"
+  },
+  "footer": {
+    "note": "صُنع بعناية، من البيانات إلى التفاصيل.",
+    "copyright": "جميع الحقوق محفوظة",
+    "contactLabel": "لنتحدث"
+  },
+  "seo": {
+    "title": "مهند المشهراوي | GIS & Web Developer",
+    "description": "مهندس GIS ومطور أنظمة ويب وداشبوردات. أحوّل البيانات والخرائط إلى أنظمة واضحة وقابلة للاستخدام."
+  }
+}

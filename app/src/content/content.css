@@ -1,0 +1,64 @@
+.site-content {
+  --accent: var(--site-accent, #0066cc);
+}
+.site-content .button.primary {
+  background: var(--site-accent, #0066cc);
+  border-color: transparent;
+}
+.site-content .hero h1 span {
+  background: none;
+  color: var(--site-accent, #0066cc);
+}
+.site-content .project-card,
+.site-content .contact-panel,
+.site-content .service {
+  border-radius: var(--site-radius, 24px);
+}
+.site-content .hero-description,
+.site-content .about-intro > p,
+.site-content .contact-copy > p {
+  font-size: 1em;
+}
+.preserve-lines {
+  white-space: pre-line;
+}
+.editor-launch {
+  position: fixed;
+  bottom: 22px;
+  left: 24px;
+  z-index: 48;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--glass);
+  color: var(--text);
+  border: 1px solid var(--glass-edge);
+  border-radius: 999px;
+  box-shadow: 0 6px 25px #0002;
+  backdrop-filter: blur(20px);
+  padding: 12px 20px;
+  font-size: 13px;
+}
+.editor-launch:disabled {
+  opacity: 0.5;
+}
+.editor-loading {
+  position: fixed;
+  inset: 20px 20px auto auto;
+  padding: 25px;
+  border-radius: 18px;
+  z-index: 101;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.cms-edit-card {
+  margin-bottom: 18px;
+  padding: 10px 12px;
+  border: 1px dashed var(--accent);
+  border-radius: 10px;
+  color: var(--accent);
+  background: transparent;
+  font:
+    12px Tajawal,
+    sans-serif;
+}

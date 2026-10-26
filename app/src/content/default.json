@@ -115,14 +115,68 @@
   },
   "projects": [
     {
-      "id": "project-1",
-      "title": "نظام تقارير تشغيل وضخ المياه",
+      "id": "rifq",
+      "title": "منصة رِفق لرعاية الأيتام",
+      "type": "Web Platform",
+      "category": "أنظمة الويب",
+      "status": "مكتمل / خاص",
+      "image": "assets/projects/rifq.webp",
+      "desc": "منصة لإدارة كفالات الأيتام: بوابة عامة تقدّم منها الأمهات والأوصياء طلب الكفالة على ثلاث خطوات مع رفع المستندات، ولوحة إشراف لمتابعة الأيتام والكفالات والطلبات الجديدة.",
+      "value": "سجل موحّد وآمن للحالات بدل الملفات المتفرقة، مع فحص التكرار، والتوزيع الجغرافي للأطفال، ونسب التغطية، وتصدير التقارير PDF.",
+      "tech": [
+        "React",
+        "Dashboard",
+        "Forms",
+        "Charts",
+        "PDF"
+      ],
+      "link": ""
+    },
+    {
+      "id": "field-census",
+      "title": "لوحة الحصر الميداني المتقدمة",
+      "type": "GIS Platform",
+      "category": "GIS والخرائط",
+      "status": "مكتمل / خاص",
+      "image": "assets/projects/field-census.webp",
+      "desc": "نظام معلومات جغرافية متكامل لحصر البيانات الميدانية في غزة، أُعدّ للهيئة العربية الدولية للإعمار في فلسطين، بواجهة عربية وإنجليزية.",
+      "value": "يجمع بيانات الحصر من الميدان في لوحة واحدة على الخريطة، فتصبح المتابعة والتحليل ودعم قرارات الإعمار أسرع وأدق.",
+      "tech": [
+        "GIS",
+        "Maps",
+        "Field Data",
+        "Analytics",
+        "AR/EN"
+      ],
+      "link": ""
+    },
+    {
+      "id": "un-field",
+      "title": "UN Field",
+      "type": "GIS Field System",
+      "category": "GIS والخرائط",
+      "status": "مكتمل / خاص",
+      "image": "assets/projects/un-field.webp",
+      "desc": "منظومة موحّدة للمسح والتوثيق والاستجابة الميدانية، مبنية على خريطة تفاعلية، مع صلاحيات دخول وواجهة عربية وإنجليزية.",
+      "value": "تربط فرق الميدان بمركز واحد: تُسجَّل البيانات وتُوثَّق في موقعها الجغرافي، وتُتابَع الاستجابة على الخريطة.",
+      "tech": [
+        "GIS",
+        "Leaflet",
+        "OpenStreetMap",
+        "Field Survey",
+        "AR/EN"
+      ],
+      "link": ""
+    },
+    {
+      "id": "sapphire-emerald",
+      "title": "Sapphire & Emerald: لوحة تشغيل محطات المياه",
       "type": "Web System",
       "category": "أنظمة الويب",
       "status": "قيد التطوير",
-      "image": "assets/projects/01.webp",
-      "desc": "نظام عربي لإدارة تقارير التشغيل اليومية، الوقود، الإنتاج، الفحوصات، الجهات المستفيدة، والأرشيف.",
-      "value": "تحويل التقارير اليومية من نصوص وملفات متفرقة إلى لوحة تشغيل قابلة للتصدير والمتابعة.",
+      "image": "assets/projects/sapphire-emerald.webp",
+      "desc": "لوحة بيانات لإدارة تقارير تشغيل محطات المياه اليومية: الإنتاج، ساعات التشغيل، الديزل والوقود المستهلك، المياه الموزعة، وأرشيف التقارير.",
+      "value": "تحويل التقارير اليومية من نصوص وملفات متفرقة إلى مؤشرات واضحة مع تحليل تدفق الإنتاج، وتقرير واتساب سريع، ومركز تصدير.",
       "tech": [
         "React",
         "TypeScript",
@@ -132,72 +186,22 @@
       "link": "https://fridge-oracle-sza.web.app/"
     },
     {
-      "id": "project-2",
-      "title": "لوحة متابعة الحصر الميداني GIS",
-      "type": "GIS Platform",
-      "category": "GIS والخرائط",
-      "status": "مكتمل / خاص",
-      "image": "assets/projects/03.webp",
-      "desc": "خريطة تفاعلية لمتابعة المناطق والمباني ونسب الإنجاز مع فلاتر وإحصائيات وتصدير.",
-      "value": "تحويل البيانات الميدانية إلى رؤية مكانية واضحة للإدارة.",
-      "tech": [
-        "GIS",
-        "Maps",
-        "Analytics",
-        "Leaflet"
-      ],
-      "link": ""
-    },
-    {
-      "id": "project-3",
-      "title": "AmanCare",
-      "type": "Storefront",
+      "id": "portfolio",
+      "title": "موقعي الشخصي مع لوحة تحرير",
+      "type": "Portfolio + CMS",
       "category": "مواقع ومنصات",
-      "status": "نموذج أولي",
-      "image": "assets/projects/06.webp",
-      "desc": "واجهة متجر عربية لعرض المنتجات بطريقة هادئة ومنظمة مع تجربة طلب واضحة ومباشرة.",
-      "value": "واجهة تجارية تركّز على الخصوصية والثقة وسهولة الطلب.",
+      "status": "مكتمل",
+      "image": "assets/projects/portfolio.webp",
+      "desc": "هذا الموقع: واجهة عربية متجاوبة بوضع داكن وفاتح، مع لوحة تحرير خاصة لتعديل كل المحتوى والصور وسجل للنسخ السابقة.",
+      "value": "تحديث الأعمال والخدمات بدون تعديل الكود، ثم نشرها على GitHub Pages بأمر واحد.",
       "tech": [
-        "Storefront",
-        "RTL",
-        "UX",
-        "Products"
+        "React",
+        "TypeScript",
+        "Node.js",
+        "SQLite",
+        "Docker"
       ],
-      "link": ""
-    },
-    {
-      "id": "project-4",
-      "title": "منصة الساعي للخير",
-      "type": "Charity Platform",
-      "category": "مواقع ومنصات",
-      "status": "نموذج أولي",
-      "image": "assets/projects/08.webp",
-      "desc": "منصة خيرية عربية/إنجليزية لعرض فكرة الكفالة والتبرع بواجهة واضحة ومؤثرة.",
-      "value": "بناء الثقة وتسهيل قرار التبرع من أول زيارة.",
-      "tech": [
-        "Charity",
-        "Landing",
-        "Bilingual",
-        "Dark/Light"
-      ],
-      "link": ""
-    },
-    {
-      "id": "project-5",
-      "title": "تجربة GIS متقدمة",
-      "type": "GIS UX",
-      "category": "GIS والخرائط",
-      "status": "مكتمل / خاص",
-      "image": "assets/projects/11.webp",
-      "desc": "شاشات دخول وتحميل ومحرر خرائط وتحكم فني مصممة لتجربة نظام GIS أكثر احترافية.",
-      "value": "النظام لا يقتصر على الخريطة؛ بل يقدم تجربة كاملة من الدخول حتى التحليل.",
-      "tech": [
-        "Login",
-        "Map Editor",
-        "Field Data",
-        "UX"
-      ],
-      "link": ""
+      "link": "https://mmashharawi2021-cell.github.io/myprofile-/"
     }
   ],
   "projectDetails": {

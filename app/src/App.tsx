@@ -2,6 +2,9 @@
 import ProjectsSection from "./ProjectsSection";
 import ProjectDialog from "./ProjectDialog";
 import ProgressiveImage from "./ProgressiveImage";
+import { useHoverPill } from "./HoverPill";
+import { TechBadge } from "./TechBadge";
+import { FloatingWords } from "./FloatingWords";
 import {
   ArrowDown,
   ArrowLeft,
@@ -41,6 +44,7 @@ export default function App() {
   });
   const mode = theme ?? c.theme.defaultMode;
   const [menuOpen, setMenuOpen] = useState(false);
+  const navPill = useHoverPill<HTMLElement>(undefined, menuOpen);
   const [selected, setSelected] = useState<Project | null>(null);
   const [editing, setEditing] = useState(false);
   const first = c.projects[0];
@@ -70,16 +74,18 @@ export default function App() {
   const sections: Record<string, React.ReactNode> = {
     home: (
       <section id="home" className="container hero">
+        <FloatingWords />
         <div className="hero-copy">
+          <p className="hello">{c.hero.greeting}</p>
+          <p className="hero-name">{c.identity.name}</p>
           <span className="eyebrow">
             <span className="status-dot" />
             {c.hero.badge}
           </span>
-          <p className="hello">{c.hero.greeting}</p>
-          <h1>
-            {c.hero.title}
+          <h1 className="hero-swap">
+            <span className="hero-line">{c.hero.title}</span>
             <br />
-            <span>{c.hero.accent}</span>
+            <span className="hero-accent">{c.hero.accent}</span>
           </h1>
           <p className="hero-description">{c.hero.description}</p>
           <div className="actions">
@@ -165,7 +171,7 @@ export default function App() {
           <span>{c.expertise.label}</span>
           <div dir="ltr">
             {c.expertise.items.map((item, index) => (
-              <b key={index}>{item}</b>
+              <TechBadge key={index} name={item} />
             ))}
           </div>
         </div>
@@ -364,7 +370,10 @@ export default function App() {
             id="main-navigation"
             className={menuOpen ? "desktop-nav is-open" : "desktop-nav"}
             aria-label="القائمة الرئيسية"
+            ref={navPill.ref}
+            {...navPill.handlers}
           >
+            {navPill.pill}
             {c.navigation.map((link) => (
               <a
                 href={link.href}

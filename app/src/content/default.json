@@ -2,7 +2,7 @@
   "identity": {
     "name": "مهند المشهراوي",
     "subtitle": "GIS & WEB DEVELOPER",
-    "portrait": "profile-photo.svg",
+    "portrait": "assets/profile-photo.webp",
     "email": "mmashharawi2021@gmail.com",
     "whatsapp": "970568876261",
     "github": "https://github.com/mmashharawi2021-cell",
@@ -74,7 +74,7 @@
   ],
   "hero": {
     "badge": "مهندس GIS ومطور أنظمة ويب",
-    "greeting": "مرحبًا، أنا مهند المشهراوي",
+    "greeting": "مرحبًا، أنا",
     "title": "أفكار معقّدة.",
     "accent": "تجارب ببساطة.",
     "description": "مهندس نظم معلومات جغرافية ومطور أنظمة ويب. أحوّل البيانات والخرائط وإجراءات العمل إلى تجارب رقمية واضحة، وعملية.",

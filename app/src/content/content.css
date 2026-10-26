@@ -9,6 +9,43 @@
   background: none;
   color: var(--site-accent, #0066cc);
 }
+/* The two headline lines trade colours on hover with a sweep and soft glow. */
+.site-content .hero h1.hero-swap > span {
+  --from: var(--text);
+  --to: var(--accent);
+  display: inline-block;
+  color: transparent;
+  background: linear-gradient(
+      105deg,
+      var(--from) 0 42%,
+      var(--to) 58% 100%
+    )
+    0 0 / 240% 100% no-repeat;
+  background-clip: text;
+  -webkit-background-clip: text;
+  filter: drop-shadow(0 0 0 transparent);
+  transition:
+    background-position 0.9s cubic-bezier(0.3, 0.7, 0.2, 1),
+    filter 0.9s;
+}
+.site-content .hero h1.hero-swap > .hero-accent {
+  --from: var(--accent);
+  --to: var(--text);
+}
+.site-content .hero h1.hero-swap:hover > span,
+.site-content .hero h1.hero-swap:active > span {
+  background-position: 100% 0;
+  filter: drop-shadow(0 0 14px color-mix(in srgb, var(--accent) 45%, transparent));
+}
+.site-content .hero h1.hero-swap:hover > .hero-accent,
+.site-content .hero h1.hero-swap:active > .hero-accent {
+  filter: drop-shadow(0 0 14px color-mix(in srgb, var(--text) 30%, transparent));
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-content .hero h1.hero-swap > span {
+    transition: none;
+  }
+}
 .site-content .project-card,
 .site-content .contact-panel,
 .site-content .service {

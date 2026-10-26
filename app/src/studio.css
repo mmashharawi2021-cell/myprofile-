@@ -74,8 +74,46 @@ body {
     color 0.2s;
 }
 .desktop-nav a:hover {
-  background: var(--line);
   color: var(--text);
+}
+.desktop-nav:not(.is-open),
+.filters {
+  position: relative;
+}
+.desktop-nav,
+.filters {
+  isolation: isolate;
+}
+.desktop-nav a,
+.filters button {
+  position: relative;
+  z-index: 1;
+}
+.hover-pill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  border-radius: 20px;
+  background: var(--line);
+  transition:
+    transform 0.38s cubic-bezier(0.3, 0.8, 0.2, 1),
+    width 0.38s cubic-bezier(0.3, 0.8, 0.2, 1),
+    height 0.38s cubic-bezier(0.3, 0.8, 0.2, 1),
+    opacity 0.2s;
+}
+.hover-pill.is-visible {
+  opacity: 1;
+}
+.hover-pill.is-instant {
+  transition: opacity 0.2s;
+}
+.filters .hover-pill {
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: 0 2px 7px #0000000e;
 }
 .button {
   border-radius: 999px;
@@ -126,6 +164,58 @@ body {
   min-height: auto;
   isolation: isolate;
 }
+.floating-words {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+}
+.floating-words > span {
+  position: absolute;
+  white-space: nowrap;
+  font-family: "JetBrains Mono", Consolas, monospace;
+  font-weight: 600;
+  color: var(--muted);
+  opacity: 0.16;
+  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.floating-words > span > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  animation: word-float 12s ease-in-out infinite;
+}
+.floating-words > .is-brand {
+  color: var(--brand);
+  opacity: 0.22;
+}
+.floating-words svg {
+  width: 1.3em;
+  height: 1.3em;
+  fill: currentColor;
+}
+@keyframes word-float {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(-2deg);
+  }
+  33% {
+    transform: translate(10px, -16px) rotate(1deg);
+  }
+  66% {
+    transform: translate(-8px, 9px) rotate(2deg);
+  }
+}
+@media (max-width: 700px) {
+  .floating-words > span:nth-child(n + 10) {
+    display: none;
+  }
+  .floating-words > span {
+    opacity: 0.12;
+  }
+}
 .hero-copy {
   text-align: center;
   max-width: 800px;
@@ -149,8 +239,63 @@ body {
 }
 .hello {
   font-size: 16px;
-  margin: 27px 0 15px;
+  margin: 0 0 4px;
   color: var(--muted);
+}
+.hero-name {
+  /* Aurora palette that flows through the name; deeper tones for light mode. */
+  --name-a: #00d4ff;
+  --name-b: #4f7bff;
+  --name-c: #b44dff;
+  --name-d: #ff4fa3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  width: fit-content;
+  margin: 0 auto 22px;
+  font-size: clamp(36px, 4.8vw, 62px);
+  font-weight: 800;
+  line-height: 1.3;
+  color: transparent;
+  background: linear-gradient(
+      90deg,
+      var(--name-a),
+      var(--name-b),
+      var(--name-c),
+      var(--name-d),
+      var(--name-a)
+    )
+    0 0 / 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  filter: drop-shadow(0 8px 30px color-mix(in srgb, var(--name-c) 40%, transparent));
+  animation: name-flow 6s linear infinite;
+}
+:root[data-theme="light"] .hero-name {
+  --name-a: #0891b2;
+  --name-b: #2563eb;
+  --name-c: #7c3aed;
+  --name-d: #db2777;
+}
+.hero-name::before,
+.hero-name::after {
+  content: "";
+  width: clamp(24px, 5vw, 64px);
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(to left, var(--name-a), transparent);
+}
+.hero-name::after {
+  background: linear-gradient(to right, var(--name-d), transparent);
+}
+@keyframes name-flow {
+  to {
+    background-position: 200% 0;
+  }
+}
+.hero-name + .eyebrow {
+  margin-bottom: 26px;
 }
 .hero h1 {
   font-size: clamp(48px, 6.5vw, 88px);
@@ -344,10 +489,10 @@ body {
   transform: rotate(-3deg);
 }
 .developer-note > img {
-  width: 43px;
-  height: 48px;
+  width: 46px;
+  height: 46px;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: 50%;
 }
 .developer-note small {
   font:
@@ -387,6 +532,37 @@ body {
 .expertise-strip {
   border-color: var(--line);
   background: var(--surface);
+}
+.expertise-strip .tech-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  white-space: nowrap;
+  color: var(--brand);
+  text-shadow: 0 0 18px color-mix(in srgb, var(--brand) 35%, transparent);
+  transition: text-shadow 0.3s;
+}
+.tech-badge svg {
+  width: 1.15em;
+  height: 1.15em;
+  flex: none;
+  fill: currentColor;
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--brand) 45%, transparent));
+  transition:
+    transform 0.3s,
+    filter 0.3s;
+}
+.expertise-strip .tech-badge:hover {
+  text-shadow: 0 0 14px color-mix(in srgb, var(--brand) 75%, transparent);
+}
+.tech-badge:hover svg {
+  transform: scale(1.15);
+  filter: drop-shadow(0 0 9px var(--brand));
+}
+:root[data-theme="light"] .expertise-strip .tech-badge {
+  /* Darken bright brands (React, Firebase) so they stay readable on white. */
+  color: color-mix(in srgb, var(--brand) 72%, #000);
+  text-shadow: none;
 }
 .featured {
   background: var(--surface);
@@ -454,9 +630,8 @@ body {
   padding: 10px 20px;
 }
 .filters button.active {
-  background: var(--surface);
+  background: transparent;
   border-color: transparent;
-  box-shadow: 0 2px 7px #0000000e;
   color: var(--text);
 }
 .progressive-image {
@@ -683,7 +858,7 @@ body {
   }
   .hello {
     font-size: 14px;
-    margin-block: 25px 15px;
+    margin-block: 0 4px;
   }
   .hero h1 {
     font-size: clamp(43px, 11.5vw, 66px);
@@ -857,6 +1032,13 @@ body {
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .hover-pill {
+    transition: none;
+  }
+  .floating-words > span > span,
+  .hero-name {
+    animation: none;
+  }
   .hero-copy,
   .studio-visual {
     animation: none;

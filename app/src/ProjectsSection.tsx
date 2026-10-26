@@ -1,6 +1,8 @@
 ﻿import { useState } from "react";
 import { ArrowUpLeft, Plus } from "lucide-react";
 import ProgressiveImage from "./ProgressiveImage";
+import { useHoverPill } from "./HoverPill";
+import { CardGlow } from "./CardGlow";
 import { assetUrl, useSite, type Project } from "./content/SiteContent";
 
 const filters = ["الكل", "GIS والخرائط", "أنظمة الويب", "مواقع ومنصات"];
@@ -21,6 +23,7 @@ export default function ProjectsSection({
     draft,
   } = useSite();
   const [filter, setFilter] = useState("الكل");
+  const filterPill = useHoverPill<HTMLDivElement>("button.active", filter);
   const visible = projects.filter((project) => matches(project, filter));
   return (
     <section
@@ -40,7 +43,14 @@ export default function ProjectsSection({
         <p>{copy.description}</p>
       </div>
       <div className="project-controls">
-        <div className="filters" role="group" aria-label="تصفية المشاريع">
+        <div
+          className="filters"
+          role="group"
+          aria-label="تصفية المشاريع"
+          ref={filterPill.ref}
+          {...filterPill.handlers}
+        >
+          {filterPill.pill}
           {filters.map((item) => (
             <button
               key={item}
@@ -71,6 +81,7 @@ export default function ProjectsSection({
             key={project.id}
             style={{ animationDelay: `${index * 45}ms` }}
           >
+            <CardGlow src={assetUrl(project.image)} />
             <button
               className="project-preview"
               onClick={() => onSelect(project)}

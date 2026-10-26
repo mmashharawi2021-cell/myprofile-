@@ -34,7 +34,7 @@ export default function App() {
   const { content: c, whatsapp, generalWhatsApp, loaded } = useSite();
   const [theme, setTheme] = useState(() => {
     try {
-      return localStorage.getItem("portfolio-studio-theme");
+      return localStorage.getItem("portfolio-theme-choice");
     } catch {
       return null;
     }
@@ -46,10 +46,14 @@ export default function App() {
   const first = c.projects[0];
   useEffect(() => {
     document.documentElement.dataset.theme = mode;
-    try {
-      localStorage.setItem("portfolio-studio-theme", mode);
-    } catch {}
   }, [mode]);
+  const toggleTheme = () => {
+    const next = mode === "dark" ? "light" : "dark";
+    setTheme(next);
+    try {
+      localStorage.setItem("portfolio-theme-choice", next);
+    } catch {}
+  };
   useEffect(() => {
     document.title = c.seo.title;
     document
@@ -377,7 +381,7 @@ export default function App() {
               aria-label={
                 mode === "dark" ? "تفعيل الوضع الفاتح" : "تفعيل الوضع الداكن"
               }
-              onClick={() => setTheme(mode === "dark" ? "light" : "dark")}
+              onClick={toggleTheme}
             >
               {mode === "dark" ? <Sun size={19} /> : <Moon size={19} />}
             </button>

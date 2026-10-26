@@ -9,7 +9,7 @@
     "whatsappMessage": "مرحبًا مهند، شاهدت موقعك وأرغب بمناقشة فكرة مشروع."
   },
   "theme": {
-    "defaultMode": "light",
+    "defaultMode": "dark",
     "accent": "#0066cc",
     "radius": 24,
     "fontSize": 16,

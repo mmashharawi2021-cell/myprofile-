@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
-import { approvedLogoSrc } from "./brandAsset";
+import { approvedLogoSrc, brandMarkPath } from "./brandAsset";
 
 type BrandIntroProps = {
   arabicName: string;
@@ -8,20 +8,8 @@ type BrandIntroProps = {
 };
 
 // Contours traced from the approved v2 logo preview (the artwork itself is unchanged).
-const tracePaths: string[] = [
-  "M 79 33 L 100 41 L 117 58 L 143 93 L 195 172 L 339 405 L 352 416 L 367 416 L 378 408 L 538 171 L 588 196 L 618 215 L 644 236 L 648 235 L 646 59 L 640 45 L 625 35 L 611 32 L 506 32 L 493 34 L 477 41 L 454 64 L 363 186 L 274 66 L 246 40 L 219 32 Z",
-  "M 138 124 L 87 141 L 44 161 L 42 200 L 42 307 L 44 309 L 138 274 Z",
-  "M 541 186 L 540 254 L 544 262 L 650 326 L 652 324 L 652 268 L 643 250 L 598 215 Z",
-  "M 148 122 L 146 270 L 149 272 L 224 244 L 225 240 Z",
-  "M 230 253 L 147 283 L 146 355 L 148 357 L 191 364 L 228 381 L 232 380 L 233 257 Z",
-  "M 541 274 L 541 387 L 550 399 L 592 423 L 592 303 Z",
-  "M 137 286 L 73 308 L 43 322 L 41 330 L 42 389 L 92 367 L 137 355 Z",
-  "M 601 308 L 600 428 L 633 449 L 645 449 L 652 444 L 655 438 L 654 353 L 646 338 Z",
-  "M 80 37 L 68 36 L 60 39 L 51 47 L 45 59 L 43 142 L 47 145 L 140 109 L 104 58 L 89 42 Z",
-  "M 137 367 L 126 367 L 99 375 L 44 401 L 41 406 L 41 425 L 44 434 L 50 440 L 66 445 L 134 448 L 137 445 Z",
-  "M 146 442 L 149 443 L 219 406 L 227 399 L 229 391 L 192 374 L 147 366 Z"
-];
-const englishName = "MUHANNAD AL-MASHHARAWI";
+const tracePaths: string[] = [brandMarkPath];
+const englishName = "MUHANAD AL-MASHHARAWI";
 const subtitle = "GIS ENGINEER & WEB SYSTEMS DEVELOPER";
 
 export default function BrandIntro({ arabicName, targetRef, onComplete }: BrandIntroProps) {
@@ -128,9 +116,9 @@ export default function BrandIntro({ arabicName, targetRef, onComplete }: BrandI
       aria-modal="true"
     >
       <div className="brand-intro-content">
-        <span className="brand-intro-top" aria-hidden="true">MUHANNAD · PERSONAL BRAND</span>
+        <span className="brand-intro-top" aria-hidden="true">MUHANAD · PERSONAL BRAND</span>
         <div className="brand-intro-symbol">
-          <svg className="brand-intro-outline" viewBox="0 0 700 465" aria-hidden="true">
+          <svg className="brand-intro-outline" viewBox="0 0 785 575" aria-hidden="true">
             <defs>
               <linearGradient id="brandIntroTraceGradient" x1="0" y1="1" x2="1" y2="0">
                 <stop stopColor="#0670dc" />

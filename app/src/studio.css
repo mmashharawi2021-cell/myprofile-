@@ -1057,3 +1057,47 @@ body {
     transition: none;
   }
 }
+
+
+/* Mobile horizontal-overflow fix: retain the layout and animations. */
+@media (max-width: 850px) {
+  /* clip (unlike hidden) does not create a scrolling ancestor for sticky navigation */
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  #root,
+  .hero-copy,
+  .studio-visual {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* The glow must not enlarge the page beyond the viewport. */
+  .studio-glow {
+    inset-inline: 0;
+  }
+
+  .hero-name,
+  .hero-swap {
+    max-width: 100%;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Grid tracks must be allowed to shrink on narrow phones. */
+  .expertise-strip .container > div {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .expertise-strip .tech-badge {
+    min-width: 0;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}

@@ -1,31 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#031D36"/>
-      <stop offset="0.55" stop-color="#071720"/>
-      <stop offset="1" stop-color="#151F20"/>
-    </linearGradient>
-    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#3995D4"/>
-      <stop offset="1" stop-color="#1F879A"/>
-    </linearGradient>
-    <filter id="blur"><feGaussianBlur stdDeviation="35"/></filter>
-  </defs>
-  <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle cx="260" cy="90" r="190" fill="#3995D4" opacity="0.22" filter="url(#blur)"/>
-  <circle cx="950" cy="80" r="210" fill="#1F879A" opacity="0.25" filter="url(#blur)"/>
-  <g opacity="0.12" stroke="#ffffff">
-    <path d="M0 90H1200M0 180H1200M0 270H1200M0 360H1200M0 450H1200M0 540H1200"/>
-    <path d="M90 0V630M180 0V630M270 0V630M360 0V630M450 0V630M540 0V630M630 0V630M720 0V630M810 0V630M900 0V630M990 0V630M1080 0V630"/>
-  </g>
-  <rect x="72" y="72" width="1056" height="486" rx="46" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-opacity="0.22"/>
-  <circle cx="986" cy="186" r="82" fill="#67D6E5" opacity="0.18" stroke="#67D6E5" stroke-opacity="0.55"/>
-  <rect x="830" y="316" width="174" height="118" rx="28" fill="#3995D4" opacity="0.20" stroke="#67D6E5" stroke-opacity="0.40" transform="rotate(9 917 375)"/>
-  <circle cx="900" cy="284" r="14" fill="#67D6E5"/>
-  <text x="96" y="164" fill="#BDEFFF" font-family="Arial, sans-serif" font-size="30" font-weight="700">GIS / Dashboards / Web Systems</text>
-  <text x="96" y="260" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="66" font-weight="900">Mohanad Al-Mashharawi</text>
-  <text x="96" y="330" fill="#EEEEF0" font-family="Arial, sans-serif" font-size="44" font-weight="700">مهندس GIS ومطور أنظمة ويب</text>
-  <text x="96" y="406" fill="#FFFFFF" opacity="0.78" font-family="Arial, sans-serif" font-size="30">أنظمة عملية، داشبوردات، خرائط تفاعلية، وتقارير واضحة</text>
-  <rect x="96" y="462" width="278" height="62" rx="22" fill="url(#accent)"/>
-  <text x="132" y="503" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="25" font-weight="800">ابدأ مشروعك بوضوح</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="مهند المشهراوي، Muhanad Al-Mashharawi - GIS engineer and web systems developer">
+<defs><linearGradient id="ogbg" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#07172B"/><stop offset=".6" stop-color="#07142A"/><stop offset="1" stop-color="#003A7E"/></linearGradient>
+<linearGradient id="accent" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#0066CC"/><stop offset="1" stop-color="#00C8F0"/></linearGradient>
+<clipPath id="mark"><path d="M 756 39 L 749 32 L 734 27 L 733 20 L 655 21 L 626 26 L 603 35 L 587 35 L 552 69 L 549 79 L 400 226 L 388 226 L 232 59 L 217 37 L 211 37 L 191 25 L 174 21 L 50 21 L 28 30 L 18 44 L 18 517 L 25 531 L 47 549 L 74 557 L 171 552 L 186 544 L 198 526 L 200 329 L 184 329 L 184 313 L 173 312 L 169 296 L 156 272 L 150 265 L 143 265 L 142 257 L 127 246 L 130 224 L 143 223 L 160 239 L 262 368 L 270 370 L 335 450 L 336 476 L 344 492 L 344 501 L 350 511 L 370 531 L 395 533 L 410 527 L 423 514 L 421 478 L 513 365 L 555 318 L 555 313 L 580 282 L 594 280 L 595 322 L 582 323 L 581 519 L 585 533 L 597 547 L 610 553 L 736 553 L 751 547 L 766 527 L 766 167 L 761 166 L 761 154 L 765 150 L 761 137 L 762 55 Z"/></clipPath>
+</defs>
+<rect width="1200" height="630" fill="url(#ogbg)"/>
+<g fill="none" stroke="#1684ED" opacity=".15" stroke-width="2">
+<path d="M0 150 Q240 20 430 158 T890 126 T1230 205"/><path d="M-40 215 Q220 95 425 240 T865 195 T1250 260"/><path d="M-50 280 Q220 167 425 322 T850 275 T1250 342"/><path d="M-40 352 Q220 244 425 410 T850 359 T1250 409"/>
+</g>
+<rect x="55" y="56" width="1090" height="518" rx="35" fill="#FFFFFF" fill-opacity=".035" stroke="#70C9FF" stroke-opacity=".3" stroke-width="2"/>
+<g transform="translate(74 184) scale(.43)"><path d="M 756 39 L 749 32 L 734 27 L 733 20 L 655 21 L 626 26 L 603 35 L 587 35 L 552 69 L 549 79 L 400 226 L 388 226 L 232 59 L 217 37 L 211 37 L 191 25 L 174 21 L 50 21 L 28 30 L 18 44 L 18 517 L 25 531 L 47 549 L 74 557 L 171 552 L 186 544 L 198 526 L 200 329 L 184 329 L 184 313 L 173 312 L 169 296 L 156 272 L 150 265 L 143 265 L 142 257 L 127 246 L 130 224 L 143 223 L 160 239 L 262 368 L 270 370 L 335 450 L 336 476 L 344 492 L 344 501 L 350 511 L 370 531 L 395 533 L 410 527 L 423 514 L 421 478 L 513 365 L 555 318 L 555 313 L 580 282 L 594 280 L 595 322 L 582 323 L 581 519 L 585 533 L 597 547 L 610 553 L 736 553 L 751 547 L 766 527 L 766 167 L 761 166 L 761 154 L 765 150 L 761 137 L 762 55 Z" fill="url(#accent)"/><g clip-path="url(#mark)" fill="none"><path d="M-40 250 Q80 110 205 210 T490 260 T790 240" stroke="#BFEFFF" stroke-width="16" opacity=".7"/><path d="M-20 330 Q110 210 234 330 T530 355 T810 335" stroke="#AEE9FF" stroke-width="13" opacity=".55"/></g></g>
+<text x="445" y="205" fill="#00C8F0" font-family="Arial,sans-serif" font-weight="700" font-size="25" letter-spacing="3">GIS  •  WEB DEVELOPMENT  •  DASHBOARDS</text>
+<text x="440" y="294" fill="#F5F8FD" font-family="Inter,Arial,sans-serif" font-weight="800" font-size="66">MUHANAD</text>
+<text x="442" y="360" fill="#86C6FF" font-family="Inter,Arial,sans-serif" font-weight="600" font-size="41" letter-spacing="4">AL-MASHHARAWI</text>
+<rect x="442" y="390" width="510" height="3" fill="url(#accent)" rx="3"/>
+<text x="440" y="445" fill="#E4F3FF" font-family="Tajawal,Arial,sans-serif" font-size="38" font-weight="700">مهند المشهراوي</text>
+<text x="440" y="494" fill="#B8CADD" font-family="Inter,Arial,sans-serif" font-size="22">GIS Engineer &amp; Web Systems Developer</text>
 </svg>

@@ -6,6 +6,7 @@ import "./styles.css";
 import "./studio.css";
 import "./projects.css";
 import "./content/content.css";
+import "./brand-intro.css";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>

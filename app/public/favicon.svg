@@ -1,10 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <defs>
-    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#3995d4"/>
-      <stop offset="100%" stop-color="#1f879a"/>
-    </linearGradient>
-  </defs>
-  <rect width="64" height="64" rx="14" fill="url(#g)"/>
-  <text x="32" y="44" font-family="Tajawal,Arial,sans-serif" font-size="34" font-weight="900" fill="#fff" text-anchor="middle">م</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Muhanad Al-Mashharawi icon">
+<defs><linearGradient id="iconBlue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0066CC"/><stop offset=".7" stop-color="#1684ED"/><stop offset="1" stop-color="#00C8F0"/></linearGradient></defs>
+<rect width="256" height="256" rx="54" fill="#07172B"/>
+<g transform="translate(17 54) scale(.283)"><path d="M 756 39 L 749 32 L 734 27 L 733 20 L 655 21 L 626 26 L 603 35 L 587 35 L 552 69 L 549 79 L 400 226 L 388 226 L 232 59 L 217 37 L 211 37 L 191 25 L 174 21 L 50 21 L 28 30 L 18 44 L 18 517 L 25 531 L 47 549 L 74 557 L 171 552 L 186 544 L 198 526 L 200 329 L 184 329 L 184 313 L 173 312 L 169 296 L 156 272 L 150 265 L 143 265 L 142 257 L 127 246 L 130 224 L 143 223 L 160 239 L 262 368 L 270 370 L 335 450 L 336 476 L 344 492 L 344 501 L 350 511 L 370 531 L 395 533 L 410 527 L 423 514 L 421 478 L 513 365 L 555 318 L 555 313 L 580 282 L 594 280 L 595 322 L 582 323 L 581 519 L 585 533 L 597 547 L 610 553 L 736 553 L 751 547 L 766 527 L 766 167 L 761 166 L 761 154 L 765 150 L 761 137 L 762 55 Z" fill="url(#iconBlue)" fill-rule="evenodd"/></g>
 </svg>

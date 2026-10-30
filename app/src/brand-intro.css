@@ -29,7 +29,7 @@
   z-index: 2000;
   display: grid;
   place-items: center;
-  background: radial-gradient(ellipse 55% 40% at center, #1237684f, transparent 74%), #080b12;
+  background: radial-gradient(ellipse 55% 40% at center, #0066CC36, transparent 74%), #07172B;
   color: #f5f5f7;
   overflow: hidden;
   text-align: center;
@@ -67,7 +67,7 @@
 }
 .brand-intro-symbol {
   width: clamp(230px, 45vw, 340px);
-  aspect-ratio: 700 / 465;
+  aspect-ratio: 785 / 575;
   position: relative;
   filter: drop-shadow(0 22px 45px #006cdb22);
 }
@@ -86,7 +86,7 @@
 .brand-intro-outline {
   fill: none;
   stroke: url(#brandIntroTraceGradient);
-  stroke-width: 2;
+  stroke-width: 3;
   stroke-linejoin: round;
   stroke-linecap: round;
   overflow: visible;
@@ -123,7 +123,7 @@
 .brand-intro-given { color: #f5f5f7; }
 .brand-intro-surname {
   color: transparent;
-  background: linear-gradient(100deg, #78b7ff 6%, #1684ed 95%);
+  background: linear-gradient(100deg, #5BAFFF 6%, #1684ED 95%);
   background-clip: text;
   -webkit-background-clip: text;
 }

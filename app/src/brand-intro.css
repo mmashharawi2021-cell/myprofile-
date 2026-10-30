@@ -1,0 +1,212 @@
+/* Approved personal brand, v2. Scoped: never changes existing site layout. */
+.portfolio-brand-mark {
+  overflow: hidden;
+  transition: opacity .2s ease;
+}
+.portfolio-brand-mark.is-pending { opacity: 0; }
+.portfolio-brand-mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 3px;
+  object-fit: contain;
+}
+.portfolio-brand-label {
+  display: block;
+  font-family: "Tajawal", sans-serif;
+  font-weight: 800;
+  color: var(--text);
+}
+.portfolio-brand-label .portfolio-brand-surname {
+  color: #78b7ff;
+}
+:root[data-theme="light"] .portfolio-brand-label .portfolio-brand-surname {
+  color: #0670dc;
+}
+.brand-intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(ellipse 55% 40% at center, #1237684f, transparent 74%), #080b12;
+  color: #f5f5f7;
+  overflow: hidden;
+  text-align: center;
+  isolation: isolate;
+  transition: opacity .55s ease;
+}
+.brand-intro-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(#ffffff05 1px, transparent 1px),
+                    linear-gradient(90deg, #ffffff05 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at center, black, transparent 78%);
+  pointer-events: none;
+  z-index: -1;
+}
+.brand-intro-overlay.is-leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+.brand-intro-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(92vw, 650px);
+  padding: 25px 0 64px;
+}
+.brand-intro-top {
+  margin-bottom: 26px;
+  color: #78b7ff8f;
+  font: 400 10px/1.4 "Inter", sans-serif;
+  letter-spacing: 3px;
+}
+.brand-intro-symbol {
+  width: clamp(230px, 45vw, 340px);
+  aspect-ratio: 700 / 465;
+  position: relative;
+  filter: drop-shadow(0 22px 45px #006cdb22);
+}
+.brand-intro-symbol .brand-intro-original,
+.brand-intro-outline {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.brand-intro-original {
+  opacity: 0;
+  clip-path: inset(100% 0 0 0);
+}
+.brand-intro-outline {
+  fill: none;
+  stroke: url(#brandIntroTraceGradient);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  overflow: visible;
+  filter: drop-shadow(0 0 5px #2f9cffaa);
+}
+.brand-intro-outline path {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  opacity: 0;
+}
+.brand-intro-overlay.is-running .brand-intro-outline path {
+  animation: brand-intro-trace 1.3s cubic-bezier(.4,0,.2,1) forwards;
+}
+.brand-intro-overlay.is-running .brand-intro-original {
+  animation: brand-intro-reveal .95s ease-out 1.24s forwards;
+}
+.brand-intro-overlay.is-running .brand-intro-outline {
+  animation: brand-intro-hide .3s ease 2.1s forwards;
+}
+.brand-intro-ar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: .28em;
+  margin-top: 24px;
+  min-height: 49px;
+  max-width: 100%;
+  font-family: "Tajawal", sans-serif;
+  font-size: clamp(27px, 5.3vw, 39px);
+  font-weight: 800;
+  line-height: 1.3;
+}
+.brand-intro-given { color: #f5f5f7; }
+.brand-intro-surname {
+  color: transparent;
+  background: linear-gradient(100deg, #78b7ff 6%, #1684ed 95%);
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+.brand-intro-en {
+  margin-top: 7px;
+  min-height: 23px;
+  max-width: 100%;
+  direction: ltr;
+  font: 600 clamp(10px, 2vw, 15px)/1.6 "Inter", sans-serif;
+  letter-spacing: .13em;
+  color: #b8c7dc;
+  overflow-wrap: anywhere;
+}
+.brand-intro-sub {
+  margin-top: 9px;
+  max-width: 100%;
+  font: 400 10px/1.6 "Inter", sans-serif;
+  letter-spacing: .55px;
+  color: #8791ab;
+  opacity: 0;
+  transition: opacity .5s ease;
+  overflow-wrap: anywhere;
+}
+.brand-intro-sub.is-visible { opacity: 1; }
+.brand-intro-progress {
+  height: 2px;
+  width: 170px;
+  margin-top: 33px;
+  border-radius: 99px;
+  background: #ffffff1b;
+  overflow: hidden;
+}
+.brand-intro-progress span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #0670dc, #78b7ff);
+  transition: width .35s ease;
+}
+.brand-intro-status {
+  margin-top: 14px;
+  color: #8791ab;
+  font: 400 11px "Tajawal", sans-serif;
+}
+.brand-intro-skip {
+  position: absolute;
+  inset-inline-end: 20px;
+  bottom: 20px;
+  padding: 11px 17px;
+  border: 1px solid #ffffff24;
+  border-radius: 999px;
+  background: #ffffff10;
+  color: #b8c7dc;
+  font-size: 12px;
+  font-weight: 700;
+}
+.brand-intro-skip:hover { background: #1684ed24; }
+.brand-intro-flight {
+  position: fixed;
+  z-index: 2001;
+  pointer-events: none;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 15px #0670dc35);
+}
+@keyframes brand-intro-trace {
+  from { stroke-dashoffset: 1000; opacity: 1; }
+  to { stroke-dashoffset: 0; opacity: 1; }
+}
+@keyframes brand-intro-reveal {
+  from { opacity: .8; clip-path: inset(100% 0 0 0); }
+  to { opacity: 1; clip-path: inset(0 0 0); }
+}
+@keyframes brand-intro-hide { to { opacity: 0; } }
+@media (max-width: 500px) {
+  .brand-intro-symbol { width: min(79vw, 310px); }
+  .brand-intro-ar { margin-top: 28px; font-size: 29px; }
+  .brand-intro-en { font-size: 11px; letter-spacing: 1px; }
+  .brand-intro-top { margin-bottom: 35px; }
+  .brand-intro-content { padding-bottom: 70px; }
+  .brand-intro-skip { bottom: max(20px, env(safe-area-inset-bottom)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .brand-intro-overlay, .brand-intro-flight, .portfolio-brand-mark { transition: none; }
+  .brand-intro-overlay.is-running .brand-intro-outline path,
+  .brand-intro-overlay.is-running .brand-intro-original,
+  .brand-intro-overlay.is-running .brand-intro-outline { animation: none; }
+}

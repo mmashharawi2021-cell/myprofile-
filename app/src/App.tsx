@@ -1,4 +1,6 @@
-﻿import { lazy, Suspense, useEffect, useState } from "react";
+﻿import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import BrandIntro from "./BrandIntro";
+import { approvedLogoSrc } from "./brandAsset";
 import ProjectsSection from "./ProjectsSection";
 import ProjectDialog from "./ProjectDialog";
 import ProgressiveImage from "./ProgressiveImage";
@@ -43,6 +45,27 @@ export default function App() {
     }
   });
   const mode = theme ?? c.theme.defaultMode;
+  const [showIntro, setShowIntro] = useState(() => {
+    if (typeof window === "undefined") return false;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
+    try {
+      return window.sessionStorage.getItem("portfolio-brand-intro-v2") !== "seen";
+    } catch {
+      return true;
+    }
+  });
+  const [brandVisible, setBrandVisible] = useState(!showIntro);
+  const brandAnchorRef = useRef<HTMLSpanElement>(null);
+  const completeIntro = useCallback(() => {
+    try {
+      window.sessionStorage.setItem("portfolio-brand-intro-v2", "seen");
+    } catch { /* Browsers that block session storage can still complete the intro. */ }
+    setBrandVisible(true);
+    setShowIntro(false);
+  }, []);
+  const nameParts = c.identity.name.trim().split(/\s+/);
+  const givenName = nameParts[0] ?? "مهند";
+  const familyName = nameParts.slice(1).join(" ");
   const [menuOpen, setMenuOpen] = useState(false);
   const navPill = useHoverPill<HTMLElement>(undefined, menuOpen);
   const [selected, setSelected] = useState<Project | null>(null);
@@ -358,11 +381,16 @@ export default function App() {
       <header className="site-header">
         <div className="container header-inner">
           <a href="#home" className="brand">
-            <span className="brand-symbol">
-              <Layers size={25} />
+            <span
+              ref={brandAnchorRef}
+              className={"brand-symbol portfolio-brand-mark" + (brandVisible ? "" : " is-pending")}
+            >
+              <img src={approvedLogoSrc} alt="" />
             </span>
             <span>
-              {c.identity.name}
+              <span className="portfolio-brand-label">
+                {givenName}{familyName && <> <span className="portfolio-brand-surname">{familyName}</span></>}
+              </span>
               <small>{c.identity.subtitle}</small>
             </span>
           </a>
@@ -419,8 +447,8 @@ export default function App() {
       </main>
       <footer className="container footer">
         <a className="brand" href="#home">
-          <span className="brand-symbol">
-            <Layers size={21} />
+          <span className="brand-symbol portfolio-brand-mark">
+            <img src={approvedLogoSrc} alt="" />
           </span>
           <span>{c.identity.name}</span>
         </a>
@@ -438,6 +466,13 @@ export default function App() {
       </nav>
       {selected && (
         <ProjectDialog project={selected} onClose={() => setSelected(null)} />
+      )}
+      {showIntro && (
+        <BrandIntro
+          arabicName={c.identity.name}
+          targetRef={brandAnchorRef}
+          onComplete={completeIntro}
+        />
       )}
       <button
         className="editor-launch"

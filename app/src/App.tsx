@@ -15,6 +15,10 @@ import {
   Check,
   Database,
   Github,
+  Facebook,
+  Instagram,
+  Linkedin,
+  Music2,
   Layers,
   Mail,
   Map,
@@ -71,6 +75,14 @@ export default function App() {
   const [selected, setSelected] = useState<Project | null>(null);
   const [editing, setEditing] = useState(false);
   const first = c.projects[0];
+  const socialLinks = [
+    { key: "linkedin", label: "LinkedIn", href: "https://www.linkedin.com/in/mohanad-elmashharawi-a4bb23148", Icon: Linkedin },
+    { key: "facebook", label: "Facebook", href: "https://www.facebook.com/share/18ytFS2SDE/", Icon: Facebook },
+    { key: "instagram", label: "Instagram", href: "https://www.instagram.com/mohanad.mashharawi/", Icon: Instagram },
+    { key: "tiktok", label: "TikTok", href: "https://www.tiktok.com/@mohanad.mashharawi", Icon: Music2 },
+    { key: "github", label: c.contact.githubLabel, href: c.identity.github, Icon: Github },
+    { key: "whatsapp", label: c.contact.whatsappLabel, href: generalWhatsApp, Icon: MessageCircle },
+  ];
   useEffect(() => {
     document.documentElement.dataset.theme = mode;
   }, [mode]);
@@ -293,20 +305,18 @@ export default function App() {
               {c.identity.email}
               <ArrowUpLeft size={19} />
             </a>
-            <div className="contact-social">
-              <a href={generalWhatsApp} target="_blank" rel="noreferrer">
-                <MessageCircle size={18} />
-                {c.contact.whatsappLabel}
-              </a>
-              <a href={c.identity.github} target="_blank" rel="noreferrer">
-                <Github size={18} />
-                {c.contact.githubLabel}
-              </a>
+            <nav className="contact-social" aria-label="حسابات التواصل الاجتماعي">
+              {socialLinks.map(({ key, label, href, Icon }) => (
+                <a key={key} href={href} target="_blank" rel="noopener noreferrer">
+                  <Icon size={18} aria-hidden="true" />
+                  {label}
+                </a>
+              ))}
               <a href={`mailto:${c.identity.email}`}>
-                <Mail size={18} />
+                <Mail size={18} aria-hidden="true" />
                 {c.contact.emailLabel}
               </a>
-            </div>
+            </nav>
           </div>
           <form
             className="contact-form"
@@ -453,6 +463,20 @@ export default function App() {
           <span>{c.identity.name}</span>
         </a>
         <span>{c.footer.note}</span>
+        <nav className="footer-social" aria-label="حسابات التواصل الاجتماعي أسفل الموقع">
+          {socialLinks.map(({ key, label, href, Icon }) => (
+            <a
+              key={key}
+              href={href}
+              aria-label={label}
+              title={label}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Icon size={18} aria-hidden="true" />
+            </a>
+          ))}
+        </nav>
         <small>
           © {new Date().getFullYear()} {c.footer.copyright}
         </small>

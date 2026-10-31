@@ -1,6 +1,8 @@
 name: Portfolio quality assurance
 
 on:
+  pull_request:
+    branches: [main]
   push:
     branches:
       - main
@@ -29,12 +31,19 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version-file: .nvmrc
           cache: npm
+      - name: Record QA run metadata
+        run: |
+          mkdir -p qa-artifacts
+          printf 'commit=%s\nref=%s\nevent=%s\nnode=%s\n' \
+            "$GITHUB_SHA" "$GITHUB_REF" "$GITHUB_EVENT_NAME" "$(node --version)" > qa-artifacts/run-info.txt
       - name: Install dependencies
         run: npm ci
       - name: TypeScript and production build
-        run: npm run build
+        run: |
+          set -o pipefail
+          npm run build 2>&1 | tee qa-artifacts/build.log
       - name: Render approved sharing image as PNG
         run: |
           sudo apt-get update -qq
@@ -42,9 +51,13 @@ jobs:
           rsvg-convert --width 1200 --height 630 --output docs/og-preview.png app/public/og-preview.svg
           test -s docs/og-preview.png
       - name: SEO metadata, sitemap and image checks
-        run: node --test scripts/seo.test.mjs
+        run: |
+          set -o pipefail
+          node --test scripts/seo.test.mjs 2>&1 | tee qa-artifacts/seo-tests.log
       - name: CMS API integration tests
-        run: node --test server/editor.test.mjs
+        run: |
+          set -o pipefail
+          node --test server/editor.test.mjs 2>&1 | tee qa-artifacts/cms-tests.log
       # Install Playwright separately: npm install in the root re-resolves
       # unrelated Rollup packages and can fail on registry replication.
       - name: Install browser test runtime
@@ -55,7 +68,9 @@ jobs:
         run: |
           "$RUNNER_TEMP/portfolio-playwright/node_modules/.bin/playwright" install --with-deps chromium
       - name: Browser regression tests
-        run: node scripts/qa-browser.mjs
+        run: |
+          set -o pipefail
+          node scripts/qa-browser.mjs 2>&1 | tee qa-artifacts/browser-tests.log
       - name: Upload QA report and mobile/desktop screenshots
         if: always()
         uses: actions/upload-artifact@v4
@@ -63,4 +78,4 @@ jobs:
           name: portfolio-qa
           path: qa-artifacts/
           if-no-files-found: ignore
-          retention-days: 14
+          retention-days: 30

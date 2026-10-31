@@ -7,7 +7,7 @@ import "./studio.css";
 import "./projects.css";
 import "./content/content.css";
 import "./brand-intro.css";
-import "./digital-glitch-intro.css";
+import "./reference-intro.css";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>

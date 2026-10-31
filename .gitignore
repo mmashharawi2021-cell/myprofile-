@@ -5,3 +5,4 @@ runtime/
 .env
 .env.*
 !.env.example
+*.tsbuildinfo

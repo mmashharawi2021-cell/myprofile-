@@ -64,6 +64,57 @@ try {
   await waitForPreview();
   browser = await chromium.launch({ headless: true, args: ["--disable-dev-shm-usage"] });
 
+  await check("Synthetic mobile and desktop performance baseline", async () => {
+    const measurements = [];
+    for (const width of [390, 1280]) {
+      const context = await browser.newContext({ viewport: { width, height: 800 }, reducedMotion: "reduce" });
+      await context.addInitScript(() => {
+        window.__portfolioVitals = { lcp: null, cls: 0 };
+        try {
+          new PerformanceObserver(list => {
+            const entries = list.getEntries();
+            if (entries.length) window.__portfolioVitals.lcp = entries.at(-1).startTime;
+          }).observe({ type: "largest-contentful-paint", buffered: true });
+        } catch {}
+        try {
+          new PerformanceObserver(list => {
+            for (const entry of list.getEntries()) {
+              if (!entry.hadRecentInput) window.__portfolioVitals.cls += entry.value;
+            }
+          }).observe({ type: "layout-shift", buffered: true });
+        } catch {}
+      });
+      const page = await context.newPage();
+      try {
+        await page.goto(base, { waitUntil: "networkidle" });
+        await page.locator(".project-card").first().waitFor();
+        const reading = await page.evaluate(() => {
+          const nav = performance.getEntriesByType("navigation")[0];
+          const paints = performance.getEntriesByType("paint");
+          const fcp = paints.find(entry => entry.name === "first-contentful-paint");
+          const assets = performance.getEntriesByType("resource").filter(entry =>
+            new URL(entry.name).origin === location.origin && /\.(?:js|css|webp|svg)(?:$|\?)/.test(entry.name));
+          return {
+            width: innerWidth,
+            fcpMs: fcp?.startTime ?? null,
+            lcpMs: window.__portfolioVitals?.lcp ?? null,
+            cls: window.__portfolioVitals?.cls ?? 0,
+            domReadyMs: nav?.domContentLoadedEventEnd ?? null,
+            loadMs: nav?.loadEventEnd ?? null,
+            assetCount: assets.length,
+            encodedAssetKB: Math.round(assets.reduce((sum, entry) => sum + (entry.encodedBodySize || 0), 0) / 1024),
+          };
+        });
+        measurements.push(reading);
+        assert.ok(reading.assetCount > 0, "Expect some same-origin site assets");
+      } finally { await context.close(); }
+    }
+    writeFileSync(output + "/performance-baseline.json", JSON.stringify({
+      note: "Synthetic Playwright Chromium, reduced motion, local Vite preview; not Lighthouse or real-user Core Web Vitals. Values vary by runner.",
+      measurements,
+    }, null, 2));
+  });
+
   await check("Static build has no CMS API requests or editor button", async () => {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: "reduce" });
     const page = await context.newPage();
@@ -122,6 +173,20 @@ try {
       } finally { await context.close(); }
     });
   }
+
+  await check("Offscreen card glow sampling waits until the card approaches the viewport", async () => {
+    const { context, page, errors } = await launchViewport(390, 700);
+    try {
+      const last = page.locator(".project-card").last();
+      const below = await last.evaluate(el => el.getBoundingClientRect().top > innerHeight + 200);
+      assert.ok(below, "Last project should start beyond the sampling threshold");
+      assert.equal(await last.locator(".card-glow.is-ready").count(), 0,
+        "Do not decode offscreen card images just to compute glow");
+      await last.scrollIntoViewIfNeeded();
+      await last.locator(".card-glow.is-ready").waitFor({timeout:10000});
+      assert.deepEqual(errors, []);
+    } finally { await context.close(); }
+  });
 
   await check("Floating words are less dense on phones", async () => {
     for (const [width, shown] of [[390, 5], [1280, 18]]) {
@@ -238,6 +303,10 @@ try {
       );
       assert.deepEqual(missingAlt, [], "Images need alt attributes (empty for decorative branding)");
       assert.equal(await page.locator(".contact-form label").count(), 3, "Form controls must have labels");
+      await page.locator(".skip-link").focus();
+      await page.keyboard.press("Enter");
+      assert.equal(await page.evaluate(() => document.activeElement?.id), "main",
+        "Skip link should move keyboard focus to the main landmark");
       const heroImage = page.locator(".hero-project-button img");
       assert.equal(await heroImage.getAttribute("fetchpriority"), "high");
       assert.equal(await heroImage.getAttribute("loading"), "eager");

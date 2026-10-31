@@ -87,8 +87,14 @@
 }
 .brand-intro-original {
   z-index: 1;
-  opacity: 0;
-  clip-path: inset(100% 0 0 0);
+  /* A faint mark appears on the very first frame while the laser draws it. */
+  opacity: .18;
+  clip-path: none;
+  filter: brightness(.62) saturate(.72);
+}
+/* The moving copy is the sole visible mark during the flight-to-header transition. */
+.brand-intro-symbol.is-flying {
+  visibility: hidden;
 }
 .brand-intro-outline {
   z-index: 3;
@@ -120,23 +126,19 @@
   will-change: transform, opacity;
 }
 .brand-intro-glitch-upper {
-  clip-path: inset(20% 0 56% 0);
-  filter: drop-shadow(2px 0 1px #40d5ff);
+  clip-path: inset(23% 0 53% 0);
+  filter: drop-shadow(3px 0 2px #89f6ff) saturate(1.5);
 }
 .brand-intro-glitch-lower {
-  clip-path: inset(63% 0 15% 0);
-  filter: drop-shadow(-2px 0 1px #1684ed);
+  clip-path: inset(57% 0 19% 0);
+  filter: drop-shadow(-3px 0 2px #2aaaff) saturate(1.4);
 }
 .brand-intro-laser-sweep {
-  position: absolute;
-  z-index: 5;
-  inset-inline: 3%;
-  height: 2px;
-  top: 0;
+  /* This is an SVG rect clipped to the actual M, never a full-width loose line. */
   opacity: 0;
   pointer-events: none;
-  background: linear-gradient(90deg, transparent, #84dfff 18%, #e7fdff 50%, #84dfff 82%, transparent);
-  box-shadow: 0 0 7px #41caff88, 0 0 14px #1684ed55;
+  filter: drop-shadow(0 0 4px #6bdbff88);
+  will-change: transform, opacity;
 }
 .brand-intro-overlay.is-running .brand-intro-laser-halo {
   animation: brand-intro-laser-trace 1.12s cubic-bezier(.36,0,.22,1) .08s both,
@@ -147,16 +149,16 @@
     brand-intro-laser-fade .3s ease 1.16s forwards;
 }
 .brand-intro-overlay.is-running .brand-intro-original {
-  animation: brand-intro-laser-reveal 1.07s cubic-bezier(.24,.8,.24,1) .29s forwards;
+  animation: brand-intro-laser-reveal 1.08s cubic-bezier(.24,.8,.24,1) 0s forwards;
 }
 .brand-intro-overlay.is-running .brand-intro-glitch-upper {
-  animation: brand-intro-glitch-upper .58s steps(1,end) .68s both;
+  animation: brand-intro-glitch-upper .5s steps(1,end) .77s both;
 }
 .brand-intro-overlay.is-running .brand-intro-glitch-lower {
-  animation: brand-intro-glitch-lower .58s steps(1,end) .72s both;
+  animation: brand-intro-glitch-lower .5s steps(1,end) .79s both;
 }
 .brand-intro-overlay.is-running .brand-intro-laser-sweep {
-  animation: brand-intro-sweep .95s ease-out .30s both;
+  animation: brand-intro-sweep .97s ease-out .18s both;
 }
 .brand-intro-ar {
   display: flex;
@@ -262,26 +264,25 @@
   to { opacity: 0; }
 }
 @keyframes brand-intro-laser-reveal {
-  0% { opacity: .08; clip-path: inset(100% 0 0 0); }
-  35% { opacity: .9; }
-  100% { opacity: 1; clip-path: inset(0 0 0 0); }
+  0% { opacity: .18; filter: brightness(.62) saturate(.72); }
+  45% { opacity: .62; filter: brightness(.85) saturate(.88); }
+  100% { opacity: 1; filter: brightness(1) saturate(1); }
 }
 @keyframes brand-intro-sweep {
-  0% { top: 0; opacity: 0; }
-  12% { opacity: .8; }
-  85% { opacity: .65; }
-  100% { top: 100%; opacity: 0; }
+  0% { transform: translateY(-32px); opacity: 0; }
+  12% { opacity: .42; }
+  72% { opacity: .4; }
+  100% { transform: translateY(575px); opacity: 0; }
 }
 @keyframes brand-intro-glitch-upper {
-  0%, 12%, 29%, 47%, 62%, 79%, 100% { opacity: 0; transform: translateX(0); }
-  13%, 28% { opacity: .85; transform: translateX(5px); }
-  48%, 61% { opacity: .7; transform: translateX(-4px); }
-  80%, 91% { opacity: .5; transform: translateX(2px); }
+  0%, 13%, 32%, 54%, 76%, 100% { opacity: 0; transform: translateX(0); }
+  14%, 31% { opacity: 1; transform: translateX(9px); }
+  55%, 75% { opacity: .92; transform: translateX(-7px); }
 }
 @keyframes brand-intro-glitch-lower {
-  0%, 18%, 34%, 52%, 70%, 100% { opacity: 0; transform: translateX(0); }
-  19%, 33% { opacity: .65; transform: translateX(-5px); }
-  53%, 69% { opacity: .7; transform: translateX(4px); }
+  0%, 19%, 39%, 59%, 81%, 100% { opacity: 0; transform: translateX(0); }
+  20%, 38% { opacity: .9; transform: translateX(-9px); }
+  60%, 80% { opacity: .86; transform: translateX(8px); }
 }
 @media (max-width: 500px) {
   .brand-intro-symbol { width: min(79vw, 310px); }
@@ -298,6 +299,6 @@
   .brand-intro-overlay.is-running .brand-intro-glitch-copy,
   .brand-intro-overlay.is-running .brand-intro-laser-sweep { animation: none; }
   .brand-intro-glitch-copy, .brand-intro-laser-sweep, .brand-intro-outline { display: none; }
-  .brand-intro-original { opacity: 1; clip-path: none; }
+  .brand-intro-original { opacity: 1; clip-path: none; filter: none; }
   .brand-intro-ar, .brand-intro-en { transition: none; transform: none; }
 }

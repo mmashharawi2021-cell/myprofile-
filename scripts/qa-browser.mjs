@@ -270,7 +270,7 @@ try {
       const overlay = page.locator(".brand-intro-overlay");
       await overlay.waitFor({ state: "visible" });
       const scene = overlay.locator(".brand-intro-orbital-scene");
-      assert.equal(await scene.locator("ellipse.brand-intro-orbit-line").count(), 2);
+      assert.equal(await scene.locator("path.brand-intro-orbit-line").count(), 2);
       assert.equal(await scene.locator("g.brand-intro-satellite").count(), 2);
       assert.equal(await scene.locator("animateMotion").count(), 2);
       assert.equal(await overlay.locator(".brand-intro-original").getAttribute("src"),

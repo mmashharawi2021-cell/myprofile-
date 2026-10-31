@@ -196,8 +196,72 @@
   to { opacity: 1; clip-path: inset(0 0 0); }
 }
 @keyframes brand-intro-hide { to { opacity: 0; } }
+/* SVG orbital detail, scoped to the introductory scene (the V4 mark is untouched). */
+.brand-intro-orbital-scene {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 158%;
+  height: auto;
+  aspect-ratio: 640 / 450;
+  overflow: visible;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity .35s ease;
+}
+.brand-intro-orbit-line {
+  fill: none;
+  stroke: url(#brandIntroOrbitGradient);
+  stroke-width: 1.6;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  opacity: 0;
+  filter: drop-shadow(0 0 3px #1684ed66);
+}
+.brand-intro-overlay.is-running .brand-intro-orbit-line-one {
+  animation: brand-intro-orbit-draw 1.7s ease-out .18s forwards;
+}
+.brand-intro-overlay.is-running .brand-intro-orbit-line-two {
+  animation: brand-intro-orbit-draw 1.9s ease-out .46s forwards;
+}
+.brand-intro-satellite {
+  opacity: 0;
+}
+.brand-intro-overlay.is-running .brand-intro-satellite-observation {
+  animation: brand-intro-satellite-appear .55s ease-out .75s forwards;
+}
+.brand-intro-overlay.is-running .brand-intro-satellite-communications {
+  animation: brand-intro-satellite-appear .55s ease-out 1.15s forwards;
+}
+.brand-intro-satellite-art {
+  filter: drop-shadow(0 0 5px #32c8ff8c);
+}
+.brand-intro-scan-beam {
+  opacity: .3;
+  animation: brand-intro-scan-pulse 1.8s ease-in-out infinite;
+}
+.brand-intro-overlay.is-leaving .brand-intro-orbital-scene {
+  opacity: 0;
+}
+@keyframes brand-intro-orbit-draw {
+  from { stroke-dashoffset: 1000; opacity: .2; }
+  to { stroke-dashoffset: 0; opacity: .86; }
+}
+@keyframes brand-intro-satellite-appear {
+  to { opacity: 1; }
+}
+@keyframes brand-intro-scan-pulse {
+  0%, 100% { opacity: .12; }
+  50% { opacity: .58; }
+}
 @media (max-width: 500px) {
   .brand-intro-symbol { width: min(79vw, 310px); }
+  .brand-intro-orbital-scene { width: 148%; }
+  .brand-intro-satellite-art { transform: scale(.84); }
   .brand-intro-ar { margin-top: 28px; font-size: 29px; }
   .brand-intro-en { font-size: 11px; letter-spacing: 1px; }
   .brand-intro-top { margin-bottom: 35px; }
@@ -205,6 +269,7 @@
   .brand-intro-skip { bottom: max(20px, env(safe-area-inset-bottom)); }
 }
 @media (prefers-reduced-motion: reduce) {
+  .brand-intro-orbital-scene { display: none; }
   .brand-intro-overlay, .brand-intro-flight, .portfolio-brand-mark { transition: none; }
   .brand-intro-overlay.is-running .brand-intro-outline path,
   .brand-intro-overlay.is-running .brand-intro-original,

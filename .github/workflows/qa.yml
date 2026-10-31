@@ -12,6 +12,7 @@ on:
       - "feature/laser-*"
       - "feature/digital-*"
       - "feature/faithful-*"
+      - "feature/approved-*"
   workflow_dispatch:
 
 permissions:

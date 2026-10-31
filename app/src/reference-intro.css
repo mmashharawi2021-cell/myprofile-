@@ -1,158 +1,119 @@
-/* Recreates 157547.mp4 timeline (3.39 s). No video is loaded. */
+/* Exact approved 6-second tracing sequence. Only end behavior changed to a logo-to-header flight. */
 .brand-intro-overlay.reference-intro {
-  background: radial-gradient(ellipse 45% 60% at 49% 44%, #071e3c 0%, #031125 55%, #020914 100%);
-  overflow: hidden;
-  isolation: isolate;
-  transition: none;
+  background: radial-gradient(ellipse 49% 58% at 50% 48%, #092b52 0%, #051831 56%, #020a18 100%);
+  isolation:isolate;
+  overflow:hidden;
+  transition:opacity .46s ease;
 }
-.reference-intro::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 23% 36% at 50% 49%, rgba(8, 93, 177, .17), transparent 83%);
-  opacity: .6;
-  pointer-events: none;
+.brand-intro-overlay.reference-intro::before {
+  content:"";
+  position:absolute;inset:0;
+  background-image: radial-gradient(#1b599842 .7px, transparent 1px);
+  background-size:46px 53px;opacity:.27;pointer-events:none;
+  mask-image:none;
 }
 .reference-intro-scene {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
+  position:absolute;inset:0;
+  display:grid;place-items:center;
+  overflow:hidden;
 }
-.reference-intro-noise {
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(#287bc840 .7px, transparent 1px);
-  background-size: 49px 58px;
-  opacity: .16;
-  pointer-events: none;
+.reference-intro-scene::after {
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent,#00182d0e 50%,transparent);
+  opacity:.6;pointer-events:none;
 }
 .reference-intro-symbol {
-  position: relative;
-  width: clamp(215px, 30vw, 380px);
-  aspect-ratio: 380/320;
-  filter: none;
-  isolation: isolate;
+  display:grid;place-items:center;
+  position:relative;
+  width:min(75vw,390px);
+  aspect-ratio:420/360;
+  z-index:2;
 }
-.reference-intro-symbol img {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  user-select: none;
-  pointer-events: none;
-  transform-origin: center;
+.reference-intro-symbol .m-svg {
+  display:block;
+  width:100%;
+  height:100%;
+  overflow:visible;
+  filter:drop-shadow(0 0 5px rgba(0,106,192,.2));
 }
-.reference-intro-ghost, .reference-intro-slice, .reference-intro-logo { opacity: 0; }
-.reference-intro.is-running .reference-intro-ghost { animation: ref-ghost 3390ms linear both; }
-.reference-intro.is-running .reference-intro-slice { animation: ref-fragment 1900ms steps(1,end) both; }
-.reference-intro.is-running .reference-intro-logo { animation: ref-logo 3390ms linear both; }
-.reference-intro-signals {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
+.reference-intro-symbol.is-flying { visibility:hidden; }
+.reference-intro .glitch-lines{z-index:1}
+.reference-intro .stage-glow{z-index:1}
+.soft-fill{opacity:0}
+.draw-stroke{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:100;stroke-dashoffset:100}
+.edge-segment,.edge-glow{transform:translateZ(0)}
+.pin-fill{fill:#06172c;opacity:0}
+.pin-outer{stroke:#54d6ff;stroke-width:3.5;filter:drop-shadow(0 0 4px #0ec4ff)}
+.pin-hole-fill{fill:#06182e;opacity:0}
+.pin-hole{stroke:#89e9ff;stroke-width:3.7}
+.pin-ground{stroke:#35caff;stroke-width:4.3}
+.pin-ring{stroke:#79e3ff;stroke-width:1.7}
+.local-pin{stroke:#52dcff;stroke-width:2.2}
+.small-pin-halo{fill:#27d5ff;opacity:0}
+.small-pin-dot{fill:#8beaff;opacity:0}
+.glitch-lines{position:absolute;inset:0;overflow:hidden;z-index:1;pointer-events:none}
+.glitch-line{position:absolute;display:block;height:2px;opacity:0;background:linear-gradient(90deg,transparent,#2db9ff 30%,#6eeaff 70%,transparent);filter:drop-shadow(0 0 3px #00aaff)}
+.glitch-line.white{background:linear-gradient(90deg,transparent,#d7edff 50%,transparent)}
+.glitch-line.green{background:linear-gradient(90deg,transparent,#61ee88 50%,transparent)}
+.glitch-line.red{background:linear-gradient(90deg,transparent,#ec5675 50%,transparent)}
+.glitch-line.blue{background:linear-gradient(90deg,transparent,#338be1 50%,transparent)}
+.glitch-line.yellow{background:linear-gradient(90deg,transparent,#ded28a 50%,transparent)}
+.stage-glow{position:absolute;inset:0;background:radial-gradient(ellipse 31% 37% at 50% 50%,#009bff42,transparent 78%);opacity:0;pointer-events:none;z-index:1}
+/* One 6-second run, no intro image revealed all at once. Every SVG stroke has its own draw timing. */
+.reference-intro.is-running .draw-stroke{animation:draw-one var(--trace-time) ease-out var(--start) both}
+.reference-intro.is-running .soft-fill{animation:fill-gradual 6s ease both}
+.reference-intro.is-running .pin-fill,.reference-intro.is-running .pin-hole-fill{animation:pin-fill-appear 6s ease both}
+.reference-intro.is-running .pin-hole-fill{animation-name:hole-fill-appear}
+.reference-intro.is-running .small-pin-halo,.reference-intro.is-running .small-pin-dot{animation:small-pin-appear 6s ease both}
+.reference-intro.is-running .glitch-line{animation:glitch-pulse .57s steps(1,end) var(--gdelay) both}
+.reference-intro.is-running .stage-glow{animation:glow-pulse 6s ease both}
+.reference-intro.is-running .m-svg{animation:overall-fade 6s linear both}
+.stage.paused *{animation-play-state:paused !important}
+@keyframes draw-one{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
+@keyframes fill-gradual{0%,49%{opacity:0}60%{opacity:.17}75%,100%{opacity:.35}}
+@keyframes pin-fill-appear{0%,66%{opacity:0}79%,100%{opacity:1}}
+@keyframes hole-fill-appear{0%,68%{opacity:0}80%,100%{opacity:1}}
+@keyframes small-pin-appear{0%,64%{opacity:0}77%,100%{opacity:1}}
+@keyframes glitch-pulse{0%,8%{opacity:0;transform:translateX(-20px) scaleX(.65)}10%,21%{opacity:.85;transform:translateX(0) scaleX(1)}22%,32%{opacity:0}33%,44%{opacity:.37;transform:translateX(13px) scaleX(.6)}45%,100%{opacity:0}}
+@keyframes glow-pulse{0%,72%{opacity:0}83%{opacity:.40}91%{opacity:.72}97%{opacity:.25}100%{opacity:0}}
+@keyframes overall-fade{0%,100%{opacity:1}}
+
+
+/* Disable final SVG fade: the approved drawing remains intact until its single-logo flight. */
+.reference-intro.is-running .m-svg { animation:overall-fade 6s linear both; }
+@keyframes overall-fade{0%,100%{opacity:1}}
+.brand-intro-flight.reference-intro-flight{
+  position:fixed;z-index:2001;
+  object-fit:contain;
+  pointer-events:none;
+  filter:drop-shadow(0 0 8px rgba(0,160,255,.45));
 }
-.reference-intro-signal {
-  position: absolute;
-  opacity: 0;
-  display: block;
-  background: linear-gradient(90deg, transparent 2%, #0b408b 15%, #55cdff 60%, transparent 98%);
-  box-shadow: 0 0 3px #087ddd66;
-  will-change: transform, opacity;
+.brand-intro-overlay.reference-intro.is-leaving{
+  opacity:0;
+  pointer-events:none;
 }
-.reference-intro-signal.s-white { background: linear-gradient(90deg, transparent, #dfebff 40%, transparent 90%); }
-.reference-intro-signal.s-green { background: linear-gradient(90deg, transparent, #68f957 35%, transparent); }
-.reference-intro-signal.s-red { background: linear-gradient(90deg, transparent, #ec4252 35%, #079cf4 55%, transparent); }
-.reference-intro-signal.s-yellow { background: linear-gradient(90deg, transparent, #d1c974 42%, transparent); }
-.reference-intro-signal.s-blue { background: linear-gradient(90deg, transparent, #0750a4 25%, #23c0ff 50%, transparent); }
-.reference-intro.is-running .reference-intro-signal { animation: ref-signal 650ms steps(1,end) both; }
-.reference-intro-flash, .reference-intro-decay {
-  display: block;
-  position: absolute;
-  inset: -28%;
-  pointer-events: none;
-  opacity: 0;
-  border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(0, 166, 255, .4), rgba(0, 92, 206, .11) 35%, transparent 67%);
-  mix-blend-mode: screen;
+.reference-intro-sr{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
 }
-.reference-intro.is-running .reference-intro-flash { animation: ref-flash 3390ms linear both; }
-.reference-intro-decay {
-  inset: 0;
-  border-radius: 0;
-  background: repeating-linear-gradient(0deg, transparent 0 9px, rgba(5, 28, 55, .55) 10px 11px, transparent 12px 17px);
+.reference-intro .brand-intro-skip {z-index:5}
+@media (max-width:520px){
+  .reference-intro-symbol{width:min(79vw,355px)}
+  .reference-intro .brand-intro-skip{bottom:max(20px,env(safe-area-inset-bottom))}
 }
-.reference-intro.is-running .reference-intro-decay { animation: ref-decay 3390ms steps(1,end) both; }
-.reference-intro-sr {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0,0,0,0);
-  white-space: nowrap;
-  border: 0;
-}
-@keyframes ref-ghost {
-  0%, 11% { opacity: 0; filter: brightness(.2) saturate(.5); }
-  17% { opacity: .18; filter: brightness(.22) saturate(.7); }
-  27% { opacity: .25; filter: brightness(.4) saturate(.9); }
-  36% { opacity: .09; filter: brightness(.3) saturate(.8); }
-  48% { opacity: .22; filter: brightness(.55); }
-  56%, 100% { opacity: 0; }
-}
-@keyframes ref-fragment {
-  0%, 6% { opacity: 0; transform: translate(var(--gx), var(--gy)); filter: brightness(.38); }
-  8%, 20% { opacity: .45; transform: translate(var(--gx), var(--gy)); filter: brightness(.6); }
-  21%, 31% { opacity: 0; }
-  32%, 48% { opacity: .78; transform: translate(calc(var(--gx) * -.4), 0); filter: brightness(1.2) drop-shadow(0 0 4px #2ab6ff); }
-  49%, 64% { opacity: .21; transform: translate(var(--gx), 2px); }
-  65%, 85% { opacity: .94; transform: translate(0,0); filter: brightness(1.25) drop-shadow(0 0 6px #16bdfb); }
-  86%, 100% { opacity: 0; transform: translate(0,0); }
-}
-@keyframes ref-logo {
-  0%, 27% { opacity: 0; filter: brightness(.3); }
-  32% { opacity: .15; filter: brightness(.5); }
-  41% { opacity: .30; filter: brightness(.82) drop-shadow(0 0 5px #009fff); }
-  49% { opacity: .70; filter: brightness(1.08) drop-shadow(0 0 7px #009fff); }
-  57%, 73% { opacity: 1; filter: brightness(1.1) drop-shadow(0 0 7px #0b88ff); }
-  80% { opacity: 1; filter: brightness(1.24) drop-shadow(0 0 11px #0099ff); }
-  86% { opacity: 1; filter: brightness(1.88) drop-shadow(0 0 21px #009dff); }
-  90% { opacity: 1; filter: brightness(2.1) drop-shadow(0 0 16px #00aeff); }
-  93% { opacity: .50; filter: brightness(.8); }
-  96% { opacity: .11; filter: brightness(.5); }
-  99%, 100% { opacity: 0; }
-}
-@keyframes ref-signal {
-  0%, 10% { opacity: 0; transform: translateX(-28px) scaleX(.5); }
-  11%, 16% { opacity: .88; transform: translateX(0) scaleX(1); }
-  17%, 28% { opacity: 0; }
-  29%, 34% { opacity: .52; transform: translateX(14px) scaleX(.6); }
-  35%, 100% { opacity: 0; }
-}
-@keyframes ref-flash {
-  0%, 70% { opacity: 0; transform: scale(.84); }
-  81% { opacity: .16; transform: scale(.96); }
-  87% { opacity: .8; transform: scale(1.04); }
-  91% { opacity: .42; transform: scale(1.08); }
-  97%, 100% { opacity: 0; transform: scale(1.12); }
-}
-@keyframes ref-decay {
-  0%, 91% { opacity: 0; }
-  92% { opacity: .45; }
-  93% { opacity: 0; }
-  94% { opacity: .7; }
-  96%, 100% { opacity: 0; }
-}
-@media (max-width: 600px) {
-  .reference-intro-symbol { width: min(69vw, 340px); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .reference-intro * { animation: none !important; }
-  .reference-intro-logo { opacity: 1; filter: none; }
-  .reference-intro-slice, .reference-intro-ghost, .reference-intro-signals { display: none; }
+@media (prefers-reduced-motion:reduce){
+  .reference-intro.is-running .draw-stroke,
+  .reference-intro.is-running .m-svg,
+  .reference-intro.is-running .soft-fill,
+  .reference-intro.is-running .pin-fill,
+  .reference-intro.is-running .pin-hole-fill,
+  .reference-intro.is-running .small-pin-halo,
+  .reference-intro.is-running .small-pin-dot,
+  .reference-intro.is-running .stage-glow,
+  .reference-intro.is-running .glitch-line{animation:none}
+  .reference-intro .draw-stroke{stroke-dashoffset:0}
+  .reference-intro .soft-fill{opacity:.4}
+  .reference-intro .pin-fill,
+  .reference-intro .pin-hole-fill,
+  .reference-intro .small-pin-dot {opacity:1}
 }

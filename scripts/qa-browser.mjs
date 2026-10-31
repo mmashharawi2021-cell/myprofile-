@@ -293,10 +293,11 @@ try {
       const a=await page.evaluate(async url=>{
         const res=await fetch(url);
         const svg=new DOMParser().parseFromString(await res.text(),"image/svg+xml");
-        return {ok:res.ok,curve:svg.querySelector("#m-clip path")?.getAttribute("d"),
+        return {ok:res.ok,parseError:Boolean(svg.querySelector("parsererror")),curve:svg.querySelector("#m-clip path")?.getAttribute("d"),
           pin:svg.querySelectorAll(".big-pin .pin-outer").length};
       },headerSrc);
       assert.ok(a.ok,"Destination logo must load");
+      assert.equal(a.parseError,false,"The finished header logo SVG must be valid XML");
       assert.equal(a.curve,shape,"Animated and destination logos must share same contour");
       assert.equal(a.pin,1,"Pin must be preserved in header logo");
       assert.deepEqual(errors,[]);

@@ -7,13 +7,13 @@ type Props = {
   onComplete: () => void;
 };
 
-const DRAW_DURATION_MS = 6000;
-const FLIGHT_DURATION_MS = 700;
+const DRAW_DURATION_MS = 1000;
+const FLIGHT_DURATION_MS = 350;
 
 /**
  * The approved standalone preview's SVG, segment timing, map details and pin are
- * reused without alteration. At the sixth second the completed mark travels
- * into the real header logo; no second logo appears during the handoff.
+ * reused without changing the artwork. The one-second drawing then flies
+ * into the header, completing the intro in about 1.35 seconds.
  */
 export default function ReferenceIntro({ targetRef, onComplete }: Props) {
   const [running, setRunning] = useState(false);
@@ -91,10 +91,10 @@ export default function ReferenceIntro({ targetRef, onComplete }: Props) {
         easing: "cubic-bezier(.25,.8,.2,1)",
         fill: "forwards",
       });
-      later(() => setLeaving(true), 110);
+      later(() => setLeaving(true), 70);
       void animation.finished.then(finish).catch(finish);
     }, DRAW_DURATION_MS);
-    later(finish, DRAW_DURATION_MS + FLIGHT_DURATION_MS + 1400);
+    later(finish, DRAW_DURATION_MS + FLIGHT_DURATION_MS + 150);
 
     const onEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") finish();

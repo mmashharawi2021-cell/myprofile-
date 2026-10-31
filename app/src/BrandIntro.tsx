@@ -7,13 +7,10 @@ type BrandIntroProps = {
   onComplete: () => void;
 };
 
-// Contours traced from the approved v2 logo preview (the artwork itself is unchanged).
+// The animated outline uses the same softened M path as the rendered brand mark.
 const tracePaths: string[] = [brandMarkPath];
 const englishName = "MUHANAD AL-MASHHARAWI";
 const subtitle = "GIS ENGINEER & WEB SYSTEMS DEVELOPER";
-// Shared SVG paths keep the drawn tracks and satellite motion in exact alignment.
-const observationOrbitPath = "M 551.97 126.54 A 252 116 -23 1 1 88.03 323.46 A 252 116 -23 1 1 551.97 126.54";
-const communicationOrbitPath = "M 518.01 343.97 A 231 106 31 1 1 121.99 106.03 A 231 106 31 1 1 518.01 343.97";
 
 export default function BrandIntro({ arabicName, targetRef, onComplete }: BrandIntroProps) {
   const [running, setRunning] = useState(false);
@@ -134,81 +131,7 @@ export default function BrandIntro({ arabicName, targetRef, onComplete }: BrandI
             ))}
           </svg>
           <img ref={sourceRef} src={approvedLogoSrc} className="brand-intro-original" alt="" />
-          {/* Decorative GIS orbits. The approved V4 monogram and its flight remain untouched. */}
-          <svg
-            className="brand-intro-orbital-scene"
-            viewBox="0 0 640 450"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <defs>
-              <linearGradient id="brandIntroOrbitGradient" x1="0" y1="0" x2="1" y2="1">
-                <stop stopColor="#1684ed" stopOpacity=".16" />
-                <stop offset=".5" stopColor="#8cdcff" stopOpacity=".9" />
-                <stop offset="1" stopColor="#00c8f0" stopOpacity=".23" />
-              </linearGradient>
-              <linearGradient id="brandIntroScanGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop stopColor="#5bafff" stopOpacity=".56" />
-                <stop offset="1" stopColor="#00c8f0" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-            <path
-              className="brand-intro-orbit-line brand-intro-orbit-line-one"
-              d={observationOrbitPath}
-              pathLength={1000}
-            />
-            <path
-              className="brand-intro-orbit-line brand-intro-orbit-line-two"
-              d={communicationOrbitPath}
-              pathLength={1000}
-            />
-            <g className="brand-intro-satellite brand-intro-satellite-observation">
-              <animateMotion
-                path={observationOrbitPath}
-                dur="7.2s" repeatCount="indefinite" rotate="auto" begin="0.15s"
-              />
-              <g className="brand-intro-satellite-art">
-                <path
-                  className="brand-intro-scan-beam"
-                  d="M-5 15 L-17 47 Q0 53 17 47 L5 15Z"
-                  fill="url(#brandIntroScanGradient)"
-                />
-                <path d="M-17 0H-12 M12 0H17" stroke="#bfefff" strokeWidth="2" />
-                <rect x="-42" y="-10" width="25" height="20" rx="2"
-                  fill="#125c9b" stroke="#8bd7ff" strokeWidth="1.6" />
-                <rect x="17" y="-10" width="25" height="20" rx="2"
-                  fill="#125c9b" stroke="#8bd7ff" strokeWidth="1.6" />
-                <path d="M-34 -10V10 M-25 -10V10 M25 -10V10 M34 -10V10"
-                  stroke="#bfefff" strokeWidth="1" opacity=".72" />
-                <rect x="-12" y="-13" width="24" height="26" rx="5"
-                  fill="#d9f8ff" stroke="#259de9" strokeWidth="2" />
-                <rect x="-6" y="-8" width="12" height="16" rx="2" fill="#176dc2" />
-                <circle cx="0" cy="0" r="3" fill="#92ecff" />
-                <path d="M0 -13V-20 M-5 -20H5" stroke="#bfefff" strokeWidth="2" strokeLinecap="round" />
-              </g>
-            </g>
-            <g className="brand-intro-satellite brand-intro-satellite-communications">
-              <animateMotion
-                path={communicationOrbitPath}
-                dur="9.1s" repeatCount="indefinite" rotate="auto"
-                begin="0.2s" keyPoints="1;0" keyTimes="0;1" calcMode="linear"
-              />
-              <g className="brand-intro-satellite-art">
-                <rect x="-32" y="-8" width="21" height="16" rx="2"
-                  fill="#125c9b" stroke="#8bd7ff" strokeWidth="1.5" />
-                <rect x="11" y="-8" width="21" height="16" rx="2"
-                  fill="#125c9b" stroke="#8bd7ff" strokeWidth="1.5" />
-                <path d="M-25 -8V8 M-18 -8V8 M18 -8V8 M25 -8V8"
-                  stroke="#bfefff" strokeWidth="1" opacity=".7" />
-                <rect x="-11" y="-11" width="22" height="22" rx="5"
-                  fill="#c6eeff" stroke="#1684ed" strokeWidth="2" />
-                <circle cx="0" cy="0" r="4" fill="#1684ed" />
-                <path d="M3 -11 L12 -22 M7 -26 Q18 -25 21 -14 Q11 -14 7 -26Z"
-                  fill="#c4eaff" stroke="#8bd7ff" strokeWidth="1.5" strokeLinejoin="round" />
-                <circle cx="12" cy="-22" r="2" fill="#e6fbff" />
-              </g>
-            </g>
-          </svg>
+
         </div>
         <div className="brand-intro-ar" dir="rtl" aria-label={arabicName}>
           <span className="brand-intro-given" aria-hidden="true">{given}</span>

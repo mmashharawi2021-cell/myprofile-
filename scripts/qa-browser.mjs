@@ -7,7 +7,7 @@ import { chromium } from "playwright";
 const base = "http://127.0.0.1:4173/myprofile-/";
 const output = "qa-artifacts";
 mkdirSync(output, { recursive: true });
-const server = spawn("npm", ["run", "preview", "--", "--host", "127.0.0.1", "--port", "4173", "--strictPort"], {
+const server = spawn(process.execPath, ["./node_modules/vite/bin/vite.js", "preview", "--host", "127.0.0.1", "--port", "4173", "--strictPort"], {
   stdio: ["ignore", "pipe", "pipe"],
   env: { ...process.env, CI: "1" },
 });
@@ -52,6 +52,7 @@ async function launchViewport(width, height) {
     window.open = (url) => { window.__qaWindowOpen = String(url); return null; };
   });
   const page = await context.newPage();
+  page.setDefaultTimeout(12000);
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto(base, { waitUntil: "domcontentloaded", timeout: 30000 });

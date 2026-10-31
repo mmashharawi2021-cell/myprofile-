@@ -314,7 +314,7 @@ try {
       assert.equal(svgArtwork.contourOpacity, ".3");
       assert.deepEqual(svgArtwork.waveStrokes, ["62", "37", "6"], "Geospatial wave should be lighter");
       assert.equal(svgArtwork.fadeMask, "url(#waveFadeMask)", "Right wave ending should fade naturally");
-      assert.deepEqual(svgArtwork.stops, ["0", ".83", "1"]);
+      assert.deepEqual(svgArtwork.stops, ["0", ".74", ".96", "1"]);
       assert.equal(svgArtwork.pin, 1, "The original location pin must remain");
       assert.deepEqual(svgArtwork.colors, ["#07172B", "#0066CC", "#1684ED", "#00C8F0"],
         "Approved blue gradient colors must remain unchanged");

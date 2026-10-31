@@ -171,7 +171,7 @@ export default function App() {
             </div>
           </div>
           <div className="glass-note developer-note">
-            <img src={assetUrl(c.identity.portrait)} alt={c.identity.name} />
+            <img src={assetUrl(c.identity.portrait)} alt={c.identity.name} loading="lazy" decoding="async" />
             <div>
               <strong>{c.identity.name}</strong>
               <small>{c.hero.role}</small>
@@ -315,7 +315,7 @@ export default function App() {
               const data = new FormData(event.currentTarget);
               window.open(
                 whatsapp(
-                  `مرحبًا، أرغب بمناقشة مشروع.\n\nالاسم: ${data.get("name")}\nنوع المشروع: ${data.get("type")}\nالفكرة: ${data.get("message")}`,
+                  `مرحبًا مهند، أرغب بالتواصل من خلال موقعك.\n\nالاسم/الجهة: ${data.get("name")}\nنوع الطلب: ${data.get("type")}\nالتفاصيل: ${data.get("message")}`,
                 ),
                 "_blank",
                 "noopener,noreferrer",

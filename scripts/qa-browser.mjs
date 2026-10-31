@@ -166,6 +166,55 @@ try {
     } finally { await context.close(); }
   });
 
+  await check("Recruitment inquiry uses the existing WhatsApp form", async () => {
+    const { context, page, errors } = await launchViewport(390, 844);
+    try {
+      const types = page.locator(".contact-form select[name='type']");
+      await types.selectOption({ label: "فرصة عمل أو تعاون مهني" });
+      await page.locator(".contact-form input[name='name']").fill("جهة توظيف اختبار");
+      await page.locator(".contact-form textarea[name='message']").fill("فرصة عمل في نظم المعلومات الجغرافية");
+      await page.locator(".contact-form button[type='submit']").click();
+      const opened = await page.evaluate(() => window.__qaWindowOpen);
+      assert.match(opened ?? "", /^https:\/\/wa\.me\/[0-9]+\?text=/);
+      const message = new URL(opened).searchParams.get("text");
+      assert.match(message ?? "", /فرصة عمل أو تعاون مهني/);
+      assert.match(message ?? "", /جهة توظيف اختبار/);
+      assert.match(message ?? "", /فرصة عمل في نظم المعلومات الجغرافية/);
+      assert.deepEqual(errors, []);
+    } finally { await context.close(); }
+  });
+
+  await check("Contact links, keyboard entry and accessibility landmarks", async () => {
+    const { context, page, errors } = await launchViewport(390, 844);
+    try {
+      assert.equal(await page.locator("main#main").count(), 1);
+      assert.equal(await page.locator("a.skip-link[href='#main']").count(), 1);
+      await page.keyboard.press("Tab");
+      assert.equal(await page.evaluate(() => document.activeElement?.classList.contains("skip-link")), true,
+        "Skip-to-content must be first in keyboard navigation");
+      const hrefs = await page.locator("#contact a").evaluateAll(links =>
+        links.map(a => ({ href: a.getAttribute("href"), text: a.textContent.trim() }))
+      );
+      assert.ok(hrefs.some(a => /^mailto:[^@\s]+@[^@\s]+\.[^@\s]+$/.test(a.href ?? "")), "Email link required");
+      assert.ok(hrefs.some(a => /^https:\/\/github\.com\//.test(a.href ?? "")), "GitHub link required");
+      assert.ok(hrefs.some(a => /^https:\/\/wa\.me\/[0-9]+\?text=/.test(a.href ?? "")), "WhatsApp link required");
+      const invalidExternal = await page.locator("a[target='_blank']").evaluateAll(links =>
+        links.filter(a => !/\b(noopener|noreferrer)\b/.test(a.getAttribute("rel") ?? "")).map(a => a.href)
+      );
+      assert.deepEqual(invalidExternal, [], "External links should protect the opener");
+      const missingAlt = await page.locator("img").evaluateAll(images =>
+        images.filter(img => !img.hasAttribute("alt")).map(img => img.currentSrc)
+      );
+      assert.deepEqual(missingAlt, [], "Images need alt attributes (empty for decorative branding)");
+      assert.equal(await page.locator(".contact-form label").count(), 3, "Form controls must have labels");
+      const heroImage = page.locator(".hero-project-button img");
+      assert.equal(await heroImage.getAttribute("fetchpriority"), "high");
+      assert.equal(await heroImage.getAttribute("loading"), "eager");
+      assert.equal(await page.locator(".project-card img[loading='lazy']").count(), 5);
+      assert.deepEqual(errors, []);
+    } finally { await context.close(); }
+  });
+
   await check("Intro is skippable without leaving page locked", async () => {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
     const page = await context.newPage();

@@ -357,7 +357,7 @@ try {
       assert.equal(sweepParent, "url(#brandIntroLaserClip)");
       assert.equal(await overlay.locator(".brand-intro-mark-stack > .brand-intro-laser-sweep").count(),
         0, "Unclipped horizontal beam must not remain in the DOM");
-      const svgPaths = await overlay.locator(".brand-intro-outline path").evaluateAll(els =>
+      const svgPaths = await overlay.locator(".brand-intro-laser-halo, .brand-intro-laser-core").evaluateAll(els =>
         els.map(el => el.getAttribute("d")));
       assert.equal(svgPaths.length, 2);
       assert.equal(svgPaths[0], svgPaths[1], "Glow and core follow the same brand M");

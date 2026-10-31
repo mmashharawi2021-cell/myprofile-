@@ -1,5 +1,5 @@
 ﻿import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
-import DigitalGlitchIntro from "./DigitalGlitchIntro";
+import ReferenceIntro from "./ReferenceIntro";
 import { approvedLogoSrc } from "./brandAsset";
 import ProjectsSection from "./ProjectsSection";
 import ProjectDialog from "./ProjectDialog";
@@ -53,7 +53,7 @@ export default function App() {
     if (typeof window === "undefined") return false;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
     try {
-      return window.sessionStorage.getItem("portfolio-digital-glitch-v1") !== "seen";
+      return window.sessionStorage.getItem("portfolio-video-reference-intro-v1") !== "seen";
     } catch {
       return true;
     }
@@ -62,7 +62,7 @@ export default function App() {
   const brandAnchorRef = useRef<HTMLSpanElement>(null);
   const completeIntro = useCallback(() => {
     try {
-      window.sessionStorage.setItem("portfolio-digital-glitch-v1", "seen");
+      window.sessionStorage.setItem("portfolio-video-reference-intro-v1", "seen");
     } catch { /* Browsers that block session storage can still complete the intro. */ }
     setBrandVisible(true);
     setShowIntro(false);
@@ -492,7 +492,7 @@ export default function App() {
         <ProjectDialog project={selected} onClose={() => setSelected(null)} />
       )}
       {showIntro && (
-        <DigitalGlitchIntro targetRef={brandAnchorRef} onComplete={completeIntro} />
+        <ReferenceIntro onComplete={completeIntro} />
       )}
       <button
         className="editor-launch"

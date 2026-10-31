@@ -64,6 +64,22 @@ try {
   await waitForPreview();
   browser = await chromium.launch({ headless: true, args: ["--disable-dev-shm-usage"] });
 
+  await check("Static build has no CMS API requests or editor button", async () => {
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: "reduce" });
+    const page = await context.newPage();
+    const apiRequests = [];
+    page.on("request", request => {
+      if (new URL(request.url()).pathname.startsWith("/myprofile-/api/")) {
+        apiRequests.push(request.url());
+      }
+    });
+    try {
+      await page.goto(base, { waitUntil: "networkidle" });
+      assert.equal(await page.locator(".editor-launch").count(), 0, "Static build must hide the CMS editor button");
+      assert.deepEqual(apiRequests, [], "Static build must not request CMS API endpoints");
+    } finally { await context.close(); }
+  });
+
   for (const [width, height] of [[320, 700], [390, 844], [768, 1024], [1280, 800]]) {
     await check("Responsive & first-project image: " + width, async () => {
       const { context, page, errors } = await launchViewport(width, height);

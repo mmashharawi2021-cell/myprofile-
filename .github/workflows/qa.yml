@@ -8,6 +8,7 @@ on:
       - "feature/seo-*"
       - "feature/social-*"
       - "feature/satellite-*"
+      - "feature/smooth-*"
   workflow_dispatch:
 
 permissions:

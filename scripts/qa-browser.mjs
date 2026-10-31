@@ -123,6 +123,21 @@ try {
     });
   }
 
+  await check("Floating words are less dense on phones", async () => {
+    for (const [width, shown] of [[390, 5], [1280, 18]]) {
+      const { context, page, errors } = await launchViewport(width, 800);
+      try {
+        const counts = await page.locator(".floating-words > span").evaluateAll(nodes => ({
+          total: nodes.length,
+          visible: nodes.filter(node => getComputedStyle(node).display !== "none").length,
+        }));
+        assert.equal(counts.total, 18, "Preserve the 18 decorative words");
+        assert.equal(counts.visible, shown, "Unexpected word density at width " + width);
+        assert.deepEqual(errors, []);
+      } finally { await context.close(); }
+    }
+  });
+
   await check("Project filters, dialog navigation and Escape", async () => {
     const { context, page, errors } = await launchViewport(390, 844);
     try {
@@ -333,7 +348,7 @@ try {
     } finally {await context.close();}
   });
 
-  await check("Approved r13 loader draws individual M segments, map roads and both pins", async () => {
+  await check("Accelerated r13 loader preserves SVG segments, map roads and both pins", async () => {
     const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:"no-preference"});
     const page=await context.newPage();
     const errors=[];
@@ -342,46 +357,55 @@ try {
       await page.goto(base,{waitUntil:"domcontentloaded"});
       const overlay=page.locator(".brand-intro-overlay.reference-intro");
       await overlay.waitFor({state:"visible"});
-      assert.equal(await overlay.locator("video, source, .reference-intro-slice, .brand-intro-progress").count(),0,
-        "Approved loader must draw the paths instead of showing a video, slices or fake progress");
-      assert.ok(await overlay.locator(".outline-layer .edge-segment").count()>=24);
-      assert.ok(await overlay.locator(".outline-layer .edge-glow").count()>=24);
-      assert.ok(await overlay.locator(".local-road, .topo-stroke, .main-road, .neon-road").count()>=65);
-      assert.equal(await overlay.locator(".glitch-line").count(),16);
-      assert.equal(await overlay.locator(".big-pin .pin-outer").count(),1);
-      assert.equal(await overlay.locator(".big-pin .pin-hole").count(),1);
-      assert.equal(await overlay.locator(".small-pin .local-pin").count(),1);
-      const shape=await overlay.locator("#m-clip path").getAttribute("d");
-      assert.match(shape??"",/Q 7 8/,"M must retain approved radius-13 curves");
-      const svgSource=await overlay.locator(".m-svg").getAttribute("viewBox");
-      assert.equal(svgSource,"-20 -20 420 360");
       await page.waitForFunction(()=>document.querySelector(".reference-intro.is-running")!==null);
-      const style=await overlay.locator(".edge-segment").first().evaluate(el=>{
-        const s=getComputedStyle(el);
-        return {name:s.animationName,iterations:s.animationIterationCount,dash:s.strokeDasharray};
+      // Collect all overlay-dependent data at once: the introduction lasts only 1.35s.
+      const snapshot=await overlay.evaluate(el=>{
+        const style=getComputedStyle(el.querySelector(".edge-segment"));
+        return {
+          fake:el.querySelectorAll("video, source, .reference-intro-slice, .brand-intro-progress").length,
+          edges:el.querySelectorAll(".outline-layer .edge-segment").length,
+          glows:el.querySelectorAll(".outline-layer .edge-glow").length,
+          roads:el.querySelectorAll(".local-road, .topo-stroke, .main-road, .neon-road").length,
+          glitches:el.querySelectorAll(".glitch-line").length,
+          pin:el.querySelectorAll(".big-pin .pin-outer").length,
+          hole:el.querySelectorAll(".big-pin .pin-hole").length,
+          localPin:el.querySelectorAll(".small-pin .local-pin").length,
+          shape:el.querySelector("#m-clip path")?.getAttribute("d"),
+          viewBox:el.querySelector(".m-svg")?.getAttribute("viewBox"),
+          animation:style.animationName, iterations:style.animationIterationCount, dash:style.strokeDasharray,
+        };
       });
-      assert.match(style.name,/draw-one/);
-      assert.equal(style.iterations,"1");
-      assert.ok(style.dash.includes("100"));
+      assert.equal(snapshot.fake,0);
+      assert.ok(snapshot.edges>=24 && snapshot.glows>=24 && snapshot.roads>=65);
+      assert.equal(snapshot.glitches,16);
+      assert.equal(snapshot.pin,1);
+      assert.equal(snapshot.hole,1);
+      assert.equal(snapshot.localPin,1);
+      assert.match(snapshot.shape??"",/Q 7 8/);
+      assert.equal(snapshot.viewBox,"-20 -20 420 360");
+      assert.match(snapshot.animation,/draw-one/);
+      assert.equal(snapshot.iterations,"1");
+      assert.ok(snapshot.dash.includes("100"));
       const headerSrc=await page.locator(".site-header .portfolio-brand-mark img").getAttribute("src");
-      assert.match(headerSrc??"",/traced-r13-logo\.svg\?v=approved-r13-traced-v2/);
-      const a=await page.evaluate(async url=>{
-        const res=await fetch(url);
-        const svg=new DOMParser().parseFromString(await res.text(),"image/svg+xml");
-        return {ok:res.ok,parseError:Boolean(svg.querySelector("parsererror")),curve:svg.querySelector("#m-clip path")?.getAttribute("d"),
+      assert.match(headerSrc??"",/traced-r13-logo\\.svg\\?v=approved-r13-traced-v2/);
+      const asset=await page.evaluate(async url=>{
+        const response=await fetch(url);
+        const svg=new DOMParser().parseFromString(await response.text(),"image/svg+xml");
+        return {ok:response.ok,parseError:Boolean(svg.querySelector("parsererror")),
+          curve:svg.querySelector("#m-clip path")?.getAttribute("d"),
           pin:svg.querySelectorAll(".big-pin .pin-outer").length};
       },headerSrc);
-      assert.ok(a.ok,"Destination logo must load");
-      assert.equal(a.parseError,false,"The finished header logo SVG must be valid XML");
-      assert.equal(a.curve,shape,"Animated and destination logos must share same contour");
-      assert.equal(a.pin,1,"Pin must be preserved in header logo");
+      assert.ok(asset.ok);
+      assert.equal(asset.parseError,false);
+      assert.equal(asset.curve,snapshot.shape);
+      assert.equal(asset.pin,1);
+      await overlay.waitFor({state:"detached",timeout:2500});
+      assert.notEqual(await page.locator("html").evaluate(el=>el.style.overflow),"hidden");
       assert.deepEqual(errors,[]);
-      await page.getByRole("button",{name:/تخطي المقدمة/}).click();
-      await overlay.waitFor({state:"detached"});
     } finally {await context.close();}
   });
 
-  await check("Approved six-second drawing follows original SVG segment timing", async () => {
+  await check("One-second SVG stroke timings preserve progressive drawing", async () => {
     const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:"no-preference"});
     const page=await context.newPage();
     const errors=[];
@@ -392,24 +416,21 @@ try {
       await overlay.waitFor({state:"visible"});
       await page.waitForFunction(()=>document.querySelector(".reference-intro.is-running")!==null);
       const map=await overlay.locator(".local-road").first().evaluate(el=>({
-        duration:getComputedStyle(el).animationDuration,
-        delay:getComputedStyle(el).animationDelay,
+        duration:parseFloat(getComputedStyle(el).animationDuration),
+        delay:parseFloat(getComputedStyle(el).animationDelay),
         source:el.getAttribute("d"),
       }));
-      assert.match(map.duration,/0\.(53|61|69)s/);
-      assert.match(map.delay,/1\.63s/);
+      assert.ok(map.duration>=0.085 && map.duration<=0.12,"Original stroke duration should scale by six: "+map.duration);
+      assert.ok(map.delay>=0.26 && map.delay<=0.29,"Original stroke delay should scale by six: "+map.delay);
       assert.ok(map.source?.startsWith("M"));
-      await page.waitForTimeout(2500);
-      const resolved=await overlay.evaluate(el=>({
-        edges:[...el.querySelectorAll(".edge-segment")].filter(p=>Number.parseFloat(getComputedStyle(p).strokeDashoffset)<2).length,
+      await page.waitForTimeout(490);
+      const drawn=await overlay.evaluate(el=>({
+        edges:[...el.querySelectorAll(".edge-segment")].filter(p=>parseFloat(getComputedStyle(p).strokeDashoffset)<2).length,
         total:el.querySelectorAll(".edge-segment").length,
-        pinned:el.querySelector(".big-pin .pin-outer")!==null,
       }));
-      assert.ok(resolved.edges>=resolved.total*.7,"Contour must be drawn progressively by 2.5s");
-      assert.ok(resolved.pinned);
+      assert.ok(drawn.edges>=drawn.total*.7,"Contour should be substantially drawn within 0.5s");
       await page.screenshot({path:output+"/approved-trace-mid.png",animations:"allow"});
-      await page.getByRole("button",{name:/تخطي المقدمة/}).click();
-      await overlay.waitFor({state:"detached"});
+      await overlay.waitFor({state:"detached",timeout:2500});
       assert.deepEqual(errors,[]);
     } finally {await context.close();}
   });
@@ -431,14 +452,13 @@ try {
         assert.ok(metrics.left>=0&&metrics.right<=metrics.w&&metrics.top>=0&&metrics.bottom<=metrics.h,
           "Approved M must fit viewport: "+JSON.stringify(metrics));
         await page.screenshot({path:output+"/approved-traced-intro-"+width+".png"});
-        await page.getByRole("button",{name:/تخطي المقدمة/}).click();
-        await overlay.waitFor({state:"detached"});
+        await overlay.waitFor({state:"detached",timeout:2500});
         assert.deepEqual(errors,[]);
       } finally {await context.close();}
     }
   });
 
-  await check("Approved 6s scene hands off a single matching M to real header", async () => {
+  await check("One-second drawing hands a single matching M to the header", async () => {
     for(const width of [390,1280]) {
       const context=await browser.newContext({viewport:{width,height:800},reducedMotion:"no-preference"});
       const page=await context.newPage();
@@ -450,9 +470,9 @@ try {
         await overlay.waitFor({state:"visible"});
         const began=Date.now();
         await page.waitForFunction(()=>document.querySelector(".reference-intro-flight")!==null,
-          {timeout:9000});
+          {timeout:2500});
         const time=Date.now()-began;
-        assert.ok(time>=5000&&time<8500,"The flight should begin after the 6s drawing, measured "+time);
+        assert.ok(time>=600&&time<1600,"Flight should start after about 1s, measured "+time);
         const flight=await page.evaluate(()=>{
           const source=document.querySelector(".reference-intro-symbol");
           const img=document.querySelector(".reference-intro-flight");
@@ -469,7 +489,7 @@ try {
         assert.ok(flight.loaded,"Preloaded asset should be visible while moving");
         assert.equal(flight.headerPending,true,"Destination mark must remain hidden until transfer finishes");
         await page.screenshot({path:output+"/approved-traced-flight-"+width+".png"});
-        await overlay.waitFor({state:"detached",timeout:3000});
+        await overlay.waitFor({state:"detached",timeout:2200});
         assert.equal(await page.locator(".reference-intro-flight").count(),0);
         assert.equal(await page.locator(".site-header .portfolio-brand-mark.is-pending").count(),0);
         assert.notEqual(await page.locator("html").evaluate(el=>el.style.overflow),"hidden");

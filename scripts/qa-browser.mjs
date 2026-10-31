@@ -276,7 +276,7 @@ try {
       const traced = await overlay.locator(".brand-intro-outline path").getAttribute("d");
       assert.match(traced ?? "", /\bC\b/, "M outline should use smooth cubic Bezier curves");
       const logoUrl = await overlay.locator(".brand-intro-original").getAttribute("src");
-      assert.match(logoUrl ?? "", /^\/myprofile-\/assets\/brand\/muhanad-symbol\.svg\?v=smooth-m-/,
+      assert.match(logoUrl ?? "", /^\/myprofile-\/assets\/brand\/muhanad-symbol\.svg\?v=v4-refined-/,
         "The intro must load the updated logo asset");
       const svg = await page.evaluate(async (url) => {
         const response = await fetch(url);
@@ -295,10 +295,95 @@ try {
       assert.equal(svg.visibleOutline, traced, "Visible outline must match the intro trace");
       assert.equal(svg.contourCount, 3,
         "All three logo contours should share the exact smooth path");
+      const svgArtwork = await page.evaluate(async url => {
+        const response = await fetch(url);
+        const image = new DOMParser().parseFromString(await response.text(), "image/svg+xml");
+        const flow = image.querySelector("#geo-flow");
+        const gradient = image.querySelector("#waveFade");
+        return {
+          contourLines: image.querySelectorAll("#contours path").length,
+          contourOpacity: image.querySelector("#contours")?.getAttribute("opacity"),
+          waveStrokes: [...(flow?.querySelectorAll("path") ?? [])].map(p => p.getAttribute("stroke-width")),
+          fadeMask: flow?.getAttribute("mask"),
+          stops: [...(gradient?.querySelectorAll("stop") ?? [])].map(s => s.getAttribute("offset")),
+          pin: image.querySelectorAll('g[transform="translate(610 125)"] circle').length,
+          colors: [...image.querySelectorAll("#blue stop")].map(s => s.getAttribute("stop-color")),
+        };
+      }, logoUrl);
+      assert.equal(svgArtwork.contourLines, 4, "Topographic lines should be simplified to four");
+      assert.equal(svgArtwork.contourOpacity, ".3");
+      assert.deepEqual(svgArtwork.waveStrokes, ["62", "37", "6"], "Geospatial wave should be lighter");
+      assert.equal(svgArtwork.fadeMask, "url(#waveFadeMask)", "Right wave ending should fade naturally");
+      assert.deepEqual(svgArtwork.stops, ["0", ".74", ".96", "1"]);
+      assert.equal(svgArtwork.pin, 1, "The original location pin must remain");
+      assert.deepEqual(svgArtwork.colors, ["#07172B", "#0066CC", "#1684ED", "#00C8F0"],
+        "Approved blue gradient colors must remain unchanged");
       assert.deepEqual(errors, []);
       await page.getByRole("button", { name: /تخطي المقدمة/ }).click();
       await overlay.waitFor({ state: "detached", timeout: 5000 });
     } finally { await context.close(); }
+  });
+
+  await check("Refined V4 loader legibility, full names and layout", async () => {
+    for (const [width, height] of [[320, 700], [390, 844], [1280, 800]]) {
+      const context = await browser.newContext({
+        viewport: { width, height },
+        reducedMotion: "no-preference",
+      });
+      const page = await context.newPage();
+      const errors = [];
+      page.on("pageerror", error => errors.push(error.message));
+      try {
+        await page.goto(base, { waitUntil: "domcontentloaded" });
+        const overlay = page.locator(".brand-intro-overlay");
+        await overlay.waitFor({ state: "visible" });
+        await page.waitForFunction(() =>
+          document.querySelector(".brand-intro-en")?.textContent === "MUHANAD AL-MASHHARAWI",
+          { timeout: 11000 });
+        const metrics = await overlay.evaluate(el => {
+          const top = el.querySelector(".brand-intro-top");
+          const status = el.querySelector(".brand-intro-status");
+          const logo = el.querySelector(".brand-intro-symbol");
+          const name = el.querySelector(".brand-intro-ar");
+          const english = el.querySelector(".brand-intro-en");
+          const progress = el.querySelector(".brand-intro-progress");
+          const box = node => {
+            const r = node.getBoundingClientRect();
+            return { top: r.top, bottom: r.bottom, left: r.left, right: r.right };
+          };
+          return {
+            topColor: getComputedStyle(top).color,
+            statusColor: getComputedStyle(status).color,
+            top: box(top), logo: box(logo), name: box(name),
+            english: box(english), progress: box(progress),
+            viewportWidth: window.innerWidth,
+            viewportHeight: window.innerHeight,
+            actualArabic: name.textContent,
+            actualEnglish: english.textContent,
+          };
+        });
+        assert.equal(metrics.topColor, "rgb(167, 196, 229)");
+        assert.equal(metrics.statusColor, "rgb(185, 205, 228)");
+        assert.equal(metrics.actualArabic.replace(/\\s/g, ""), "مهندالمشهراوي",
+          "Arabic segments should complete and be visually separated by flex gap");
+        assert.equal(metrics.actualEnglish, "MUHANAD AL-MASHHARAWI");
+        for (const item of [metrics.logo, metrics.name, metrics.english, metrics.progress]) {
+          assert.ok(item.left >= -1 && item.right <= metrics.viewportWidth + 1,
+            "Loader item must fit viewport width: " + JSON.stringify({ width, item }));
+          assert.ok(item.top >= -1 && item.bottom <= metrics.viewportHeight + 1,
+            "Loader item must fit viewport height: " + JSON.stringify({ height, item }));
+        }
+        assert.ok(metrics.progress.top - metrics.english.bottom < 65,
+          "English name and progress should not be separated by excessive whitespace");
+        await page.screenshot({
+          path: output + "/refined-v4-intro-" + width + ".png",
+          animations: "allow",
+        });
+        await page.getByRole("button", { name: /تخطي المقدمة/ }).click();
+        await overlay.waitFor({ state: "detached", timeout: 5000 });
+        assert.deepEqual(errors, []);
+      } finally { await context.close(); }
+    }
   });
 
   await check("V4 loader respects reduced motion", async () => {

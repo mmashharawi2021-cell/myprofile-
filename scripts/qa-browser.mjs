@@ -257,7 +257,7 @@ try {
     }
   });
 
-  await check("V4 loader draws two moving GIS satellite orbits", async () => {
+  await check("V4 intro has no orbits and uses a smooth M logo", async () => {
     const context = await browser.newContext({
       viewport: { width: 390, height: 844 },
       reducedMotion: "no-preference",
@@ -269,29 +269,29 @@ try {
       await page.goto(base, { waitUntil: "domcontentloaded" });
       const overlay = page.locator(".brand-intro-overlay");
       await overlay.waitFor({ state: "visible" });
-      const scene = overlay.locator(".brand-intro-orbital-scene");
-      assert.equal(await scene.locator("path.brand-intro-orbit-line").count(), 2);
-      assert.equal(await scene.locator("g.brand-intro-satellite").count(), 2);
-      assert.equal(await scene.locator("animateMotion").count(), 2);
-      assert.equal(await overlay.locator(".brand-intro-original").getAttribute("src"),
-        "/myprofile-/assets/brand/muhanad-symbol.svg",
-        "Approved artwork must remain the only logo image in the intro");
-      const satellite = scene.locator(".brand-intro-satellite-observation");
-      await satellite.waitFor({ state: "attached" });
-      await page.waitForTimeout(1000);
-      const start = await satellite.boundingBox();
-      await page.waitForTimeout(450);
-      const end = await satellite.boundingBox();
-      assert.ok(start && end && Math.hypot(end.x - start.x, end.y - start.y) > 2,
-        "The observation satellite should travel around its orbit");
-      const orbitState = await scene.locator(".brand-intro-orbit-line-one").evaluate(el =>
-        getComputedStyle(el).strokeDashoffset);
-      assert.ok(Number.parseFloat(orbitState) < 1000, "Orbit drawing should progress");
-      await page.screenshot({ path: output + "/v4-satellite-loader-mobile.png", animations: "allow" });
+      assert.equal(await overlay.locator(".brand-intro-orbital-scene").count(), 0,
+        "No orbital scene may remain");
+      assert.equal(await overlay.locator("animateMotion, .brand-intro-satellite").count(), 0,
+        "No satellites or SMIL motion may remain");
+      const traced = await overlay.locator(".brand-intro-outline path").getAttribute("d");
+      assert.match(traced ?? "", /\bC\b/, "M outline should use smooth cubic Bezier curves");
+      const logoUrl = await overlay.locator(".brand-intro-original").getAttribute("src");
+      assert.match(logoUrl ?? "", /^\/myprofile-\/assets\/brand\/muhanad-symbol\.svg\?v=smooth-m-/,
+        "The intro must load the updated logo asset");
+      const svg = await page.evaluate(async (url) => {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Logo asset not available: " + response.status);
+        return new DOMParser().parseFromString(await response.text(), "image/svg+xml");
+      }, logoUrl);
+      const clipPath = svg.querySelector("#shape path")?.getAttribute("d");
+      const visibleOutline = svg.querySelector('path[stroke="#6ABAFD"]')?.getAttribute("d");
+      assert.equal(clipPath, traced, "Clip mask must use the same smooth outline as the intro");
+      assert.equal(visibleOutline, traced, "Visible outline must match the intro trace");
+      assert.equal(svg.querySelectorAll("path[d='" + traced + "']").length, 3,
+        "All three logo contours should share the exact smooth path");
+      assert.deepEqual(errors, []);
       await page.getByRole("button", { name: /تخطي المقدمة/ }).click();
       await overlay.waitFor({ state: "detached", timeout: 5000 });
-      assert.notEqual(await page.locator("html").evaluate(el => el.style.overflow), "hidden");
-      assert.deepEqual(errors, []);
     } finally { await context.close(); }
   });
 

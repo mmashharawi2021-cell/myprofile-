@@ -174,6 +174,24 @@ try {
     });
   }
 
+  await check("All project thumbnails load without broken local images", async () => {
+    const { context, page, errors } = await launchViewport(390, 844);
+    try {
+      const thumbnails = page.locator(".project-card .project-preview img");
+      assert.equal(await thumbnails.count(), 5, "Expected all five project cards");
+      for (let i = 0; i < await thumbnails.count(); i++) {
+        const thumbnail = thumbnails.nth(i);
+        await thumbnail.scrollIntoViewIfNeeded();
+        const loaded = await thumbnail.evaluate(async image => {
+          try { await image.decode(); } catch {}
+          return image.complete && image.naturalWidth > 0;
+        });
+        assert.ok(loaded, "Broken project thumbnail at index " + i);
+      }
+      assert.deepEqual(errors, [], "Project image scrolling must not trigger JavaScript exceptions");
+    } finally { await context.close(); }
+  });
+
   await check("Offscreen card glow sampling waits until the card approaches the viewport", async () => {
     const { context, page, errors } = await launchViewport(390, 700);
     try {

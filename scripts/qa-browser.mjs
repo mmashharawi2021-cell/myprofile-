@@ -281,13 +281,19 @@ try {
       const svg = await page.evaluate(async (url) => {
         const response = await fetch(url);
         if (!response.ok) throw new Error("Logo asset not available: " + response.status);
-        return new DOMParser().parseFromString(await response.text(), "image/svg+xml");
+        const image = new DOMParser().parseFromString(await response.text(), "image/svg+xml");
+        const clipPath = image.querySelector("#shape path")?.getAttribute("d");
+        return {
+          clipPath,
+          visibleOutline: image.querySelector('path[stroke="#6ABAFD"]')?.getAttribute("d"),
+          contourCount: [...image.querySelectorAll("path")].filter(
+            path => path.getAttribute("d") === clipPath,
+          ).length,
+        };
       }, logoUrl);
-      const clipPath = svg.querySelector("#shape path")?.getAttribute("d");
-      const visibleOutline = svg.querySelector('path[stroke="#6ABAFD"]')?.getAttribute("d");
-      assert.equal(clipPath, traced, "Clip mask must use the same smooth outline as the intro");
-      assert.equal(visibleOutline, traced, "Visible outline must match the intro trace");
-      assert.equal(svg.querySelectorAll("path[d='" + traced + "']").length, 3,
+      assert.equal(svg.clipPath, traced, "Clip mask must use the same smooth outline as the intro");
+      assert.equal(svg.visibleOutline, traced, "Visible outline must match the intro trace");
+      assert.equal(svg.contourCount, 3,
         "All three logo contours should share the exact smooth path");
       assert.deepEqual(errors, []);
       await page.getByRole("button", { name: /تخطي المقدمة/ }).click();

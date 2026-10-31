@@ -53,7 +53,7 @@ export default function App() {
     if (typeof window === "undefined") return false;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
     try {
-      return window.sessionStorage.getItem("portfolio-video-reference-intro-v1") !== "seen";
+      return window.sessionStorage.getItem("portfolio-traced-r13-intro-v2") !== "seen";
     } catch {
       return true;
     }
@@ -62,7 +62,7 @@ export default function App() {
   const brandAnchorRef = useRef<HTMLSpanElement>(null);
   const completeIntro = useCallback(() => {
     try {
-      window.sessionStorage.setItem("portfolio-video-reference-intro-v1", "seen");
+      window.sessionStorage.setItem("portfolio-traced-r13-intro-v2", "seen");
     } catch { /* Browsers that block session storage can still complete the intro. */ }
     setBrandVisible(true);
     setShowIntro(false);
@@ -492,7 +492,7 @@ export default function App() {
         <ProjectDialog project={selected} onClose={() => setSelected(null)} />
       )}
       {showIntro && (
-        <ReferenceIntro onComplete={completeIntro} />
+        <ReferenceIntro targetRef={brandAnchorRef} onComplete={completeIntro} />
       )}
       <button
         className="editor-launch"

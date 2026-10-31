@@ -6,6 +6,8 @@
   type ReactNode,
 } from "react";
 import defaults from "./default.json";
+
+export const CMS_ENABLED = import.meta.env.DEV || import.meta.env.VITE_CMS === "true";
 export type SiteContent = typeof defaults;
 export type Project = SiteContent["projects"][number];
 /**
@@ -73,6 +75,10 @@ export function SiteProvider({ children }: { children: ReactNode }) {
     setConnected(true);
   };
   useEffect(() => {
+    if (!CMS_ENABLED) {
+      setLoaded(true);
+      return;
+    }
     let active = true;
     api("content")
       .then((value) => {

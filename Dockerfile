@@ -5,6 +5,7 @@ RUN npm ci
 COPY app ./app
 COPY shared ./shared
 COPY tsconfig.json vite.config.ts ./
+ENV VITE_CMS=true
 RUN npm run build
 
 FROM node:24-alpine

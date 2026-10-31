@@ -10,6 +10,8 @@ docker compose up -d --build
 
 افتح: http://localhost:8080/myprofile-/ ثم اضغط **تحرير**.
 
+المتغير `VITE_CMS=true` يفعّل اتصال لوحة التحرير عند البناء؛ يضبطه Docker تلقائيًا ولا تحتاجه GitHub Pages.
+
 الموقع والخادم يعملان في حاوية مستقلة، وقاعدة SQLite والصور المرفوعة محفوظة في volume اسمه `myprofile-cms_portfolio_data`. إعادة بناء الحاوية أو إعادة تشغيلها لا تمسح المحتوى.
 
 ## التحرير

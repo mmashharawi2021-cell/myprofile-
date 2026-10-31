@@ -1,89 +1,139 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
+import approvedSvg from "./traced-r13-m.svg?raw";
+import { approvedLogoSrc } from "./brandAsset";
 
-type Props = { onComplete: () => void };
+type Props = {
+  targetRef: RefObject<HTMLSpanElement>;
+  onComplete: () => void;
+};
+
+const DRAW_DURATION_MS = 6000;
+const FLIGHT_DURATION_MS = 700;
 
 /**
- * Recreates the submitted 3.39-second reference scene with DOM/SVG/CSS animations.
- * The video is NOT embedded or requested by the browser.
+ * The approved standalone preview's SVG, segment timing, map details and pin are
+ * reused without alteration. At the sixth second the completed mark travels
+ * into the real header logo; no second logo appears during the handoff.
  */
-const ASSET = `${import.meta.env.BASE_URL}assets/brand/video-reference-mark.svg`;
-const DURATION = 3390;
-const slices = [
-  [0, 13, -36, -6, 80], [9, 21, 24, -13, 180], [19, 31, -32, 9, 380],
-  [29, 42, 33, -6, 140], [40, 52, -25, 10, 300], [50, 62, 24, -8, 90],
-  [60, 72, -37, 11, 410], [70, 83, 26, -3, 270], [81, 94, -18, 7, 350],
-  [90, 100, 30, -4, 240], [12, 30, 19, 2, 490], [47, 68, -22, -5, 510],
-] as const;
-const signals = [
-  [13, 19, 69, 1, "s-cyan", 170], [20, 26, 23, 3, "s-white", 230],
-  [28, 22, 40, 2, "s-red", 240], [31, 41, 15, 3, "s-cyan", 205],
-  [44, 29, 8, 4, "s-green", 285], [51, 34, 55, 2, "s-cyan", 360],
-  [62, 40, 14, 2, "s-white", 400], [67, 46, 18, 3, "s-blue", 255],
-  [74, 37, 31, 2, "s-green", 330], [82, 51, 8, 4, "s-red", 300],
-  [22, 55, 30, 2, "s-white", 275], [35, 66, 17, 2, "s-blue", 370],
-  [50, 61, 36, 2, "s-cyan", 420], [70, 60, 17, 2, "s-yellow", 310],
-  [86, 48, 14, 3, "s-cyan", 240], [17, 73, 18, 2, "s-white", 420],
-] as const;
+export default function ReferenceIntro({ targetRef, onComplete }: Props) {
+  const [running, setRunning] = useState(false);
+  const [leaving, setLeaving] = useState(false);
+  const symbolRef = useRef<HTMLDivElement>(null);
+  const flightRef = useRef<HTMLImageElement | null>(null);
+  const doneRef = useRef(false);
+  const completeRef = useRef(onComplete);
+  completeRef.current = onComplete;
 
-export default function ReferenceIntro({ onComplete }: Props) {
-  const [active, setActive] = useState(false);
-  const done = useRef(false);
-  const onCompleteRef = useRef(onComplete);
-  onCompleteRef.current = onComplete;
+  const finish = () => {
+    if (doneRef.current) return;
+    doneRef.current = true;
+    flightRef.current?.remove();
+    flightRef.current = null;
+    completeRef.current();
+  };
 
   useEffect(() => {
-    const previousOverflow = document.documentElement.style.overflow;
+    const priorOverflow = document.documentElement.style.overflow;
     document.documentElement.style.overflow = "hidden";
-    const close = () => {
-      if (done.current) return;
-      done.current = true;
-      onCompleteRef.current();
+    const timeouts: number[] = [];
+    const later = (callback: () => void, delay: number) => {
+      timeouts.push(window.setTimeout(() => {
+        if (!doneRef.current) callback();
+      }, delay));
     };
-    const keydown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") close();
+    // Preload precisely the same completed SVG displayed by the destination brand.
+    const preloaded = new Image();
+    preloaded.src = approvedLogoSrc;
+    const frame = window.requestAnimationFrame(() => setRunning(true));
+
+    later(() => {
+      const source = symbolRef.current?.getBoundingClientRect();
+      const target = targetRef.current?.getBoundingClientRect();
+      const supported = typeof document.createElement("div").animate === "function";
+      if (!source || !target || target.width < 8 || target.height < 8 || !supported) {
+        finish();
+        return;
+      }
+
+      const flight = document.createElement("img");
+      flight.src = approvedLogoSrc;
+      flight.alt = "";
+      flight.setAttribute("aria-hidden", "true");
+      flight.className = "brand-intro-flight reference-intro-flight";
+      Object.assign(flight.style, {
+        left: source.left + "px",
+        top: source.top + "px",
+        width: source.width + "px",
+        height: source.height + "px",
+      });
+      document.body.appendChild(flight);
+      flightRef.current = flight;
+
+      // The copy is present before the inline SVG is hidden: only one M is visible.
+      symbolRef.current?.classList.add("is-flying");
+
+      const tw = Math.min(Math.max(target.width - 4, 1), 66);
+      const th = Math.min(Math.max(target.height - 4, 1), 56);
+      const destination = {
+        left: target.left + (target.width - tw) / 2,
+        top: target.top + (target.height - th) / 2,
+        width: tw,
+        height: th,
+      };
+
+      const animation = flight.animate([
+        { left: source.left + "px", top: source.top + "px",
+          width: source.width + "px", height: source.height + "px" },
+        { left: destination.left + "px", top: destination.top + "px",
+          width: destination.width + "px", height: destination.height + "px" },
+      ], {
+        duration: FLIGHT_DURATION_MS,
+        easing: "cubic-bezier(.25,.8,.2,1)",
+        fill: "forwards",
+      });
+      later(() => setLeaving(true), 110);
+      void animation.finished.then(finish).catch(finish);
+    }, DRAW_DURATION_MS);
+    later(finish, DRAW_DURATION_MS + FLIGHT_DURATION_MS + 1400);
+
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") finish();
     };
-    document.addEventListener("keydown", keydown);
-    const frame = window.requestAnimationFrame(() => setActive(true));
-    const completion = window.setTimeout(close, DURATION);
-    const failSafe = window.setTimeout(close, DURATION + 600);
+    document.addEventListener("keydown", onEscape);
+
     return () => {
       window.cancelAnimationFrame(frame);
-      window.clearTimeout(completion);
-      window.clearTimeout(failSafe);
-      document.removeEventListener("keydown", keydown);
-      document.documentElement.style.overflow = previousOverflow;
+      timeouts.forEach(window.clearTimeout);
+      document.removeEventListener("keydown", onEscape);
+      flightRef.current?.remove();
+      flightRef.current = null;
+      document.documentElement.style.overflow = priorOverflow;
     };
-  }, []);
+  }, [targetRef]);
 
   return (
-    <div className={`brand-intro-overlay reference-intro${active ? " is-running" : ""}`}
-      role="dialog" aria-modal="true" aria-label="مقدمة الشعار الجغرافي">
-      <div className="reference-intro-scene" aria-hidden="true">
-        <div className="reference-intro-noise" />
-        <div className="reference-intro-signals">
-          {signals.map(([left, top, width, height, tone, delay], index) => (
-            <span key={index} className={`reference-intro-signal ${tone}`} style={{
-              left: `${left}%`, top: `${top}%`, width: `${width}%`, height: `${height}px`,
-              animationDelay: `${delay}ms`,
-            }} />
-          ))}
-        </div>
-        <div className="reference-intro-symbol">
-          <img className="reference-intro-ghost" src={ASSET} alt="" draggable={false} />
-          {slices.map(([top, bottom, dx, dy, delay], index) => (
-            <img key={index} className="reference-intro-slice" src={ASSET} alt=""
-              draggable={false} style={{
-                clipPath: `inset(${top}% 0 ${100 - bottom}% 0)`,
-                "--gx": `${dx}px`, "--gy": `${dy}px`,
-                animationDelay: `${delay}ms`,
-              } as CSSProperties} />
-          ))}
-          <img className="reference-intro-logo" src={ASSET} alt="" draggable={false} />
-          <span className="reference-intro-flash" />
-          <span className="reference-intro-decay" />
-        </div>
+    <div
+      className={"brand-intro-overlay reference-intro" +
+        (running ? " is-running" : "") + (leaving ? " is-leaving" : "")}
+      role="dialog"
+      aria-modal="true"
+      aria-label="مقدمة رسم الشعار الجغرافي"
+    >
+      <div className="reference-intro-scene">
+        <div className="glitch-lines" aria-hidden="true"
+          dangerouslySetInnerHTML={{ __html: GLITCH_LINES }} />
+        <div className="stage-glow" aria-hidden="true" />
+        <div ref={symbolRef} className="reference-intro-symbol"
+          dangerouslySetInnerHTML={{ __html: approvedSvg }} />
       </div>
       <span className="reference-intro-sr" role="status">جارٍ فتح الموقع</span>
+      <button type="button" className="brand-intro-skip" onClick={finish}>
+        تخطي المقدمة ←
+      </button>
     </div>
   );
 }
+
+// Authored, static decorations copied from the approved standalone preview.
+// There is no remote HTML, network content, or user input in these SVG/DOM layers.
+const GLITCH_LINES = "<span class=\"glitch-line cyan\" style=\"left:12%;top:20%;width:66%;--gdelay:0.160s\"></span>\n<span class=\"glitch-line white\" style=\"left:24%;top:26%;width:34%;--gdelay:0.275s\"></span>\n<span class=\"glitch-line blue\" style=\"left:17%;top:33%;width:28%;--gdelay:0.390s\"></span>\n<span class=\"glitch-line red\" style=\"left:67%;top:30%;width:21%;--gdelay:0.505s\"></span>\n<span class=\"glitch-line cyan\" style=\"left:46%;top:38%;width:20%;--gdelay:0.620s\"></span>\n<span class=\"glitch-line green\" style=\"left:10%;top:44%;width:29%;--gdelay:0.735s\"></span>\n<span class=\"glitch-line cyan\" style=\"left:77%;top:42%;width:15%;--gdelay:0.850s\"></span>\n<span class=\"glitch-line red\" style=\"left:31%;top:55%;width:22%;--gdelay:0.965s\"></span>\n<span class=\"glitch-line blue\" style=\"left:75%;top:60%;width:18%;--gdelay:1.080s\"></span>\n<span class=\"glitch-line cyan\" style=\"left:18%;top:64%;width:25%;--gdelay:1.195s\"></span>\n<span class=\"glitch-line white\" style=\"left:42%;top:74%;width:29%;--gdelay:1.310s\"></span>\n<span class=\"glitch-line yellow\" style=\"left:61%;top:77%;width:15%;--gdelay:1.425s\"></span>\n<span class=\"glitch-line cyan\" style=\"left:32%;top:24%;width:20%;--gdelay:1.540s\"></span>\n<span class=\"glitch-line blue\" style=\"left:55%;top:65%;width:34%;--gdelay:1.655s\"></span>\n<span class=\"glitch-line cyan\" style=\"left:3%;top:53%;width:15%;--gdelay:1.770s\"></span>\n<span class=\"glitch-line white\" style=\"left:83%;top:49%;width:9%;--gdelay:1.885s\"></span>";

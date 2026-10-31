@@ -448,7 +448,7 @@ export default function App() {
           </div>
         </div>
       </header>
-      <main id="main">
+      <main id="main" tabIndex={-1}>
         {c.sections
           .filter((section) => section.visible)
           .map((section) => (

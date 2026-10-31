@@ -72,6 +72,9 @@ export default function BrandIntro({ arabicName, targetRef, onComplete }: BrandI
       });
       document.body.appendChild(flight);
       flightRef.current = flight;
+      // Make the original mark invisible *in the same frame* as the flying copy.
+      // Only one full logo is ever visible while it travels to the header.
+      sourceRef.current?.closest(".brand-intro-symbol")?.classList.add("is-flying");
       const targetWidth = Math.min(target.width - 4, 60);
       const targetHeight = Math.min(target.height - 4, 46);
       const animation = flight.animate([
@@ -117,9 +120,22 @@ export default function BrandIntro({ arabicName, targetRef, onComplete }: BrandI
                 <stop offset=".5" stopColor="#b7efff" />
                 <stop offset="1" stopColor="#00c8f0" />
               </linearGradient>
+              <linearGradient id="brandIntroSweepGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop stopColor="#61d9ff" stopOpacity="0" />
+                <stop offset=".45" stopColor="#a8eeff" stopOpacity=".05" />
+                <stop offset=".72" stopColor="#b1efff" stopOpacity=".24" />
+                <stop offset="1" stopColor="#e1faff" stopOpacity=".76" />
+              </linearGradient>
+              <clipPath id="brandIntroLaserClip">
+                <path d={brandMarkPath} />
+              </clipPath>
             </defs>
             <path className="brand-intro-laser-halo" d={brandMarkPath} pathLength={1000} />
             <path className="brand-intro-laser-core" d={brandMarkPath} pathLength={1000} />
+            <g clipPath="url(#brandIntroLaserClip)">
+              <rect className="brand-intro-laser-sweep"
+                x="0" y="0" width="785" height="30" fill="url(#brandIntroSweepGradient)" />
+            </g>
           </svg>
           <div className="brand-intro-mark-stack">
             <img ref={sourceRef} src={approvedLogoSrc} className="brand-intro-original" alt="" />
@@ -127,7 +143,6 @@ export default function BrandIntro({ arabicName, targetRef, onComplete }: BrandI
               aria-hidden="true" draggable={false} />
             <img src={approvedLogoSrc} className="brand-intro-glitch-copy brand-intro-glitch-lower" alt=""
               aria-hidden="true" draggable={false} />
-            <span className="brand-intro-laser-sweep" aria-hidden="true" />
           </div>
         </div>
         <div className={"brand-intro-ar" + (showArabic ? " is-visible" : "")}

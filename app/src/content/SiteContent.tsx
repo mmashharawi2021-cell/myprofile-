@@ -8,6 +8,27 @@
 import defaults from "./default.json";
 export type SiteContent = typeof defaults;
 export type Project = SiteContent["projects"][number];
+/**
+ * Backward compatibility for content saved in Docker before project contribution
+ * fields existed. Do not replace an editor's own wording when already present.
+ */
+export function normalizeSiteContent(input: SiteContent): SiteContent {
+  return {
+    ...input,
+    projectDetails: {
+      ...defaults.projectDetails,
+      ...input.projectDetails,
+    },
+    projects: input.projects.map((project) => ({
+      ...project,
+      role:
+        typeof project.role === "string"
+          ? project.role
+          : (defaults.projects.find((item) => item.id === project.id)?.role ?? ""),
+    })),
+  };
+}
+
 export const assetUrl = (path: string) =>
   /^(https?:|data:|blob:)/i.test(path)
     ? path
@@ -47,7 +68,7 @@ export function SiteProvider({ children }: { children: ReactNode }) {
   const [loaded, setLoaded] = useState(false);
   const [connected, setConnected] = useState(false);
   const accept = (value: { content: SiteContent; revision: number }) => {
-    setSaved(value.content);
+    setSaved(normalizeSiteContent(value.content));
     setRevision(value.revision);
     setConnected(true);
   };

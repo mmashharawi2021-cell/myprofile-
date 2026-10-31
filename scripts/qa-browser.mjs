@@ -273,7 +273,7 @@ try {
         "No orbital scene may remain");
       assert.equal(await overlay.locator("animateMotion, .brand-intro-satellite").count(), 0,
         "No satellites or SMIL motion may remain");
-      const traced = await overlay.locator(".brand-intro-outline path").getAttribute("d");
+      const traced = await overlay.locator(".brand-intro-outline path").first().getAttribute("d");
       assert.match(traced ?? "", /\bC\b/, "M outline should use smooth cubic Bezier curves");
       const logoUrl = await overlay.locator(".brand-intro-original").getAttribute("src");
       assert.match(logoUrl ?? "", /^\/myprofile-\/assets\/brand\/muhanad-symbol\.svg\?v=laser-glitch-v4-/,

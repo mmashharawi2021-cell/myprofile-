@@ -364,7 +364,8 @@ try {
         });
         assert.equal(metrics.topColor, "rgb(167, 196, 229)");
         assert.equal(metrics.statusColor, "rgb(185, 205, 228)");
-        assert.equal(metrics.actualArabic.trim(), "مهند المشهراوي");
+        assert.equal(metrics.actualArabic.replace(/\\s/g, ""), "مهندالمشهراوي",
+          "Arabic segments should complete and be visually separated by flex gap");
         assert.equal(metrics.actualEnglish, "MUHANAD AL-MASHHARAWI");
         for (const item of [metrics.logo, metrics.name, metrics.english, metrics.progress]) {
           assert.ok(item.left >= -1 && item.right <= metrics.viewportWidth + 1,

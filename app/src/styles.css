@@ -1521,3 +1521,32 @@ h2 {
     animation: none !important;
   }
 }
+
+/* Social profile links: reuse the current typography and color tokens. */
+.footer-social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.footer-social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 36px;
+  padding: 8px;
+  border-radius: 8px;
+  color: var(--muted);
+}
+.footer-social a:hover,
+.footer-social a:focus-visible {
+  color: var(--accent);
+}
+@media (max-width: 600px) {
+  .footer-social {
+    justify-content: flex-start;
+    margin: 8px 0 18px;
+  }
+}

@@ -215,6 +215,48 @@ try {
     } finally { await context.close(); }
   });
 
+  await check("Social profiles in contact and footer on mobile and desktop", async () => {
+    const expected = [
+      ["LinkedIn", "https://www.linkedin.com/in/mohanad-elmashharawi-a4bb23148"],
+      ["Facebook", "https://www.facebook.com/share/18ytFS2SDE/"],
+      ["Instagram", "https://www.instagram.com/mohanad.mashharawi/"],
+      ["TikTok", "https://www.tiktok.com/@mohanad.mashharawi"],
+      ["GitHub", "https://github.com/mmashharawi2021-cell"],
+    ];
+    for (const width of [320, 1280]) {
+      const { context, page, errors } = await launchViewport(width, 800);
+      try {
+        const contactLinks = await page.locator("#contact .contact-social a").evaluateAll(links =>
+          links.map(a => ({ label: a.textContent.trim(), url: a.getAttribute("href"), rel: a.getAttribute("rel") }))
+        );
+        const footerLinks = await page.locator("footer .footer-social a").evaluateAll(links =>
+          links.map(a => ({ label: a.getAttribute("aria-label"), url: a.getAttribute("href"), rel: a.getAttribute("rel") }))
+        );
+        assert.equal(contactLinks.length, 7, "Six networks and existing email in contact");
+        assert.equal(footerLinks.length, 6, "Six networks in footer");
+        for (const [label, url] of expected) {
+          assert.equal(contactLinks.find(item => item.label === label)?.url, url, label + " contact link");
+          assert.equal(footerLinks.find(item => item.label === label)?.url, url, label + " footer link");
+        }
+        for (const links of [contactLinks, footerLinks]) {
+          const wa = links.find(item => item.label === "واتساب");
+          assert.match(wa?.url ?? "", /^https:\/\/wa\.me\/972599876261\?text=/, "Current WhatsApp number");
+          assert.ok(links.every(item => item.url?.startsWith("mailto:") ||
+            /\bnoopener\b/.test(item.rel ?? "") && /\bnoreferrer\b/.test(item.rel ?? "")),
+            "External social links must use safe target attributes");
+        }
+        assert.match(contactLinks.find(item => item.label === "البريد")?.url ?? "", /^mailto:/);
+        const overflow = await page.evaluate(() => ({
+          width: document.documentElement.clientWidth,
+          scrollWidth: document.documentElement.scrollWidth,
+        }));
+        assert.ok(overflow.scrollWidth <= overflow.width + 2,
+          "Social links must not cause horizontal scrolling: " + JSON.stringify(overflow));
+        assert.deepEqual(errors, []);
+      } finally { await context.close(); }
+    }
+  });
+
   await check("Intro is skippable without leaving page locked", async () => {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
     const page = await context.newPage();

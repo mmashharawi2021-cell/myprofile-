@@ -1,6 +1,6 @@
 import './site-extras.css';
 
-const whatsappNumber = '970568876261';
+const whatsappNumber = '972599876261';
 const quickConsultUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent('مرحبًا مهند، أريد استشارة سريعة بخصوص فكرة نظام أو موقع.')}`;
 
 const audience = [

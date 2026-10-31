@@ -209,11 +209,11 @@ body {
   }
 }
 @media (max-width: 700px) {
-  .floating-words > span:nth-child(n + 10) {
+  .floating-words > span:nth-child(n + 6) {
     display: none;
   }
   .floating-words > span {
-    opacity: 0.12;
+    opacity: 0.1;
   }
 }
 .hero-copy {

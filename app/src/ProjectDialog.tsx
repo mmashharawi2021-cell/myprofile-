@@ -144,6 +144,12 @@ export default function ProjectDialog({
               <p>{current.value}</p>
             </div>
           </div>
+          {current.role && (
+            <div className="project-contribution">
+              <span className="detail-label">{copy.contribution}</span>
+              <p>{current.role}</p>
+            </div>
+          )}
           <div className="project-tech">
             <span className="detail-label">{copy.technologies}</span>
             <div className="tags">

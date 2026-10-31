@@ -258,6 +258,65 @@ try {
   });
 
 
+  await check("Signature header keeps the approved M, removes its icon frame, and adds cyan rule", async () => {
+    for (const [width,height] of [[320,700],[390,844],[1280,800]]) {
+      const {context,page,errors}=await launchViewport(width,height);
+      try {
+        const header=page.locator(".site-header");
+        const metrics=await header.evaluate(el=>{
+          const mark=el.querySelector(".portfolio-brand-mark");
+          const brandText=el.querySelector(".portfolio-brand-text");
+          const img=mark.querySelector("img");
+          const m=getComputedStyle(mark), t=getComputedStyle(brandText);
+          const r=mark.getBoundingClientRect(), tr=brandText.getBoundingClientRect();
+          return {
+            width:r.width,height:r.height,border:m.borderTopWidth,
+            imageSrc:img.getAttribute("src"),
+            imageFilter:getComputedStyle(img).filter,
+            dividerWidth:t.borderInlineStartWidth,
+            dividerStyle:t.borderInlineStartStyle,
+            bg:m.backgroundImage,
+            brandTextRight:tr.right,
+            scrollWidth:document.documentElement.scrollWidth,
+            viewportWidth:document.documentElement.clientWidth,
+          };
+        });
+        assert.equal(metrics.border,"0px","Signature has no surrounding frame");
+        assert.equal(metrics.dividerWidth,"2px","Signature uses a slim blue text divider");
+        assert.equal(metrics.dividerStyle,"solid");
+        assert.match(metrics.bg,/radial-gradient/,"A subtle blue glow replaces the frame");
+        assert.match(metrics.imageSrc??"",/traced-r13-logo\.svg/,"Original approved logo must remain");
+        assert.match(metrics.imageFilter,/brightness/,"Unframed logo receives Signature luminance treatment");
+        assert.ok(metrics.width>=48 && metrics.height>=50,"The GIS mark must remain legible");
+        assert.ok(metrics.scrollWidth<=metrics.viewportWidth+2,
+          "Signature header must never overflow viewport at width "+width+": "+JSON.stringify(metrics));
+        await page.screenshot({path:output+"/signature-header-"+width+".png"});
+        assert.deepEqual(errors,[]);
+      } finally {await context.close();}
+    }
+  });
+
+  await check("Signature header supports light theme without changing the loading animation", async () => {
+    const {context,page,errors}=await launchViewport(390,844);
+    try {
+      const brand=page.locator(".site-header .portfolio-brand-mark");
+      await page.evaluate(()=>document.documentElement.setAttribute("data-theme","light"));
+      const state=await brand.evaluate(el=>({
+        background:getComputedStyle(el).backgroundImage,
+        divider:getComputedStyle(document.querySelector(".site-header .portfolio-brand-text")).borderInlineStartColor,
+        logo:getComputedStyle(el.querySelector("img")).filter,
+        src:el.querySelector("img").getAttribute("src"),
+      }));
+      assert.match(state.background,/radial-gradient/);
+      assert.match(state.src??"",/traced-r13-logo\.svg/);
+      assert.match(state.logo,/brightness/);
+      assert.notEqual(state.divider,"rgba(0, 0, 0, 0)");
+      assert.equal(await page.locator(".reference-intro").count(),0,
+        "Loader is unchanged and should stay skipped for returning or reduced-motion users");
+      assert.deepEqual(errors,[]);
+    } finally {await context.close();}
+  });
+
   await check("Approved r13 loader draws individual M segments, map roads and both pins", async () => {
     const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:"no-preference"});
     const page=await context.newPage();

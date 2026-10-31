@@ -83,17 +83,17 @@ try {
           scrollWidth: document.documentElement.scrollWidth,
           bodyWidth: document.body.scrollWidth,
         }));
-        if (Math.max(extent.scrollWidth, extent.bodyWidth) > extent.pageWidth + 2) {
-          const offenders = await page.evaluate(() => [...document.body.querySelectorAll("*")].map((el) => {
-            const rect = el.getBoundingClientRect();
-            return { tag: el.tagName.toLowerCase(), className: String(el.className?.baseVal ?? el.className ?? "").slice(0, 90),
-              left: Math.round(rect.left), right: Math.round(rect.right), width: Math.round(rect.width),
-              text: (el.textContent ?? "").trim().slice(0, 30) };
-          }).filter((rect) => rect.right > innerWidth + 2 || rect.left < -2)
-            .sort((a, b) => b.right - a.right).slice(0, 12));
-          await page.screenshot({ path: output + "/overflow-" + width + ".png", fullPage: true, animations: "disabled" });
-          throw new Error("Horizontal overflow: " + JSON.stringify({ extent, offenders }));
-        }
+        const horizontalScroll = await page.evaluate(() => {
+          const scroller = document.scrollingElement;
+          const initialY = window.scrollY;
+          window.scrollTo({ left: 1000, top: initialY, behavior: "instant" });
+          const actualX = window.scrollX;
+          window.scrollTo({ left: 0, top: initialY, behavior: "instant" });
+          return { availableWidth: scroller.clientWidth, scrollableWidth: scroller.scrollWidth, actualX };
+        });
+        assert.ok(horizontalScroll.scrollableWidth <= horizontalScroll.availableWidth + 2
+          && horizontalScroll.actualX < 2,
+          "Page can actually scroll horizontally: " + JSON.stringify({ ...extent, ...horizontalScroll }));
         const firstCardImg = first.locator(".project-preview img");
         await firstCardImg.scrollIntoViewIfNeeded();
         const cardLoaded = await firstCardImg.evaluate(async (image) => {

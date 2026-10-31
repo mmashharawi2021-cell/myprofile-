@@ -11,6 +11,9 @@ type BrandIntroProps = {
 const tracePaths: string[] = [brandMarkPath];
 const englishName = "MUHANAD AL-MASHHARAWI";
 const subtitle = "GIS ENGINEER & WEB SYSTEMS DEVELOPER";
+// Shared SVG paths keep the drawn tracks and satellite motion in exact alignment.
+const observationOrbitPath = "M 551.97 126.54 A 252 116 -23 1 1 88.03 323.46 A 252 116 -23 1 1 551.97 126.54";
+const communicationOrbitPath = "M 518.01 343.97 A 231 106 31 1 1 121.99 106.03 A 231 106 31 1 1 518.01 343.97";
 
 export default function BrandIntro({ arabicName, targetRef, onComplete }: BrandIntroProps) {
   const [running, setRunning] = useState(false);
@@ -149,24 +152,21 @@ export default function BrandIntro({ arabicName, targetRef, onComplete }: BrandI
                 <stop offset="1" stopColor="#00c8f0" stopOpacity="0" />
               </linearGradient>
             </defs>
-            <ellipse
-              id="brandIntroObservationOrbit"
+            <path
               className="brand-intro-orbit-line brand-intro-orbit-line-one"
-              cx="320" cy="225" rx="252" ry="116"
-              transform="rotate(-23 320 225)"
+              d={observationOrbitPath}
               pathLength={1000}
             />
-            <ellipse
-              id="brandIntroCommunicationOrbit"
+            <path
               className="brand-intro-orbit-line brand-intro-orbit-line-two"
-              cx="320" cy="225" rx="231" ry="106"
-              transform="rotate(31 320 225)"
+              d={communicationOrbitPath}
               pathLength={1000}
             />
             <g className="brand-intro-satellite brand-intro-satellite-observation">
-              <animateMotion dur="7.2s" repeatCount="indefinite" rotate="auto" begin="0.15s">
-                <mpath href="#brandIntroObservationOrbit" />
-              </animateMotion>
+              <animateMotion
+                path={observationOrbitPath}
+                dur="7.2s" repeatCount="indefinite" rotate="auto" begin="0.15s"
+              />
               <g className="brand-intro-satellite-art">
                 <path
                   className="brand-intro-scan-beam"
@@ -189,11 +189,10 @@ export default function BrandIntro({ arabicName, targetRef, onComplete }: BrandI
             </g>
             <g className="brand-intro-satellite brand-intro-satellite-communications">
               <animateMotion
+                path={communicationOrbitPath}
                 dur="9.1s" repeatCount="indefinite" rotate="auto"
                 begin="0.2s" keyPoints="1;0" keyTimes="0;1" calcMode="linear"
-              >
-                <mpath href="#brandIntroCommunicationOrbit" />
-              </animateMotion>
+              />
               <g className="brand-intro-satellite-art">
                 <rect x="-32" y="-8" width="21" height="16" rx="2"
                   fill="#125c9b" stroke="#8bd7ff" strokeWidth="1.5" />

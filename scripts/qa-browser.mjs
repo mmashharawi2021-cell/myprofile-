@@ -257,6 +257,76 @@ try {
     }
   });
 
+  await check("V4 loader draws two moving GIS satellite orbits", async () => {
+    const context = await browser.newContext({
+      viewport: { width: 390, height: 844 },
+      reducedMotion: "no-preference",
+    });
+    const page = await context.newPage();
+    const errors = [];
+    page.on("pageerror", error => errors.push(error.message));
+    try {
+      await page.goto(base, { waitUntil: "domcontentloaded" });
+      const overlay = page.locator(".brand-intro-overlay");
+      await overlay.waitFor({ state: "visible" });
+      const scene = overlay.locator(".brand-intro-orbital-scene");
+      assert.equal(await scene.locator("path.brand-intro-orbit-line").count(), 2);
+      assert.equal(await scene.locator("g.brand-intro-satellite").count(), 2);
+      assert.equal(await scene.locator("animateMotion").count(), 2);
+      assert.equal(await overlay.locator(".brand-intro-original").getAttribute("src"),
+        "/myprofile-/assets/brand/muhanad-symbol.svg",
+        "Approved artwork must remain the only logo image in the intro");
+      const satellite = scene.locator(".brand-intro-satellite-observation");
+      await satellite.waitFor({ state: "attached" });
+      await page.waitForTimeout(1000);
+      const start = await satellite.boundingBox();
+      await page.waitForTimeout(450);
+      const end = await satellite.boundingBox();
+      assert.ok(start && end && Math.hypot(end.x - start.x, end.y - start.y) > 2,
+        "The observation satellite should travel around its orbit");
+      const orbitState = await scene.locator(".brand-intro-orbit-line-one").evaluate(el =>
+        getComputedStyle(el).strokeDashoffset);
+      assert.ok(Number.parseFloat(orbitState) < 1000, "Orbit drawing should progress");
+      await page.screenshot({ path: output + "/v4-satellite-loader-mobile.png", animations: "allow" });
+      await page.getByRole("button", { name: /تخطي المقدمة/ }).click();
+      await overlay.waitFor({ state: "detached", timeout: 5000 });
+      assert.notEqual(await page.locator("html").evaluate(el => el.style.overflow), "hidden");
+      assert.deepEqual(errors, []);
+    } finally { await context.close(); }
+  });
+
+  await check("V4 loader respects reduced motion", async () => {
+    const context = await browser.newContext({
+      viewport: { width: 390, height: 844 },
+      reducedMotion: "reduce",
+    });
+    const page = await context.newPage();
+    try {
+      await page.goto(base, { waitUntil: "domcontentloaded" });
+      assert.equal(await page.locator(".brand-intro-overlay").count(), 0,
+        "Reduced-motion visitors must not be forced through the intro");
+    } finally { await context.close(); }
+  });
+
+  await check("V4 loader exits naturally and keeps the header brand", async () => {
+    const context = await browser.newContext({
+      viewport: { width: 1280, height: 800 },
+      reducedMotion: "no-preference",
+    });
+    const page = await context.newPage();
+    const errors = [];
+    page.on("pageerror", error => errors.push(error.message));
+    try {
+      await page.goto(base, { waitUntil: "domcontentloaded" });
+      const overlay = page.locator(".brand-intro-overlay");
+      await overlay.waitFor({ state: "visible" });
+      await overlay.waitFor({ state: "detached", timeout: 15000 });
+      assert.equal(await page.locator(".site-header .portfolio-brand-mark.is-pending").count(), 0);
+      assert.notEqual(await page.locator("html").evaluate(el => el.style.overflow), "hidden");
+      assert.deepEqual(errors, []);
+    } finally { await context.close(); }
+  });
+
   await check("Intro is skippable without leaving page locked", async () => {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
     const page = await context.newPage();

@@ -7,20 +7,18 @@ type BrandIntroProps = {
   onComplete: () => void;
 };
 
-// The animated outline uses the same softened M path as the rendered brand mark.
-const tracePaths: string[] = [brandMarkPath];
 const englishName = "MUHANAD AL-MASHHARAWI";
 const subtitle = "GIS ENGINEER & WEB SYSTEMS DEVELOPER";
 
+// The logo itself is one reusable SVG: the laser and the header image share its M contour.
 export default function BrandIntro({ arabicName, targetRef, onComplete }: BrandIntroProps) {
   const [running, setRunning] = useState(false);
   const [leaving, setLeaving] = useState(false);
-  const [given, setGiven] = useState("");
-  const [surname, setSurname] = useState("");
-  const [english, setEnglish] = useState("");
+  const [showArabic, setShowArabic] = useState(false);
+  const [showEnglish, setShowEnglish] = useState(false);
   const [showSubtitle, setShowSubtitle] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [status, setStatus] = useState("رسم الهوية البصرية...");
+  const [status, setStatus] = useState("رسم الشعار بالليزر...");
   const sourceRef = useRef<HTMLImageElement>(null);
   const flightRef = useRef<HTMLImageElement | null>(null);
   const finishedRef = useRef(false);
@@ -42,26 +40,15 @@ export default function BrandIntro({ arabicName, targetRef, onComplete }: BrandI
         if (!finishedRef.current) callback();
       }, delay));
     };
-    const type = (text: string, setter: (value: string) => void, start: number, step: number) => {
-      const chars = Array.from(text);
-      chars.forEach((_, index) => later(() => setter(chars.slice(0, index + 1).join("")), start + step * index));
-      return start + step * chars.length;
-    };
     const frame = window.requestAnimationFrame(() => setRunning(true));
-    const parts = arabicName.trim().split(/\s+/);
-    const first = parts.shift() || "مهند";
-    const family = parts.join(" ") || "المشهراوي";
-    const firstDone = type(first, setGiven, 2320, 90);
-    const arabicDone = type(family, setSurname, firstDone + 120, 82);
-    const englishDone = type(englishName, setEnglish, arabicDone + 260, 37);
-    later(() => { setProgress(26); setStatus("إظهار الرمز..."); }, 1300);
-    later(() => { setProgress(45); setStatus("كتابة الاسم بالعربية..."); }, 2140);
-    later(() => { setProgress(66); setStatus("كتابة الاسم بالإنجليزية..."); }, arabicDone + 180);
-    later(() => {
-      setShowSubtitle(true);
-      setProgress(90);
-      setStatus("تجهيز واجهة الموقع...");
-    }, englishDone + 100);
+
+    later(() => { setProgress(24); setStatus("تشكيل الحواف الضوئية..."); }, 520);
+    later(() => { setProgress(53); setStatus("تثبيت الهوية الرقمية..."); }, 1160);
+    later(() => { setShowArabic(true); setProgress(72); setStatus("إظهار الاسم..."); }, 1470);
+    later(() => { setShowEnglish(true); setProgress(84); }, 1690);
+    later(() => { setShowSubtitle(true); setProgress(94); }, 1910);
+
+    // Do not prolong a simulated "loading" bar beyond the actual introduction.
     later(() => {
       if (finishedRef.current) return;
       setProgress(100);
@@ -93,11 +80,11 @@ export default function BrandIntro({ arabicName, targetRef, onComplete }: BrandI
           top: (target.top + (target.height - targetHeight) / 2) + "px",
           width: targetWidth + "px", height: targetHeight + "px" },
       ], {
-        duration: 1000, easing: "cubic-bezier(.25,.8,.2,1)", fill: "forwards",
+        duration: 720, easing: "cubic-bezier(.25,.8,.2,1)", fill: "forwards",
       });
-      later(() => setLeaving(true), 170);
+      later(() => setLeaving(true), 100);
       animation.finished.then(finish).catch(finish);
-    }, englishDone + 800);
+    }, 2700);
 
     return () => {
       window.cancelAnimationFrame(frame);
@@ -106,11 +93,16 @@ export default function BrandIntro({ arabicName, targetRef, onComplete }: BrandI
       flightRef.current = null;
       document.documentElement.style.overflow = originalOverflow;
     };
-  }, [arabicName, targetRef, onComplete]);
+  }, [onComplete, targetRef]);
+
+  const parts = arabicName.trim().split(/\s+/);
+  const firstName = parts.shift() || "مهند";
+  const familyName = parts.join(" ") || "المشهراوي";
 
   return (
     <div
-      className={"brand-intro-overlay" + (running ? " is-running" : "") + (leaving ? " is-leaving" : "")}
+      className={"brand-intro-overlay brand-intro-laser-glitch" +
+        (running ? " is-running" : "") + (leaving ? " is-leaving" : "")}
       aria-label="مقدمة الهوية البصرية"
       role="dialog"
       aria-modal="true"
@@ -122,25 +114,30 @@ export default function BrandIntro({ arabicName, targetRef, onComplete }: BrandI
             <defs>
               <linearGradient id="brandIntroTraceGradient" x1="0" y1="1" x2="1" y2="0">
                 <stop stopColor="#0670dc" />
-                <stop offset=".5" stopColor="#78b7ff" />
-                <stop offset="1" stopColor="#1684ed" />
+                <stop offset=".5" stopColor="#b7efff" />
+                <stop offset="1" stopColor="#00c8f0" />
               </linearGradient>
             </defs>
-            {tracePaths.map((d, index) => (
-              <path key={index} d={d} pathLength={1000} style={{ animationDelay: (0.12 + index * 0.035) + "s" }} />
-            ))}
+            <path className="brand-intro-laser-halo" d={brandMarkPath} pathLength={1000} />
+            <path className="brand-intro-laser-core" d={brandMarkPath} pathLength={1000} />
           </svg>
-          <img ref={sourceRef} src={approvedLogoSrc} className="brand-intro-original" alt="" />
-
+          <div className="brand-intro-mark-stack">
+            <img ref={sourceRef} src={approvedLogoSrc} className="brand-intro-original" alt="" />
+            <img src={approvedLogoSrc} className="brand-intro-glitch-copy brand-intro-glitch-upper" alt=""
+              aria-hidden="true" draggable={false} />
+            <img src={approvedLogoSrc} className="brand-intro-glitch-copy brand-intro-glitch-lower" alt=""
+              aria-hidden="true" draggable={false} />
+            <span className="brand-intro-laser-sweep" aria-hidden="true" />
+          </div>
         </div>
-        <div className="brand-intro-ar" dir="rtl" aria-label={arabicName}>
-          <span className="brand-intro-given" aria-hidden="true">{given}</span>
-          <span className="brand-intro-surname" aria-hidden="true">{surname}</span>
+        <div className={"brand-intro-ar" + (showArabic ? " is-visible" : "")}
+          dir="rtl" aria-label={arabicName}>
+          <span className="brand-intro-given" aria-hidden="true">{showArabic ? firstName : ""}</span>
+          <span className="brand-intro-surname" aria-hidden="true">{showArabic ? familyName : ""}</span>
         </div>
-        <div className="brand-intro-en" dir="ltr" aria-label={englishName}>{english}</div>
-        <div className={"brand-intro-sub" + (showSubtitle ? " is-visible" : "")}>
-          {subtitle}
-        </div>
+        <div className={"brand-intro-en" + (showEnglish ? " is-visible" : "")}
+          dir="ltr" aria-label={englishName}>{showEnglish ? englishName : ""}</div>
+        <div className={"brand-intro-sub" + (showSubtitle ? " is-visible" : "")}>{subtitle}</div>
         <div className="brand-intro-progress" aria-hidden="true">
           <span style={{ width: progress + "%" }} />
         </div>

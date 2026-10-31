@@ -60,10 +60,10 @@
   padding: 25px 0 64px;
 }
 .brand-intro-top {
-  margin-bottom: 26px;
-  color: #78b7ff8f;
+  margin-bottom: 23px;
+  color: #a7c4e5;
   font: 400 10px/1.4 "Inter", sans-serif;
-  letter-spacing: 3px;
+  letter-spacing: 2.6px;
 }
 .brand-intro-symbol {
   width: clamp(230px, 45vw, 340px);
@@ -112,8 +112,8 @@
   align-items: baseline;
   justify-content: center;
   gap: .28em;
-  margin-top: 24px;
-  min-height: 49px;
+  margin-top: 18px;
+  min-height: 45px;
   max-width: 100%;
   font-family: "Tajawal", sans-serif;
   font-size: clamp(27px, 5.3vw, 39px);
@@ -128,7 +128,7 @@
   -webkit-background-clip: text;
 }
 .brand-intro-en {
-  margin-top: 7px;
+  margin-top: 5px;
   min-height: 23px;
   max-width: 100%;
   direction: ltr;
@@ -138,11 +138,11 @@
   overflow-wrap: anywhere;
 }
 .brand-intro-sub {
-  margin-top: 9px;
+  margin-top: 6px;
   max-width: 100%;
   font: 400 10px/1.6 "Inter", sans-serif;
   letter-spacing: .55px;
-  color: #8791ab;
+  color: #afc4dc;
   opacity: 0;
   transition: opacity .5s ease;
   overflow-wrap: anywhere;
@@ -151,7 +151,7 @@
 .brand-intro-progress {
   height: 2px;
   width: 170px;
-  margin-top: 33px;
+  margin-top: 20px;
   border-radius: 99px;
   background: #ffffff1b;
   overflow: hidden;
@@ -163,8 +163,8 @@
   transition: width .35s ease;
 }
 .brand-intro-status {
-  margin-top: 14px;
-  color: #8791ab;
+  margin-top: 11px;
+  color: #b9cde4;
   font: 400 11px "Tajawal", sans-serif;
 }
 .brand-intro-skip {
@@ -198,10 +198,10 @@
 @keyframes brand-intro-hide { to { opacity: 0; } }
 @media (max-width: 500px) {
   .brand-intro-symbol { width: min(79vw, 310px); }
-  .brand-intro-ar { margin-top: 28px; font-size: 29px; }
+  .brand-intro-ar { margin-top: 19px; font-size: clamp(23px, 7.3vw, 29px); }
   .brand-intro-en { font-size: 11px; letter-spacing: 1px; }
-  .brand-intro-top { margin-bottom: 35px; }
-  .brand-intro-content { padding-bottom: 70px; }
+  .brand-intro-top { margin-bottom: 26px; }
+  .brand-intro-content { padding-bottom: 49px; }
   .brand-intro-skip { bottom: max(20px, env(safe-area-inset-bottom)); }
 }
 @media (prefers-reduced-motion: reduce) {

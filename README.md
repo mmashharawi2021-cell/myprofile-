@@ -1,48 +1,54 @@
 # Mohanad Al-Mashharawi Portfolio
 
-موقع عربي لعرض أعمال وخدمات مهند المشهراوي في نظم المعلومات الجغرافية وتطوير أنظمة الويب.
+موقع شخصي عربي لعرض مشاريع نظم المعلومات الجغرافية (GIS) وتطوير أنظمة الويب، مبني باستخدام React 18 وTypeScript وVite 5، مع تصميم RTL ووضعين داكن وفاتح.
 
-## التصميم
+## مكوّنات المشروع
 
-هوية مستوحاة من الخرائط والبيانات، بدرجات خضراء هادئة، مع وضع داكن وفاتح محفوظ محليًا. تشمل الواجهة:
+- **الموقع العام:** تطبيق React يبدأ من `app/index.html` و`app/src/main.tsx`، والأقسام والتفاعلات في `app/src/App.tsx`.
+- **المحتوى الافتراضي:** `app/src/content/default.json`، ويحمّله `app/src/content/SiteContent.tsx`؛ ملفات `app/src/data.ts` ليست مصدر البيانات الفعلي.
+- **التصميم:** `app/src/styles.css` وملفات CSS التي يستوردها `app/src/main.tsx`.
+- **المشاريع والصور:** `app/public/assets/projects/`، والصورة الشخصية المستخدمة في المحتوى `app/public/assets/profile-photo.webp`.
+- **لوحة التحرير الاختيارية (CMS):** خادم Node.js في `server/` مع SQLite وحاوية Docker، وواجهة التحرير في `app/src/editor/`.
 
-- عرض المشاريع الأصلية وصورها مع تصفية حسب المجال.
-- نافذة تفاصيل تدعم لوحة المفاتيح والإغلاق بـ Escape.
-- الخدمات والمهارات ومراحل العمل.
-- نموذج يجهز رسالة واتساب للمراجعة والإرسال بواسطة الزائر.
-- تصميم عربي RTL متجاوب وقائمة تنقل للجوال.
+تتضمن الواجهة تصفية المشاريع، نافذة تفاصيل قابلة للإغلاق بلوحة المفاتيح، خدمات ومهارات، روابط تواصل، ونموذجًا يفتح رسالة واتساب لمراجعتها قبل إرسالها.
 
-## التشغيل المحلي
+## التشغيل والتطوير
+
+استخدم Node.js 24 وفق `.nvmrc`، ثم:
 
 ```sh
 npm ci
 npm run dev
 ```
 
-على Windows يمكن استخدام `npm.cmd` إذا منعت سياسة PowerShell تشغيل `npm.ps1`.
+افتح: http://localhost:5173/myprofile-/
 
-افتح `http://localhost:5173/myprofile-/`.
+على Windows، قد تحتاج إلى `npm.cmd` بدل `npm` في PowerShell. عند تشغيل Vite، تمر طلبات `/myprofile-/api` و`/myprofile-/media` إلى خادم Docker المحلي على المنفذ 8080؛ تشغيل الموقع للعرض لا يتطلب الخادم، لكن التحرير والحفظ يتطلبانه.
 
-## البناء والنشر
+## البناء والنشر العام
 
 ```sh
 npm run build
 ```
 
-يفحص الأمر TypeScript ويبني الموقع في `docs/`. ينشر workflow الموجود في `.github/workflows/deploy.yml` هذا المجلد إلى GitHub Pages عند الرفع على `main`.
+يفحص الأمر TypeScript ويبني الموقع داخل `docs/`، وفق `vite.config.ts` (الجذر `app` والمسار الأساسي `/myprofile-/`). مجلد `docs/` ناتج بناء ومُستبعد من Git؛ **لا يلزم عمل commit له**. يبني `.github/workflows/deploy.yml` الموقع تلقائيًا من `main` وينشر الناتج على GitHub Pages:
 
-رابط الموقع: https://mmashharawi2021-cell.github.io/myprofile-/
+https://mmashharawi2021-cell.github.io/myprofile-/
 
-## تعديل المحتوى
+النسخة المنشورة على GitHub Pages ثابتة، ولا تُشغّل خادم CMS أو SQLite أو تستدعي API الخاص بالتحرير. في بناء Docker، يفعّل `VITE_CMS=true` الاتصال بالمحرر. راجع [دليل المحرر](EDITOR.md) للتشغيل، والحفظ، ونشر تعديلات CMS إلى الموقع الثابت باستخدام `npm run publish-site`.
 
-- `app/src/data.ts`: المشاريع، الخدمات، المهارات ووسائل التواصل.
-- `app/src/App.tsx`: أقسام الواجهة والتفاعلات.
-- `app/src/styles.css`: الألوان والتنسيق المتجاوب.
-- `app/public/assets/projects/`: صور المشاريع بصيغة WebP.
-- `app/public/profile-photo.svg`: الصورة الشخصية الحالية.
+ملفات HTML القديمة الموجودة في جذر المستودع ليست نقطة دخول تطبيق Vite الحالي. تُراجع ضمن مرحلة تنظيف منفصلة، ولا تُحذف قبل التحقق من مراجعها.
 
-نقطة دخول الموقع المنشور هي `app/index.html` حسب إعداد Vite. ملفات HTML الموجودة في جذر المستودع وإضافات الواجهة القديمة محفوظة كمرجع، ولا تحملها الواجهة الجديدة.
+## الجودة وإدارة التغييرات
 
-## لوحة التحرير الجديدة
+```sh
+npm ci
+npm run build
+node --test scripts/seo.test.mjs
+node --test server/editor.test.mjs
+node scripts/qa-browser.mjs
+```
 
-تمت إضافة خادم Docker مع قاعدة بيانات ومحرر محتوى. راجع [دليل لوحة التحرير](EDITOR.md) للتشغيل والحفظ والنسخ السابقة. بيانات لوحة التحكم محفوظة في Docker volume؛ GitHub Pages وحده لا يدعم الحفظ.
+تحتاج اختبارات المتصفح إلى Playwright وChromium، ويُثبّتهما CI تلقائيًا. راجع [QUALITY.md](QUALITY.md) لتشغيل QA عند فتح طلبات السحب وحفظ نتائج الاختبارات ولقطات الشاشة، و[REPOSITORY_AUDIT.md](REPOSITORY_AUDIT.md) لحالة الفروع القديمة وPR #3.
+
+لا تُدمج طلبات السحب قبل نجاح فحوص الجودة ومراجعة التغييرات. تتطلب حماية `main` الإلزامية ضبط قواعد GitHub Repository من الإعدادات.

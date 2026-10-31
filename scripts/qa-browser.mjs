@@ -215,6 +215,66 @@ try {
     } finally { await context.close(); }
   });
 
+  await check("All approved social accounts in contact and footer", async () => {
+    const { context, page, errors } = await launchViewport(390, 844);
+    try {
+      const expected = new Map([
+        ["واتساب", "https://wa.me/972599876261"],
+        ["LinkedIn", "https://www.linkedin.com/in/mohanad-elmashharawi-a4bb23148"],
+        ["Facebook", "https://www.facebook.com/share/18ytFS2SDE/"],
+        ["Instagram", "https://www.instagram.com/mohanad.mashharawi"],
+        ["TikTok", "https://www.tiktok.com/@mohanad.mashharawi"],
+        ["GitHub", "https://github.com/mmashharawi2021-cell"],
+        ["البريد", "mailto:mmashharawi2021@gmail.com"],
+      ]);
+      for (const selector of ["#contact nav.contact-social", "footer nav.footer-social"]) {
+        const links = await page.locator(selector + " a").evaluateAll(anchors =>
+          anchors.map(a => ({
+            label: a.textContent.trim(),
+            href: a.getAttribute("href"),
+            target: a.getAttribute("target"),
+            rel: a.getAttribute("rel"),
+          }))
+        );
+        assert.equal(links.length, expected.size, selector + ": unexpected link count");
+        for (const [label, href] of expected) {
+          const match = links.find(item => item.label === label);
+          assert.ok(match, selector + ": missing " + label);
+          if (label === "واتساب") {
+            assert.ok(match.href.startsWith(href + "?text="), selector + ": incorrect WhatsApp number");
+          } else {
+            assert.equal(match.href, href, selector + ": incorrect " + label + " link");
+          }
+          if (label !== "البريد") {
+            assert.equal(match.target, "_blank");
+            assert.match(match.rel ?? "", /noopener/);
+            assert.match(match.rel ?? "", /noreferrer/);
+          }
+        }
+      }
+      const oldNumber = await page.locator('a[href*="970568876261"]').count();
+      assert.equal(oldNumber, 0, "Old WhatsApp number should not appear");
+      const ticktok = page.locator('#contact a[href*="tiktok.com"] svg[aria-hidden="true"]');
+      assert.equal(await ticktok.count(), 1, "TikTok link should have its brand icon");
+      assert.deepEqual(errors, []);
+    } finally { await context.close(); }
+  });
+
+  await check("WhatsApp contact form and project detail use the updated number", async () => {
+    const { context, page, errors } = await launchViewport(390, 844);
+    try {
+      await page.locator(".contact-form input[name='name']").fill("QA Contact");
+      await page.locator(".contact-form textarea[name='message']").fill("تجربة رقم واتساب الجديد");
+      await page.locator(".contact-form button[type='submit']").click();
+      const opened = await page.evaluate(() => window.__qaWindowOpen);
+      assert.match(opened ?? "", /^https:\/\/wa\.me\/972599876261\?text=/);
+      await page.locator(".project-card").first().locator(".project-info h3 button").click();
+      const href = await page.locator("dialog.studio-dialog .dialog-cta a[href^='https://wa.me/']").getAttribute("href");
+      assert.match(href ?? "", /^https:\/\/wa\.me\/972599876261\?text=/);
+      assert.deepEqual(errors, []);
+    } finally { await context.close(); }
+  });
+
   await check("Intro is skippable without leaving page locked", async () => {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
     const page = await context.newPage();

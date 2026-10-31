@@ -347,6 +347,16 @@ try {
       assert.equal(await overlay.locator(".brand-intro-laser-core").count(), 1);
       assert.equal(await overlay.locator(".brand-intro-glitch-copy").count(), 2);
       assert.equal(await overlay.locator(".brand-intro-laser-sweep").count(), 1);
+      assert.equal(await overlay.locator("#brandIntroLaserClip path").count(), 1);
+      const clipPath = await overlay.locator("#brandIntroLaserClip path").getAttribute("d");
+      assert.equal(clipPath, await overlay.locator(".brand-intro-laser-core").getAttribute("d"),
+        "Laser scan must be clipped precisely to the M contour");
+      assert.equal(await overlay.locator(".brand-intro-laser-sweep").getAttribute("width"), "785");
+      const sweepParent = await overlay.locator(".brand-intro-laser-sweep").evaluate(el =>
+        el.parentElement?.getAttribute("clip-path"));
+      assert.equal(sweepParent, "url(#brandIntroLaserClip)");
+      assert.equal(await overlay.locator(".brand-intro-mark-stack > .brand-intro-laser-sweep").count(),
+        0, "Unclipped horizontal beam must not remain in the DOM");
       const svgPaths = await overlay.locator(".brand-intro-outline path").evaluateAll(els =>
         els.map(el => el.getAttribute("d")));
       assert.equal(svgPaths.length, 2);
@@ -369,7 +379,7 @@ try {
       });
       assert.match(animations.glitchName, /brand-intro-glitch-upper/);
       assert.equal(animations.glitchIterations, "1", "Glitch must not loop or keep flashing");
-      assert.equal(animations.glitchDuration, "0.58s");
+      assert.equal(animations.glitchDuration, "0.5s");
       assert.match(animations.sweepName, /brand-intro-sweep/);
       assert.match(animations.haloName, /brand-intro-laser-trace/);
       await page.waitForTimeout(1430);
@@ -452,6 +462,59 @@ try {
         });
         await page.getByRole("button", { name: /تخطي المقدمة/ }).click();
         await overlay.waitFor({ state: "detached", timeout: 5000 });
+        assert.deepEqual(errors, []);
+      } finally { await context.close(); }
+    }
+  });
+
+  await check("Laser intro starts with a visible M and clean single-logo flight", async () => {
+    for (const width of [390, 1280]) {
+      const context = await browser.newContext({
+        viewport: { width, height: 800 },
+        reducedMotion: "no-preference",
+      });
+      const page = await context.newPage();
+      const errors = [];
+      page.on("pageerror", error => errors.push(error.message));
+      try {
+        await page.goto(base, { waitUntil: "domcontentloaded" });
+        const overlay = page.locator(".brand-intro-overlay");
+        await overlay.waitFor({ state: "visible" });
+        const early = await overlay.locator(".brand-intro-original").evaluate(el => ({
+          opacity: Number.parseFloat(getComputedStyle(el).opacity),
+          imageLoaded: el.complete && el.naturalWidth > 0,
+        }));
+        assert.ok(early.opacity > .06, "The starting logo should be faintly visible, not blank");
+        assert.ok(early.imageLoaded, "The introductory mark must already be loaded");
+        await page.waitForFunction(() => document.querySelector(".brand-intro-flight") !== null,
+          { timeout: 6500 });
+        const transfer = await page.evaluate(() => {
+          const intro = document.querySelector(".brand-intro-symbol");
+          const original = document.querySelector(".brand-intro-original");
+          const flight = document.querySelector(".brand-intro-flight");
+          return {
+            introVisibility: intro && getComputedStyle(intro).visibility,
+            originalVisibility: original && getComputedStyle(original).visibility,
+            flightVisibility: flight && getComputedStyle(flight).visibility,
+            flightImageLoaded: flight && flight.complete && flight.naturalWidth > 0,
+            flightCount: document.querySelectorAll(".brand-intro-flight").length,
+            brandVisible: document.querySelector(".site-header .portfolio-brand-mark") &&
+              getComputedStyle(document.querySelector(".site-header .portfolio-brand-mark")).opacity,
+            flightBounds: flight?.getBoundingClientRect().toJSON(),
+          };
+        });
+        assert.equal(transfer.introVisibility, "hidden",
+          "The original logo must hide immediately when the flight copy is inserted");
+        assert.equal(transfer.originalVisibility, "hidden",
+          "No second M may remain visible behind the moving logo");
+        assert.equal(transfer.flightVisibility, "visible");
+        assert.equal(transfer.flightCount, 1, "There should be exactly one flight image");
+        assert.ok(transfer.flightImageLoaded, "The flying logo image should be cached and rendered");
+        await page.screenshot({ path: output + "/laser-glitch-flight-" + width + ".png",
+          animations: "allow" });
+        await overlay.waitFor({ state: "detached", timeout: 5000 });
+        assert.equal(await page.locator(".brand-intro-flight").count(), 0);
+        assert.equal(await page.locator(".site-header .portfolio-brand-mark.is-pending").count(), 0);
         assert.deepEqual(errors, []);
       } finally { await context.close(); }
     }

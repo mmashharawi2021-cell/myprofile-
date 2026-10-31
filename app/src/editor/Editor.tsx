@@ -18,6 +18,7 @@ import {
   api,
   assetUrl,
   useSite,
+  normalizeSiteContent,
   type SiteContent,
 } from "../content/SiteContent";
 import defaults from "../content/default.json";
@@ -466,7 +467,7 @@ export default function Editor({ onClose }: { onClose: () => void }) {
   const begin = async () => {
     const latest = await api("content");
     accept(latest);
-    setDraft(structuredClone(latest.content));
+    setDraft(structuredClone(normalizeSiteContent(latest.content)));
     setAuthenticated(true);
   };
   useEffect(() => {
@@ -690,7 +691,7 @@ export default function Editor({ onClose }: { onClose: () => void }) {
                     onClick={async () => {
                       try {
                         const value = await api(`history/${version.id}`);
-                        change(value.content);
+                        change(normalizeSiteContent(value.content));
                         setShowHistory(false);
                         setNotice(
                           "تم تحميل النسخة للمعاينة. اضغط حفظ لاعتمادها.",
@@ -749,7 +750,7 @@ export default function Editor({ onClose }: { onClose: () => void }) {
                     body: JSON.stringify({ content: draft, revision }),
                   });
                   accept(value);
-                  setDraft(structuredClone(value.content));
+                  setDraft(structuredClone(normalizeSiteContent(value.content)));
                   setUndo([]);
                   setRedo([]);
                   setNotice("تم الحفظ. المحتوى الجديد متاح لكل الزوار.");

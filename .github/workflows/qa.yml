@@ -50,6 +50,10 @@ jobs:
           sudo apt-get install -y --no-install-recommends librsvg2-bin fonts-noto-core
           rsvg-convert --width 1200 --height 630 --output docs/og-preview.png app/public/og-preview.svg
           test -s docs/og-preview.png
+      - name: Static release file integrity
+        run: |
+          set -o pipefail
+          node --test scripts/release-static.test.mjs 2>&1 | tee qa-artifacts/release-static-tests.log
       - name: SEO metadata, sitemap and image checks
         run: |
           set -o pipefail
@@ -76,6 +80,32 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: portfolio-qa
+          path: qa-artifacts/
+          if-no-files-found: ignore
+          retention-days: 30
+
+  docker-cms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Real Docker CMS release smoke
+        run: |
+          mkdir -p qa-artifacts
+          set -o pipefail
+          node scripts/docker-smoke.mjs 2>&1 | tee qa-artifacts/docker-smoke.log
+      - name: Upload Docker smoke log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-docker-smoke
           path: qa-artifacts/
           if-no-files-found: ignore
           retention-days: 30

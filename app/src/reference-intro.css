@@ -1,4 +1,4 @@
-/* Exact approved 6-second tracing sequence. Only end behavior changed to a logo-to-header flight. */
+/* Approved tracing sequence shortened to one second before the logo-to-header flight. */
 .brand-intro-overlay.reference-intro {
   background: radial-gradient(ellipse 49% 58% at 50% 48%, #092b52 0%, #051831 56%, #020a18 100%);
   isolation:isolate;
@@ -59,15 +59,15 @@
 .glitch-line.blue{background:linear-gradient(90deg,transparent,#338be1 50%,transparent)}
 .glitch-line.yellow{background:linear-gradient(90deg,transparent,#ded28a 50%,transparent)}
 .stage-glow{position:absolute;inset:0;background:radial-gradient(ellipse 31% 37% at 50% 50%,#009bff42,transparent 78%);opacity:0;pointer-events:none;z-index:1}
-/* One 6-second run, no intro image revealed all at once. Every SVG stroke has its own draw timing. */
-.reference-intro.is-running .draw-stroke{animation:draw-one var(--trace-time) ease-out var(--start) both}
-.reference-intro.is-running .soft-fill{animation:fill-gradual 6s ease both}
-.reference-intro.is-running .pin-fill,.reference-intro.is-running .pin-hole-fill{animation:pin-fill-appear 6s ease both}
+/* Scale approved inline SVG timing to one sixth without changing the original paths. */
+.reference-intro.is-running .draw-stroke{animation:draw-one calc(var(--trace-time) * 0.166667) ease-out calc(var(--start) * 0.166667) both}
+.reference-intro.is-running .soft-fill{animation:fill-gradual 1s ease both}
+.reference-intro.is-running .pin-fill,.reference-intro.is-running .pin-hole-fill{animation:pin-fill-appear 1s ease both}
 .reference-intro.is-running .pin-hole-fill{animation-name:hole-fill-appear}
-.reference-intro.is-running .small-pin-halo,.reference-intro.is-running .small-pin-dot{animation:small-pin-appear 6s ease both}
-.reference-intro.is-running .glitch-line{animation:glitch-pulse .57s steps(1,end) var(--gdelay) both}
-.reference-intro.is-running .stage-glow{animation:glow-pulse 6s ease both}
-.reference-intro.is-running .m-svg{animation:overall-fade 6s linear both}
+.reference-intro.is-running .small-pin-halo,.reference-intro.is-running .small-pin-dot{animation:small-pin-appear 1s ease both}
+.reference-intro.is-running .glitch-line{animation:glitch-pulse .095s steps(1,end) calc(var(--gdelay) * 0.166667) both}
+.reference-intro.is-running .stage-glow{animation:glow-pulse 1s ease both}
+.reference-intro.is-running .m-svg{animation:overall-fade 1s linear both}
 .stage.paused *{animation-play-state:paused !important}
 @keyframes draw-one{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
 @keyframes fill-gradual{0%,49%{opacity:0}60%{opacity:.17}75%,100%{opacity:.35}}
@@ -80,7 +80,7 @@
 
 
 /* Disable final SVG fade: the approved drawing remains intact until its single-logo flight. */
-.reference-intro.is-running .m-svg { animation:overall-fade 6s linear both; }
+.reference-intro.is-running .m-svg { animation:overall-fade 1s linear both; }
 @keyframes overall-fade{0%,100%{opacity:1}}
 .brand-intro-flight.reference-intro-flight{
   position:fixed;z-index:2001;

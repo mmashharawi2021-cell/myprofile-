@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 const cache = new Map<string, Promise<string | null>>();
 
@@ -55,9 +55,28 @@ function vivid(r: number, g: number, b: number) {
 
 // A light that travels around the card's border in the image's own colour.
 export function CardGlow({ src }: { src: string }) {
-  const color = useImageAccent(src);
+  const element = useRef<HTMLSpanElement>(null);
+  const [nearby, setNearby] = useState(false);
+  useEffect(() => {
+    const node = element.current;
+    if (!node || typeof IntersectionObserver === "undefined") {
+      setNearby(true);
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setNearby(true);
+        observer.disconnect();
+      }
+    }, { rootMargin: "200px" });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+  // Avoid eager image decoding and canvas sampling for off-screen cards.
+  const color = useImageAccent(nearby ? src : null);
   return (
     <span
+      ref={element}
       className={`card-glow${color ? " is-ready" : ""}`}
       style={color ? ({ "--glow": color } as CSSProperties) : undefined}
       aria-hidden="true"
@@ -65,9 +84,10 @@ export function CardGlow({ src }: { src: string }) {
   );
 }
 
-export function useImageAccent(src: string) {
+export function useImageAccent(src: string | null) {
   const [color, setColor] = useState<string | null>(null);
   useEffect(() => {
+    if (!src) return;
     let active = true;
     if (!cache.has(src)) cache.set(src, sample(src));
     cache.get(src)!.then((value) => {

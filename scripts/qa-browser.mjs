@@ -47,7 +47,7 @@ async function check(name, run) {
 async function launchViewport(width, height) {
   const context = await browser.newContext({ viewport: { width, height }, reducedMotion: "reduce" });
   await context.addInitScript(() => {
-    sessionStorage.setItem("portfolio-video-reference-intro-v1", "seen");
+    sessionStorage.setItem("portfolio-traced-r13-intro-v2", "seen");
     window.__qaWindowOpen = null;
     window.open = (url) => { window.__qaWindowOpen = String(url); return null; };
   });
@@ -258,45 +258,56 @@ try {
   });
 
 
-  await check("Reference intro reproduces the geometric map M and pin without video", async () => {
-    const context = await browser.newContext({viewport:{width:390,height:844},reducedMotion:"no-preference"});
-    const page = await context.newPage();
-    const errors = [];
-    page.on("pageerror", e => errors.push(e.message));
+  await check("Approved r13 loader draws individual M segments, map roads and both pins", async () => {
+    const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:"no-preference"});
+    const page=await context.newPage();
+    const errors=[];
+    page.on("pageerror",e=>errors.push(e.message));
     try {
-      await page.goto(base, { waitUntil:"domcontentloaded" });
-      const overlay = page.locator(".brand-intro-overlay.reference-intro");
+      await page.goto(base,{waitUntil:"domcontentloaded"});
+      const overlay=page.locator(".brand-intro-overlay.reference-intro");
       await overlay.waitFor({state:"visible"});
-      assert.equal(await overlay.locator("video, source, .brand-intro-flight, .brand-intro-progress, .brand-intro-status").count(),0,
-        "Intro must not embed the MP4, fly to header or show fake loading text");
-      assert.equal(await overlay.locator(".reference-intro-slice").count(),12);
-      assert.equal(await overlay.locator(".reference-intro-signal").count(),16);
-      assert.equal(await overlay.locator(".reference-intro-logo").count(),1);
-      const assetUrl=await overlay.locator(".reference-intro-logo").getAttribute("src");
-      assert.match(assetUrl??"", /\/assets\/brand\/video-reference-mark\.svg$/);
-      const logo=await page.evaluate(async url => {
-        const response=await fetch(url);
-        if(!response.ok) throw new Error("Reference logo not available: "+response.status);
-        const svg=new DOMParser().parseFromString(await response.text(),"image/svg+xml");
-        return {
-          outer: svg.querySelector("#mark-shape path")?.getAttribute("d"),
-          pins: svg.querySelectorAll('circle[cx="190"][cy="165"]').length,
-          geom: svg.querySelectorAll('path[d*="L 190 112"]').length,
-          grid: svg.querySelectorAll('g[clip-path="url(#mark-shape)"] path').length,
-        };
-      },assetUrl);
-      assert.match(logo.outer??"",/\bL 190 112\b/,"Angular M silhouette must match reference");
-      assert.equal(logo.pins,1,"Central location marker must be present");
-      assert.ok(logo.grid>=50,"Geospatial map texture must be present inside M");
+      assert.equal(await overlay.locator("video, source, .reference-intro-slice, .brand-intro-progress").count(),0,
+        "Approved loader must draw the paths instead of showing a video, slices or fake progress");
+      assert.ok(await overlay.locator(".outline-layer .edge-segment").count()>=24);
+      assert.ok(await overlay.locator(".outline-layer .edge-glow").count()>=24);
+      assert.ok(await overlay.locator(".local-road, .topo-stroke, .main-road, .neon-road").count()>=65);
+      assert.equal(await overlay.locator(".glitch-line").count(),16);
+      assert.equal(await overlay.locator(".big-pin .pin-outer").count(),1);
+      assert.equal(await overlay.locator(".big-pin .pin-hole").count(),1);
+      assert.equal(await overlay.locator(".small-pin .local-pin").count(),1);
+      const shape=await overlay.locator("#m-clip path").getAttribute("d");
+      assert.match(shape??"",/Q 7 8/,"M must retain approved radius-13 curves");
+      const svgSource=await overlay.locator(".m-svg").getAttribute("viewBox");
+      assert.equal(svgSource,"-20 -20 420 360");
+      await page.waitForFunction(()=>document.querySelector(".reference-intro.is-running")!==null);
+      const style=await overlay.locator(".edge-segment").first().evaluate(el=>{
+        const s=getComputedStyle(el);
+        return {name:s.animationName,iterations:s.animationIterationCount,dash:s.strokeDasharray};
+      });
+      assert.match(style.name,/draw-one/);
+      assert.equal(style.iterations,"1");
+      assert.ok(style.dash.includes("100"));
+      const headerSrc=await page.locator(".site-header .portfolio-brand-mark img").getAttribute("src");
+      assert.match(headerSrc??"",/traced-r13-logo\.svg\?v=approved-r13-traced-v2/);
+      const a=await page.evaluate(async url=>{
+        const res=await fetch(url);
+        const svg=new DOMParser().parseFromString(await res.text(),"image/svg+xml");
+        return {ok:res.ok,curve:svg.querySelector("#m-clip path")?.getAttribute("d"),
+          pin:svg.querySelectorAll(".big-pin .pin-outer").length};
+      },headerSrc);
+      assert.ok(a.ok,"Destination logo must load");
+      assert.equal(a.curve,shape,"Animated and destination logos must share same contour");
+      assert.equal(a.pin,1,"Pin must be preserved in header logo");
       assert.deepEqual(errors,[]);
-      await page.keyboard.press("Escape");
+      await page.getByRole("button",{name:/تخطي المقدمة/}).click();
       await overlay.waitFor({state:"detached"});
-    } finally { await context.close(); }
+    } finally {await context.close();}
   });
 
-  await check("Reference intro animates fragments without looping or additional text", async () => {
-    const context = await browser.newContext({viewport:{width:390,height:844},reducedMotion:"no-preference"});
-    const page = await context.newPage();
+  await check("Approved six-second drawing follows original SVG segment timing", async () => {
+    const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:"no-preference"});
+    const page=await context.newPage();
     const errors=[];
     page.on("pageerror",e=>errors.push(e.message));
     try {
@@ -304,35 +315,30 @@ try {
       const overlay=page.locator(".reference-intro");
       await overlay.waitFor({state:"visible"});
       await page.waitForFunction(()=>document.querySelector(".reference-intro.is-running")!==null);
-      const css=await overlay.evaluate(el=>{
-        const slice=getComputedStyle(el.querySelector(".reference-intro-slice"));
-        const mark=getComputedStyle(el.querySelector(".reference-intro-logo"));
-        return {sliceAnimation:slice.animationName,sliceIterations:slice.animationIterationCount,
-          markAnimation:mark.animationName,markIterations:mark.animationIterationCount,
-          count:el.querySelectorAll("img").length,
-          sources:new Set(Array.from(el.querySelectorAll("img"),img=>img.src)).size};
-      });
-      assert.match(css.sliceAnimation,/ref-fragment/);
-      assert.equal(css.sliceIterations,"1");
-      assert.match(css.markAnimation,/ref-logo/);
-      assert.equal(css.markIterations,"1");
-      assert.equal(css.sources,1,"Every fragment should reuse the same SVG, not video frames");
-      assert.equal(css.count,14);
-      await page.waitForTimeout(2090);
-      const resolved=await overlay.locator(".reference-intro-logo").evaluate(el=>({
-        loaded:el.complete&&el.naturalWidth>0,
-        opacity:parseFloat(getComputedStyle(el).opacity),
+      const map=await overlay.locator(".local-road").first().evaluate(el=>({
+        duration:getComputedStyle(el).animationDuration,
+        delay:getComputedStyle(el).animationDelay,
+        source:el.getAttribute("d"),
       }));
-      assert.ok(resolved.loaded,"Reference logo image must load");
-      assert.ok(resolved.opacity>.95,"Fully assembled logo must be clear at 2.1 seconds");
-      await page.screenshot({path:output+"/reference-intro-resolved.png"});
-      await page.keyboard.press("Escape");
+      assert.match(map.duration,/0\.(53|61|69)s/);
+      assert.match(map.delay,/1\.63s/);
+      assert.ok(map.source?.startsWith("M"));
+      await page.waitForTimeout(2500);
+      const resolved=await overlay.evaluate(el=>({
+        edges:[...el.querySelectorAll(".edge-segment")].filter(p=>Number.parseFloat(getComputedStyle(p).strokeDashoffset)<2).length,
+        total:el.querySelectorAll(".edge-segment").length,
+        pinned:el.querySelector(".big-pin .pin-outer")!==null,
+      }));
+      assert.ok(resolved.edges>=resolved.total*.7,"Contour must be drawn progressively by 2.5s");
+      assert.ok(resolved.pinned);
+      await page.screenshot({path:output+"/approved-trace-mid.png",animations:"allow"});
+      await page.getByRole("button",{name:/تخطي المقدمة/}).click();
       await overlay.waitFor({state:"detached"});
       assert.deepEqual(errors,[]);
-    } finally { await context.close(); }
+    } finally {await context.close();}
   });
 
-  await check("Reference intro stays centered on mobile and desktop", async () => {
+  await check("Rounded traced loader is centered on mobile and desktop", async () => {
     for(const [width,height] of [[320,700],[390,844],[1280,800]]) {
       const context=await browser.newContext({viewport:{width,height},reducedMotion:"no-preference"});
       const page=await context.newPage();
@@ -342,21 +348,61 @@ try {
         await page.goto(base,{waitUntil:"domcontentloaded"});
         const overlay=page.locator(".reference-intro");
         await overlay.waitFor({state:"visible"});
-        const box=await overlay.locator(".reference-intro-symbol").evaluate(el=>{
+        const metrics=await overlay.locator(".reference-intro-symbol").evaluate(el=>{
           const r=el.getBoundingClientRect();
           return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,w:innerWidth,h:innerHeight};
         });
-        assert.ok(box.left>=0&&box.right<=box.w&&box.top>=0&&box.bottom<=box.h,
-          "Reference mark must fit screen: "+JSON.stringify(box));
-        await page.screenshot({path:output+"/reference-intro-"+width+".png"});
-        await page.keyboard.press("Escape");
+        assert.ok(metrics.left>=0&&metrics.right<=metrics.w&&metrics.top>=0&&metrics.bottom<=metrics.h,
+          "Approved M must fit viewport: "+JSON.stringify(metrics));
+        await page.screenshot({path:output+"/approved-traced-intro-"+width+".png"});
+        await page.getByRole("button",{name:/تخطي المقدمة/}).click();
         await overlay.waitFor({state:"detached"});
         assert.deepEqual(errors,[]);
-      } finally { await context.close(); }
+      } finally {await context.close();}
     }
   });
 
-  await check("Reference intro respects reduced motion", async () => {
+  await check("Approved 6s scene hands off a single matching M to real header", async () => {
+    for(const width of [390,1280]) {
+      const context=await browser.newContext({viewport:{width,height:800},reducedMotion:"no-preference"});
+      const page=await context.newPage();
+      const errors=[];
+      page.on("pageerror",e=>errors.push(e.message));
+      try {
+        await page.goto(base,{waitUntil:"domcontentloaded"});
+        const overlay=page.locator(".reference-intro");
+        await overlay.waitFor({state:"visible"});
+        const began=Date.now();
+        await page.waitForFunction(()=>document.querySelector(".reference-intro-flight")!==null,
+          {timeout:9000});
+        const time=Date.now()-began;
+        assert.ok(time>=5000&&time<8500,"The flight should begin after the 6s drawing, measured "+time);
+        const flight=await page.evaluate(()=>{
+          const source=document.querySelector(".reference-intro-symbol");
+          const img=document.querySelector(".reference-intro-flight");
+          const head=document.querySelector(".site-header .portfolio-brand-mark");
+          return {sourceVisibility:source&&getComputedStyle(source).visibility,
+            count:document.querySelectorAll(".reference-intro-flight").length,
+            flightSrc:img?.getAttribute("src"),
+            loaded:img?.complete&&img?.naturalWidth>0,
+            headerPending:head?.classList.contains("is-pending")};
+        });
+        assert.equal(flight.sourceVisibility,"hidden","Hide source as flight begins");
+        assert.equal(flight.count,1,"No duplicated logo during flight");
+        assert.match(flight.flightSrc??"",/traced-r13-logo\.svg/);
+        assert.ok(flight.loaded,"Preloaded asset should be visible while moving");
+        assert.equal(flight.headerPending,true,"Destination mark must remain hidden until transfer finishes");
+        await page.screenshot({path:output+"/approved-traced-flight-"+width+".png"});
+        await overlay.waitFor({state:"detached",timeout:3000});
+        assert.equal(await page.locator(".reference-intro-flight").count(),0);
+        assert.equal(await page.locator(".site-header .portfolio-brand-mark.is-pending").count(),0);
+        assert.notEqual(await page.locator("html").evaluate(el=>el.style.overflow),"hidden");
+        assert.deepEqual(errors,[]);
+      } finally {await context.close();}
+    }
+  });
+
+  await check("Approved tracing loader respects reduced motion", async () => {
     const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:"reduce"});
     const page=await context.newPage();
     try {
@@ -365,34 +411,15 @@ try {
     } finally {await context.close();}
   });
 
-  await check("Reference intro ends after video duration, unlocks page, and keeps header", async () => {
-    const context=await browser.newContext({viewport:{width:1280,height:800},reducedMotion:"no-preference"});
-    const page=await context.newPage();
-    const errors=[];
-    page.on("pageerror",e=>errors.push(e.message));
-    try {
-      await page.goto(base,{waitUntil:"domcontentloaded"});
-      const overlay=page.locator(".reference-intro");
-      await overlay.waitFor({state:"visible"});
-      const began=Date.now();
-      await overlay.waitFor({state:"detached",timeout:8000});
-      assert.ok(Date.now()-began<5500,"Reference intro must end shortly after 3.39 seconds");
-      assert.equal(await page.locator(".brand-intro-flight").count(),0);
-      assert.equal(await page.locator(".site-header .portfolio-brand-mark.is-pending").count(),0);
-      assert.notEqual(await page.locator("html").evaluate(el=>el.style.overflow),"hidden");
-      assert.deepEqual(errors,[]);
-    } finally {await context.close();}
-  });
-
-  await check("Intro can be dismissed by Escape without leaving scrolling locked", async () => {
-    const context=await browser.newContext({viewport:{width:390,height:844}});
+  await check("Approved tracing loader can be skipped without scroll lock", async () => {
+    const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:"no-preference"});
     const page=await context.newPage();
     try {
       await page.goto(base,{waitUntil:"domcontentloaded"});
       const overlay=page.locator(".reference-intro");
       await overlay.waitFor({state:"visible"});
-      await page.keyboard.press("Escape");
-      await overlay.waitFor({state:"detached",timeout:2000});
+      await page.getByRole("button",{name:/تخطي المقدمة/}).click();
+      await overlay.waitFor({state:"detached",timeout:2500});
       assert.notEqual(await page.locator("html").evaluate(el=>el.style.overflow),"hidden");
     } finally {await context.close();}
   });

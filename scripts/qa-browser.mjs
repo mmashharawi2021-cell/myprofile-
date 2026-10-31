@@ -47,7 +47,7 @@ async function check(name, run) {
 async function launchViewport(width, height) {
   const context = await browser.newContext({ viewport: { width, height }, reducedMotion: "reduce" });
   await context.addInitScript(() => {
-    sessionStorage.setItem("portfolio-brand-intro-v2", "seen");
+    sessionStorage.setItem("portfolio-digital-glitch-v1", "seen");
     window.__qaWindowOpen = null;
     window.open = (url) => { window.__qaWindowOpen = String(url); return null; };
   });

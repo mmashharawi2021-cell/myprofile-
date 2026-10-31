@@ -6,6 +6,7 @@ on:
       - main
       - "qa/**"
       - "feature/seo-*"
+      - "feature/social-*"
   workflow_dispatch:
 
 permissions:

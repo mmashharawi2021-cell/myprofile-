@@ -40,7 +40,7 @@ const icons = {
   check: Check,
 };
 export default function App() {
-  const { content: c, whatsapp, generalWhatsApp, loaded } = useSite();
+  const { content: c, whatsapp, generalWhatsApp, connected } = useSite();
   const [theme, setTheme] = useState(() => {
     try {
       return localStorage.getItem("portfolio-theme-choice");
@@ -494,13 +494,14 @@ export default function App() {
       {showIntro && (
         <ReferenceIntro targetRef={brandAnchorRef} onComplete={completeIntro} />
       )}
-      <button
-        className="editor-launch"
-        disabled={!loaded}
-        onClick={() => setEditing(true)}
-      >
-        <Pencil size={16} /> تحرير
-      </button>
+      {connected && (
+        <button
+          className="editor-launch"
+          onClick={() => setEditing(true)}
+        >
+          <Pencil size={16} /> تحرير
+        </button>
+      )}
       {editing && (
         <Suspense
           fallback={

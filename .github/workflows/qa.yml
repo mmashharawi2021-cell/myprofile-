@@ -9,6 +9,7 @@ on:
       - "feature/social-*"
       - "feature/satellite-*"
       - "feature/smooth-*"
+      - "feature/laser-*"
   workflow_dispatch:
 
 permissions:

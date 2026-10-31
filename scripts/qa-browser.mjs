@@ -273,10 +273,10 @@ try {
         "No orbital scene may remain");
       assert.equal(await overlay.locator("animateMotion, .brand-intro-satellite").count(), 0,
         "No satellites or SMIL motion may remain");
-      const traced = await overlay.locator(".brand-intro-outline path").getAttribute("d");
+      const traced = await overlay.locator(".brand-intro-outline path").first().getAttribute("d");
       assert.match(traced ?? "", /\bC\b/, "M outline should use smooth cubic Bezier curves");
       const logoUrl = await overlay.locator(".brand-intro-original").getAttribute("src");
-      assert.match(logoUrl ?? "", /^\/myprofile-\/assets\/brand\/muhanad-symbol\.svg\?v=v4-refined-/,
+      assert.match(logoUrl ?? "", /^\/myprofile-\/assets\/brand\/muhanad-symbol\.svg\?v=laser-glitch-v4-/,
         "The intro must load the updated logo asset");
       const svg = await page.evaluate(async (url) => {
         const response = await fetch(url);
@@ -303,6 +303,9 @@ try {
         return {
           contourLines: image.querySelectorAll("#contours path").length,
           contourOpacity: image.querySelector("#contours")?.getAttribute("opacity"),
+          pinClearance: image.querySelector("#contours")?.getAttribute("mask"),
+          pinMaskCircle: image.querySelector("#pinClearanceMask circle")?.getAttribute("r"),
+          strayDecorativeCurves: [...image.querySelectorAll('g[stroke="#D2F3FF"] path')].length,
           waveStrokes: [...(flow?.querySelectorAll("path") ?? [])].map(p => p.getAttribute("stroke-width")),
           fadeMask: flow?.getAttribute("mask"),
           stops: [...(gradient?.querySelectorAll("stop") ?? [])].map(s => s.getAttribute("offset")),
@@ -311,7 +314,11 @@ try {
         };
       }, logoUrl);
       assert.equal(svgArtwork.contourLines, 4, "Topographic lines should be simplified to four");
-      assert.equal(svgArtwork.contourOpacity, ".3");
+      assert.equal(svgArtwork.contourOpacity, ".27");
+      assert.equal(svgArtwork.pinClearance, "url(#pinClearanceMask)");
+      assert.equal(svgArtwork.pinMaskCircle, "84", "Contours should avoid the geographic pin");
+      assert.equal(svgArtwork.strayDecorativeCurves, 0,
+        "The extra lower-right white curve should be removed");
       assert.deepEqual(svgArtwork.waveStrokes, ["62", "37", "6"], "Geospatial wave should be lighter");
       assert.equal(svgArtwork.fadeMask, "url(#waveFadeMask)", "Right wave ending should fade naturally");
       assert.deepEqual(svgArtwork.stops, ["0", ".74", ".96", "1"]);
@@ -321,6 +328,70 @@ try {
       assert.deepEqual(errors, []);
       await page.getByRole("button", { name: /تخطي المقدمة/ }).click();
       await overlay.waitFor({ state: "detached", timeout: 5000 });
+    } finally { await context.close(); }
+  });
+
+  await check("Laser Glitch is brief, non-looping and leaves the real logo intact", async () => {
+    const context = await browser.newContext({
+      viewport: { width: 390, height: 844 },
+      reducedMotion: "no-preference",
+    });
+    const page = await context.newPage();
+    const errors = [];
+    page.on("pageerror", error => errors.push(error.message));
+    try {
+      await page.goto(base, { waitUntil: "domcontentloaded" });
+      const overlay = page.locator(".brand-intro-overlay");
+      await overlay.waitFor({ state: "visible" });
+      assert.equal(await overlay.locator(".brand-intro-laser-halo").count(), 1);
+      assert.equal(await overlay.locator(".brand-intro-laser-core").count(), 1);
+      assert.equal(await overlay.locator(".brand-intro-glitch-copy").count(), 2);
+      assert.equal(await overlay.locator(".brand-intro-laser-sweep").count(), 1);
+      const svgPaths = await overlay.locator(".brand-intro-outline path").evaluateAll(els =>
+        els.map(el => el.getAttribute("d")));
+      assert.equal(svgPaths.length, 2);
+      assert.equal(svgPaths[0], svgPaths[1], "Glow and core follow the same brand M");
+      await overlay.locator(".is-never-a-control").count();
+      const animations = await overlay.evaluate(el => {
+        const glitch = el.querySelector(".brand-intro-glitch-upper");
+        const sweep = el.querySelector(".brand-intro-laser-sweep");
+        const halo = el.querySelector(".brand-intro-laser-halo");
+        const upperStyle = getComputedStyle(glitch);
+        const sweepStyle = getComputedStyle(sweep);
+        const haloStyle = getComputedStyle(halo);
+        return {
+          glitchName: upperStyle.animationName,
+          glitchIterations: upperStyle.animationIterationCount,
+          glitchDuration: upperStyle.animationDuration,
+          sweepName: sweepStyle.animationName,
+          haloName: haloStyle.animationName,
+        };
+      });
+      assert.match(animations.glitchName, /brand-intro-glitch-upper/);
+      assert.equal(animations.glitchIterations, "1", "Glitch must not loop or keep flashing");
+      assert.equal(animations.glitchDuration, "0.58s");
+      assert.match(animations.sweepName, /brand-intro-sweep/);
+      assert.match(animations.haloName, /brand-intro-laser-trace/);
+      await page.waitForTimeout(1430);
+      const result = await overlay.evaluate(el => {
+        const original = el.querySelector(".brand-intro-original");
+        const glitch = el.querySelector(".brand-intro-glitch-upper");
+        const lower = el.querySelector(".brand-intro-glitch-lower");
+        return {
+          originalOpacity: Number.parseFloat(getComputedStyle(original).opacity),
+          glitchOpacity: Number.parseFloat(getComputedStyle(glitch).opacity),
+          lowerOpacity: Number.parseFloat(getComputedStyle(lower).opacity),
+          logoComplete: original.complete && original.naturalWidth > 0,
+        };
+      });
+      assert.ok(result.logoComplete);
+      assert.ok(result.originalOpacity > .98, "Logo should fully resolve after laser pass");
+      assert.equal(result.glitchOpacity, 0, "Glitch upper must settle without lingering");
+      assert.equal(result.lowerOpacity, 0, "Glitch lower must settle without lingering");
+      await page.screenshot({ path: output + "/laser-glitch-v4-resolved.png", animations: "allow" });
+      await page.getByRole("button", { name: /تخطي المقدمة/ }).click();
+      await overlay.waitFor({ state: "detached", timeout: 5000 });
+      assert.deepEqual(errors, []);
     } finally { await context.close(); }
   });
 
@@ -411,7 +482,9 @@ try {
       await page.goto(base, { waitUntil: "domcontentloaded" });
       const overlay = page.locator(".brand-intro-overlay");
       await overlay.waitFor({ state: "visible" });
-      await overlay.waitFor({ state: "detached", timeout: 15000 });
+      const began = Date.now();
+      await overlay.waitFor({ state: "detached", timeout: 10000 });
+      assert.ok(Date.now() - began < 6500, "Laser-glitch intro must finish quickly");
       assert.equal(await page.locator(".site-header .portfolio-brand-mark.is-pending").count(), 0);
       assert.notEqual(await page.locator("html").evaluate(el => el.style.overflow), "hidden");
       assert.deepEqual(errors, []);

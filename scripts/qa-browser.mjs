@@ -257,261 +257,152 @@ try {
     }
   });
 
-  await check("V4 intro has no orbits and uses a smooth M logo", async () => {
+  await check("Digital glitch intro keeps the original V4 M and GIS pin", async () => {
     const context = await browser.newContext({
-      viewport: { width: 390, height: 844 },
-      reducedMotion: "no-preference",
+      viewport: { width: 390, height: 844 }, reducedMotion: "no-preference",
     });
     const page = await context.newPage();
     const errors = [];
     page.on("pageerror", error => errors.push(error.message));
     try {
       await page.goto(base, { waitUntil: "domcontentloaded" });
-      const overlay = page.locator(".brand-intro-overlay");
+      const overlay = page.locator(".brand-intro-overlay.digital-intro");
       await overlay.waitFor({ state: "visible" });
-      assert.equal(await overlay.locator(".brand-intro-orbital-scene").count(), 0,
-        "No orbital scene may remain");
-      assert.equal(await overlay.locator("animateMotion, .brand-intro-satellite").count(), 0,
-        "No satellites or SMIL motion may remain");
-      const traced = await overlay.locator(".brand-intro-outline path").first().getAttribute("d");
-      assert.match(traced ?? "", /\bC\b/, "M outline should use smooth cubic Bezier curves");
-      const logoUrl = await overlay.locator(".brand-intro-original").getAttribute("src");
-      assert.match(logoUrl ?? "", /^\/myprofile-\/assets\/brand\/muhanad-symbol\.svg\?v=laser-glitch-v4-/,
-        "The intro must load the updated logo asset");
-      const svg = await page.evaluate(async (url) => {
+      assert.equal(await overlay.locator(".brand-intro-orbital-scene, .brand-intro-satellite").count(), 0);
+      assert.equal(await overlay.locator(".brand-intro-laser-core, .brand-intro-laser-sweep").count(), 0,
+        "Old laser loader must not be rendered");
+      assert.equal(await overlay.locator(".digital-intro-fragment").count(), 10);
+      assert.equal(await overlay.locator(".digital-intro-signal").count(), 16);
+      assert.equal(await overlay.locator(".digital-intro-circuits").count(), 1);
+      const shape = await overlay.locator(".digital-intro-edge").getAttribute("d");
+      assert.match(shape ?? "", /\bC\b/, "The approved mark has curved V4 paths");
+      assert.equal(shape, await overlay.locator("#digitalMarkClip path").getAttribute("d"));
+      const url = await overlay.locator(".digital-intro-base").getAttribute("src");
+      assert.match(url ?? "", /^\/myprofile-\/assets\/brand\/muhanad-symbol\.svg\?v=laser-glitch-v4-/);
+      const asset = await page.evaluate(async url => {
         const response = await fetch(url);
-        if (!response.ok) throw new Error("Logo asset not available: " + response.status);
+        if (!response.ok) throw new Error("Logo asset unavailable: " + response.status);
         const image = new DOMParser().parseFromString(await response.text(), "image/svg+xml");
-        const clipPath = image.querySelector("#shape path")?.getAttribute("d");
         return {
-          clipPath,
-          visibleOutline: image.querySelector('path[stroke="#6ABAFD"]')?.getAttribute("d"),
-          contourCount: [...image.querySelectorAll("path")].filter(
-            path => path.getAttribute("d") === clipPath,
-          ).length,
-        };
-      }, logoUrl);
-      assert.equal(svg.clipPath, traced, "Clip mask must use the same smooth outline as the intro");
-      assert.equal(svg.visibleOutline, traced, "Visible outline must match the intro trace");
-      assert.equal(svg.contourCount, 3,
-        "All three logo contours should share the exact smooth path");
-      const svgArtwork = await page.evaluate(async url => {
-        const response = await fetch(url);
-        const image = new DOMParser().parseFromString(await response.text(), "image/svg+xml");
-        const flow = image.querySelector("#geo-flow");
-        const gradient = image.querySelector("#waveFade");
-        return {
-          contourLines: image.querySelectorAll("#contours path").length,
-          contourOpacity: image.querySelector("#contours")?.getAttribute("opacity"),
-          pinClearance: image.querySelector("#contours")?.getAttribute("mask"),
-          pinMaskCircle: image.querySelector("#pinClearanceMask circle")?.getAttribute("r"),
-          strayDecorativeCurves: [...image.querySelectorAll('g[stroke="#D2F3FF"] path')].length,
-          waveStrokes: [...(flow?.querySelectorAll("path") ?? [])].map(p => p.getAttribute("stroke-width")),
-          fadeMask: flow?.getAttribute("mask"),
-          stops: [...(gradient?.querySelectorAll("stop") ?? [])].map(s => s.getAttribute("offset")),
+          contour: image.querySelector("#shape path")?.getAttribute("d"),
+          outline: image.querySelector('path[stroke="#6ABAFD"]')?.getAttribute("d"),
           pin: image.querySelectorAll('g[transform="translate(610 125)"] circle').length,
-          colors: [...image.querySelectorAll("#blue stop")].map(s => s.getAttribute("stop-color")),
         };
-      }, logoUrl);
-      assert.equal(svgArtwork.contourLines, 4, "Topographic lines should be simplified to four");
-      assert.equal(svgArtwork.contourOpacity, ".27");
-      assert.equal(svgArtwork.pinClearance, "url(#pinClearanceMask)");
-      assert.equal(svgArtwork.pinMaskCircle, "84", "Contours should avoid the geographic pin");
-      assert.equal(svgArtwork.strayDecorativeCurves, 0,
-        "The extra lower-right white curve should be removed");
-      assert.deepEqual(svgArtwork.waveStrokes, ["62", "37", "6"], "Geospatial wave should be lighter");
-      assert.equal(svgArtwork.fadeMask, "url(#waveFadeMask)", "Right wave ending should fade naturally");
-      assert.deepEqual(svgArtwork.stops, ["0", ".74", ".96", "1"]);
-      assert.equal(svgArtwork.pin, 1, "The original location pin must remain");
-      assert.deepEqual(svgArtwork.colors, ["#07172B", "#0066CC", "#1684ED", "#00C8F0"],
-        "Approved blue gradient colors must remain unchanged");
+      }, url);
+      assert.equal(asset.contour, shape);
+      assert.equal(asset.outline, shape);
+      assert.equal(asset.pin, 1, "Original GIS pin must remain");
       assert.deepEqual(errors, []);
       await page.getByRole("button", { name: /تخطي المقدمة/ }).click();
-      await overlay.waitFor({ state: "detached", timeout: 5000 });
+      await overlay.waitFor({ state: "detached" });
     } finally { await context.close(); }
   });
 
-  await check("Laser Glitch is brief, non-looping and leaves the real logo intact", async () => {
+  await check("Digital glitch is brief, assembled from one image and never loops", async () => {
     const context = await browser.newContext({
-      viewport: { width: 390, height: 844 },
-      reducedMotion: "no-preference",
+      viewport: { width: 390, height: 844 }, reducedMotion: "no-preference",
     });
     const page = await context.newPage();
     const errors = [];
     page.on("pageerror", error => errors.push(error.message));
     try {
       await page.goto(base, { waitUntil: "domcontentloaded" });
-      const overlay = page.locator(".brand-intro-overlay");
+      const overlay = page.locator(".brand-intro-overlay.digital-intro");
       await overlay.waitFor({ state: "visible" });
-      assert.equal(await overlay.locator(".brand-intro-laser-halo").count(), 1);
-      assert.equal(await overlay.locator(".brand-intro-laser-core").count(), 1);
-      assert.equal(await overlay.locator(".brand-intro-glitch-copy").count(), 2);
-      assert.equal(await overlay.locator(".brand-intro-laser-sweep").count(), 1);
-      assert.equal(await overlay.locator("#brandIntroLaserClip path").count(), 1);
-      const clipPath = await overlay.locator("#brandIntroLaserClip path").getAttribute("d");
-      assert.equal(clipPath, await overlay.locator(".brand-intro-laser-core").getAttribute("d"),
-        "Laser scan must be clipped precisely to the M contour");
-      assert.equal(await overlay.locator(".brand-intro-laser-sweep").getAttribute("width"), "785");
-      const sweepParent = await overlay.locator(".brand-intro-laser-sweep").evaluate(el =>
-        el.parentElement?.getAttribute("clip-path"));
-      assert.equal(sweepParent, "url(#brandIntroLaserClip)");
-      assert.equal(await overlay.locator(".brand-intro-mark-stack > .brand-intro-laser-sweep").count(),
-        0, "Unclipped horizontal beam must not remain in the DOM");
-      const svgPaths = await overlay.locator(".brand-intro-laser-halo, .brand-intro-laser-core").evaluateAll(els =>
-        els.map(el => el.getAttribute("d")));
-      assert.equal(svgPaths.length, 2);
-      assert.equal(svgPaths[0], svgPaths[1], "Glow and core follow the same brand M");
-      await overlay.locator(".is-never-a-control").count();
-      const animations = await overlay.evaluate(el => {
-        const glitch = el.querySelector(".brand-intro-glitch-upper");
-        const sweep = el.querySelector(".brand-intro-laser-sweep");
-        const halo = el.querySelector(".brand-intro-laser-halo");
-        const upperStyle = getComputedStyle(glitch);
-        const sweepStyle = getComputedStyle(sweep);
-        const haloStyle = getComputedStyle(halo);
+      await page.waitForFunction(() => document.querySelector(".digital-intro.is-running") !== null);
+      const styles = await overlay.evaluate(el => {
+        const fragment = el.querySelector(".digital-intro-fragment");
+        const baseMark = el.querySelector(".digital-intro-base");
+        const edge = el.querySelector(".digital-intro-edge");
+        const fragmentCss = getComputedStyle(fragment);
+        const baseCss = getComputedStyle(baseMark);
         return {
-          glitchName: upperStyle.animationName,
-          glitchIterations: upperStyle.animationIterationCount,
-          glitchDuration: upperStyle.animationDuration,
-          sweepName: sweepStyle.animationName,
-          haloName: haloStyle.animationName,
+          fragmentAnimation: fragmentCss.animationName,
+          iterations: fragmentCss.animationIterationCount,
+          baseAnimation: baseCss.animationName,
+          edgeAnimation: getComputedStyle(edge).animationName,
+          imageCount: el.querySelectorAll(".digital-intro-fragment").length,
+          uniqueImages: new Set(Array.from(el.querySelectorAll(".digital-intro-base, .digital-intro-fragment"), img => img.getAttribute("src"))).size,
         };
       });
-      assert.match(animations.glitchName, /brand-intro-glitch-upper/);
-      assert.equal(animations.glitchIterations, "1", "Glitch must not loop or keep flashing");
-      assert.equal(animations.glitchDuration, "0.5s");
-      assert.match(animations.sweepName, /brand-intro-sweep/);
-      assert.match(animations.haloName, /brand-intro-laser-trace/);
-      await page.waitForTimeout(1430);
-      const result = await overlay.evaluate(el => {
-        const original = el.querySelector(".brand-intro-original");
-        const glitch = el.querySelector(".brand-intro-glitch-upper");
-        const lower = el.querySelector(".brand-intro-glitch-lower");
-        return {
-          originalOpacity: Number.parseFloat(getComputedStyle(original).opacity),
-          glitchOpacity: Number.parseFloat(getComputedStyle(glitch).opacity),
-          lowerOpacity: Number.parseFloat(getComputedStyle(lower).opacity),
-          logoComplete: original.complete && original.naturalWidth > 0,
-        };
-      });
-      assert.ok(result.logoComplete);
-      assert.ok(result.originalOpacity > .98, "Logo should fully resolve after laser pass");
-      assert.equal(result.glitchOpacity, 0, "Glitch upper must settle without lingering");
-      assert.equal(result.lowerOpacity, 0, "Glitch lower must settle without lingering");
-      await page.screenshot({ path: output + "/laser-glitch-v4-resolved.png", animations: "allow" });
+      assert.match(styles.fragmentAnimation, /digital-fragment-reveal/);
+      assert.equal(styles.iterations, "1");
+      assert.match(styles.baseAnimation, /digital-base-reveal/);
+      assert.match(styles.edgeAnimation, /digital-edge-assemble/);
+      assert.equal(styles.imageCount, 10);
+      assert.equal(styles.uniqueImages, 1, "All pieces reuse the original logo asset");
+      await page.waitForTimeout(2100);
+      const completed = await overlay.locator(".digital-intro-base").evaluate(el => ({
+        opacity: Number.parseFloat(getComputedStyle(el).opacity),
+        loaded: el.complete && el.naturalWidth > 0,
+      }));
+      assert.equal(completed.loaded, true);
+      assert.ok(completed.opacity > .98, "The final resolved logo must be fully visible");
+      await page.screenshot({ path: output + "/digital-glitch-resolved.png" });
       await page.getByRole("button", { name: /تخطي المقدمة/ }).click();
-      await overlay.waitFor({ state: "detached", timeout: 5000 });
+      await overlay.waitFor({ state: "detached" });
       assert.deepEqual(errors, []);
     } finally { await context.close(); }
   });
 
-  await check("Refined V4 loader legibility, full names and layout", async () => {
+  await check("Digital glitch layout fits mobile and desktop without fake progress text", async () => {
     for (const [width, height] of [[320, 700], [390, 844], [1280, 800]]) {
-      const context = await browser.newContext({
-        viewport: { width, height },
-        reducedMotion: "no-preference",
-      });
+      const context = await browser.newContext({ viewport: { width, height }, reducedMotion: "no-preference" });
       const page = await context.newPage();
       const errors = [];
       page.on("pageerror", error => errors.push(error.message));
       try {
         await page.goto(base, { waitUntil: "domcontentloaded" });
-        const overlay = page.locator(".brand-intro-overlay");
+        const overlay = page.locator(".brand-intro-overlay.digital-intro");
         await overlay.waitFor({ state: "visible" });
-        await page.waitForFunction(() =>
-          document.querySelector(".brand-intro-en")?.textContent === "MUHANAD AL-MASHHARAWI",
-          { timeout: 11000 });
-        const metrics = await overlay.evaluate(el => {
-          const top = el.querySelector(".brand-intro-top");
-          const status = el.querySelector(".brand-intro-status");
-          const logo = el.querySelector(".brand-intro-symbol");
-          const name = el.querySelector(".brand-intro-ar");
-          const english = el.querySelector(".brand-intro-en");
-          const progress = el.querySelector(".brand-intro-progress");
-          const box = node => {
-            const r = node.getBoundingClientRect();
-            return { top: r.top, bottom: r.bottom, left: r.left, right: r.right };
-          };
-          return {
-            topColor: getComputedStyle(top).color,
-            statusColor: getComputedStyle(status).color,
-            top: box(top), logo: box(logo), name: box(name),
-            english: box(english), progress: box(progress),
-            viewportWidth: window.innerWidth,
-            viewportHeight: window.innerHeight,
-            actualArabic: name.textContent,
-            actualEnglish: english.textContent,
-          };
+        assert.equal(await overlay.locator(".brand-intro-progress, .brand-intro-status, .brand-intro-ar, .brand-intro-en").count(), 0);
+        const metrics = await overlay.locator(".digital-intro-symbol").evaluate(el => {
+          const r = el.getBoundingClientRect();
+          return { left: r.left, right: r.right, top: r.top, bottom: r.bottom,
+            viewportWidth: innerWidth, viewportHeight: innerHeight };
         });
-        assert.equal(metrics.topColor, "rgb(167, 196, 229)");
-        assert.equal(metrics.statusColor, "rgb(185, 205, 228)");
-        assert.equal(metrics.actualArabic.replace(/\\s/g, ""), "مهندالمشهراوي",
-          "Arabic segments should complete and be visually separated by flex gap");
-        assert.equal(metrics.actualEnglish, "MUHANAD AL-MASHHARAWI");
-        for (const item of [metrics.logo, metrics.name, metrics.english, metrics.progress]) {
-          assert.ok(item.left >= -1 && item.right <= metrics.viewportWidth + 1,
-            "Loader item must fit viewport width: " + JSON.stringify({ width, item }));
-          assert.ok(item.top >= -1 && item.bottom <= metrics.viewportHeight + 1,
-            "Loader item must fit viewport height: " + JSON.stringify({ height, item }));
-        }
-        assert.ok(metrics.progress.top - metrics.english.bottom < 65,
-          "English name and progress should not be separated by excessive whitespace");
-        await page.screenshot({
-          path: output + "/refined-v4-intro-" + width + ".png",
-          animations: "allow",
-        });
+        assert.ok(metrics.left >= 0 && metrics.right <= metrics.viewportWidth,
+          "Mark must fit viewport width: " + JSON.stringify(metrics));
+        assert.ok(metrics.top >= 0 && metrics.bottom <= metrics.viewportHeight,
+          "Mark must fit viewport height: " + JSON.stringify(metrics));
+        await page.screenshot({ path: output + "/digital-glitch-" + width + ".png" });
         await page.getByRole("button", { name: /تخطي المقدمة/ }).click();
-        await overlay.waitFor({ state: "detached", timeout: 5000 });
+        await overlay.waitFor({ state: "detached" });
         assert.deepEqual(errors, []);
       } finally { await context.close(); }
     }
   });
 
-  await check("Laser intro starts with a visible M and clean single-logo flight", async () => {
+  await check("Digital glitch hands off exactly one M to header", async () => {
     for (const width of [390, 1280]) {
       const context = await browser.newContext({
-        viewport: { width, height: 800 },
-        reducedMotion: "no-preference",
+        viewport: { width, height: 800 }, reducedMotion: "no-preference",
       });
       const page = await context.newPage();
       const errors = [];
       page.on("pageerror", error => errors.push(error.message));
       try {
         await page.goto(base, { waitUntil: "domcontentloaded" });
-        const overlay = page.locator(".brand-intro-overlay");
+        const overlay = page.locator(".brand-intro-overlay.digital-intro");
         await overlay.waitFor({ state: "visible" });
-        const early = await overlay.locator(".brand-intro-original").evaluate(el => ({
-          opacity: Number.parseFloat(getComputedStyle(el).opacity),
-          imageLoaded: el.complete && el.naturalWidth > 0,
-        }));
-        assert.ok(early.opacity > .06, "The starting logo should be faintly visible, not blank");
-        assert.ok(early.imageLoaded, "The introductory mark must already be loaded");
         await page.waitForFunction(() => document.querySelector(".brand-intro-flight") !== null,
           { timeout: 6500 });
-        const transfer = await page.evaluate(() => {
-          const intro = document.querySelector(".brand-intro-symbol");
-          const original = document.querySelector(".brand-intro-original");
-          const flight = document.querySelector(".brand-intro-flight");
+        const flight = await page.evaluate(() => {
+          const symbol = document.querySelector(".digital-intro-symbol");
+          const movingLogo = document.querySelector(".brand-intro-flight");
           return {
-            introVisibility: intro && getComputedStyle(intro).visibility,
-            originalVisibility: original && getComputedStyle(original).visibility,
-            flightVisibility: flight && getComputedStyle(flight).visibility,
-            flightImageLoaded: flight && flight.complete && flight.naturalWidth > 0,
-            flightCount: document.querySelectorAll(".brand-intro-flight").length,
-            brandVisible: document.querySelector(".site-header .portfolio-brand-mark") &&
-              getComputedStyle(document.querySelector(".site-header .portfolio-brand-mark")).opacity,
-            flightBounds: flight?.getBoundingClientRect().toJSON(),
+            originalVisibility: symbol && getComputedStyle(symbol).visibility,
+            movingCount: document.querySelectorAll(".brand-intro-flight").length,
+            movingVisible: movingLogo && getComputedStyle(movingLogo).visibility,
+            movingLoaded: movingLogo && movingLogo.complete && movingLogo.naturalWidth > 0,
           };
         });
-        assert.equal(transfer.introVisibility, "hidden",
-          "The original logo must hide immediately when the flight copy is inserted");
-        assert.equal(transfer.originalVisibility, "hidden",
-          "No second M may remain visible behind the moving logo");
-        assert.equal(transfer.flightVisibility, "visible");
-        assert.equal(transfer.flightCount, 1, "There should be exactly one flight image");
-        assert.ok(transfer.flightImageLoaded, "The flying logo image should be cached and rendered");
-        await page.screenshot({ path: output + "/laser-glitch-flight-" + width + ".png",
-          animations: "allow" });
+        assert.equal(flight.originalVisibility, "hidden",
+          "Original must hide during flight to avoid double M");
+        assert.equal(flight.movingCount, 1);
+        assert.equal(flight.movingVisible, "visible");
+        assert.equal(flight.movingLoaded, true);
+        await page.screenshot({ path: output + "/digital-glitch-flight-" + width + ".png" });
         await overlay.waitFor({ state: "detached", timeout: 5000 });
         assert.equal(await page.locator(".brand-intro-flight").count(), 0);
         assert.equal(await page.locator(".site-header .portfolio-brand-mark.is-pending").count(), 0);
@@ -520,7 +411,7 @@ try {
     }
   });
 
-  await check("V4 loader respects reduced motion", async () => {
+  await check("Digital glitch intro respects reduced motion", async () => {
     const context = await browser.newContext({
       viewport: { width: 390, height: 844 },
       reducedMotion: "reduce",
@@ -533,7 +424,7 @@ try {
     } finally { await context.close(); }
   });
 
-  await check("V4 loader exits naturally and keeps the header brand", async () => {
+  await check("Digital glitch intro exits naturally and keeps the header brand", async () => {
     const context = await browser.newContext({
       viewport: { width: 1280, height: 800 },
       reducedMotion: "no-preference",
@@ -547,7 +438,7 @@ try {
       await overlay.waitFor({ state: "visible" });
       const began = Date.now();
       await overlay.waitFor({ state: "detached", timeout: 10000 });
-      assert.ok(Date.now() - began < 6500, "Laser-glitch intro must finish quickly");
+      assert.ok(Date.now() - began < 6500, "Digital glitch intro must finish quickly");
       assert.equal(await page.locator(".site-header .portfolio-brand-mark.is-pending").count(), 0);
       assert.notEqual(await page.locator("html").evaluate(el => el.style.overflow), "hidden");
       assert.deepEqual(errors, []);

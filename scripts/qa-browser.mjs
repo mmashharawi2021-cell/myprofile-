@@ -83,8 +83,17 @@ try {
           scrollWidth: document.documentElement.scrollWidth,
           bodyWidth: document.body.scrollWidth,
         }));
-        assert.ok(Math.max(extent.scrollWidth, extent.bodyWidth) <= extent.pageWidth + 2,
-          "Horizontal overflow: " + JSON.stringify(extent));
+        if (Math.max(extent.scrollWidth, extent.bodyWidth) > extent.pageWidth + 2) {
+          const offenders = await page.evaluate(() => [...document.body.querySelectorAll("*")].map((el) => {
+            const rect = el.getBoundingClientRect();
+            return { tag: el.tagName.toLowerCase(), className: String(el.className?.baseVal ?? el.className ?? "").slice(0, 90),
+              left: Math.round(rect.left), right: Math.round(rect.right), width: Math.round(rect.width),
+              text: (el.textContent ?? "").trim().slice(0, 30) };
+          }).filter((rect) => rect.right > innerWidth + 2 || rect.left < -2)
+            .sort((a, b) => b.right - a.right).slice(0, 12));
+          await page.screenshot({ path: output + "/overflow-" + width + ".png", fullPage: true, animations: "disabled" });
+          throw new Error("Horizontal overflow: " + JSON.stringify({ extent, offenders }));
+        }
         const firstCardImg = first.locator(".project-preview img");
         await firstCardImg.scrollIntoViewIfNeeded();
         const cardLoaded = await firstCardImg.evaluate(async (image) => {

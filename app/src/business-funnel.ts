@@ -1,6 +1,6 @@
 import './business-funnel.css';
 
-const phone = '970568876261';
+const phone = '972599876261';
 const wa = (text: string) => `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
 const businessMessage = wa('مرحبًا مهند، أريد تصورًا مبدئيًا لنظام يساعدني في تنظيم عملي.\n\nنوع النشاط:\nالمشكلة الحالية:\nهل أستخدم Excel أو واتساب حاليًا؟\nالمخرجات المطلوبة:');
 

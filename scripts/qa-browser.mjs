@@ -387,7 +387,7 @@ try {
       assert.equal(snapshot.iterations,"1");
       assert.ok(snapshot.dash.includes("100"));
       const headerSrc=await page.locator(".site-header .portfolio-brand-mark img").getAttribute("src");
-      assert.match(headerSrc??"",/traced-r13-logo\\.svg\\?v=approved-r13-traced-v2/);
+      assert.match(headerSrc??"",/traced-r13-logo\.svg\?v=approved-r13-traced-v2/);
       const asset=await page.evaluate(async url=>{
         const response=await fetch(url);
         const svg=new DOMParser().parseFromString(await response.text(),"image/svg+xml");

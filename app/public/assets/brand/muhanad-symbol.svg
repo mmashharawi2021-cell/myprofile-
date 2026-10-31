@@ -3,8 +3,8 @@
 <linearGradient id="flow" x1="0" y1="0" x2="1" y2=".65"><stop stop-color="#00C8F0"/><stop offset=".6" stop-color="#5BABFF"/><stop offset="1" stop-color="#E1F8FF"/></linearGradient>
 <clipPath id="shape"><path d="M 52 21 C 32 21 18 35 18 56 L 18 513 C 18 540 37 555 69 555 L 165 554 C 189 554 201 538 201 513 L 201 351 C 201 332 194 316 184 302 L 152 260 C 143 248 135 239 134 231 C 133 223 139 218 146 222 C 157 227 168 242 176 253 L 326 441 C 337 454 341 466 342 482 L 344 495 C 347 519 366 539 388 539 C 411 539 426 520 426 497 L 426 486 C 426 476 429 468 436 459 L 559 308 C 569 295 578 281 585 286 C 591 291 586 312 586 328 L 586 514 C 586 541 602 554 627 554 L 732 554 C 755 554 766 536 766 515 L 766 58 C 766 35 751 21 731 21 L 655 21 C 632 21 616 26 599 39 L 409 225 C 400 235 391 236 383 226 L 216 44 C 201 28 184 21 168 21 Z"/></clipPath>
 <linearGradient id="waveFade" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="785" y2="0">
-<stop offset="0" stop-color="white"/><stop offset=".83" stop-color="white"/>
-<stop offset="1" stop-color="black"/>
+<stop offset="0" stop-color="white"/><stop offset=".74" stop-color="white"/>
+<stop offset=".96" stop-color="black"/><stop offset="1" stop-color="black"/>
 </linearGradient>
 <mask id="waveFadeMask" maskUnits="userSpaceOnUse" x="0" y="0" width="785" height="575">
 <rect width="785" height="575" fill="url(#waveFade)"/>

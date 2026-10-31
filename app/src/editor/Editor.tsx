@@ -73,6 +73,7 @@ const labels: Record<string, string> = {
   image: "صورة المشروع",
   desc: "وصف المشروع",
   value: "القيمة / النتيجة",
+  contribution: "عنوان قسم المساهمة المهنية",
   tech: "التقنيات والمجالات",
   link: "رابط المعاينة (اختياري)",
   projectDetails: "نصوص نافذة التفاصيل",
@@ -258,7 +259,9 @@ function Fields({
               <label htmlFor={`cms-${path}-${name}`}>
                 {name === "accent" && path !== "theme"
                   ? "السطر الملوّن"
-                  : (labels[name] ?? name)}
+                  : name === "role" && path.startsWith("projects.")
+                    ? "دوري ومساهمتي في المشروع"
+                    : (labels[name] ?? name)}
               </label>
               <Fields
                 value={entry}
@@ -321,6 +324,7 @@ function Fields({
         "description",
         "desc",
         "value",
+        "role",
         "message",
         "title",
         "whatsappMessage",

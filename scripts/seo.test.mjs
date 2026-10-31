@@ -63,7 +63,13 @@ test("SEO: JSON-LD describes actual person, website and page", () => {
   const webpage = graph.find((node) => node["@type"] === "WebPage");
   assert.equal(person.name, config.identity.name);
   assert.equal(person.alternateName, "Muhanad Al-Mashharawi");
-  assert.deepEqual(person.sameAs, [config.identity.github]);
+  assert.deepEqual(person.sameAs, [
+    config.identity.github,
+    "https://www.linkedin.com/in/mohanad-elmashharawi-a4bb23148",
+    "https://www.facebook.com/share/18ytFS2SDE/",
+    "https://www.instagram.com/mohanad.mashharawi",
+    "https://www.tiktok.com/@mohanad.mashharawi",
+  ]);
   assert.equal(person.url, site);
   assert.equal(website.url, site);
   assert.equal(website.creator["@id"], person["@id"]);

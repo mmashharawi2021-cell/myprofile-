@@ -4,6 +4,7 @@ import { approvedLogoSrc } from "./brandAsset";
 import ProjectsSection from "./ProjectsSection";
 import ProjectDialog from "./ProjectDialog";
 import ProgressiveImage from "./ProgressiveImage";
+import SocialLinks from "./SocialLinks";
 import { useHoverPill } from "./HoverPill";
 import { TechBadge } from "./TechBadge";
 import { FloatingWords } from "./FloatingWords";
@@ -16,10 +17,8 @@ import {
   Database,
   Github,
   Layers,
-  Mail,
   Map,
   Menu,
-  MessageCircle,
   Moon,
   Pencil,
   Sun,
@@ -293,20 +292,7 @@ export default function App() {
               {c.identity.email}
               <ArrowUpLeft size={19} />
             </a>
-            <div className="contact-social">
-              <a href={generalWhatsApp} target="_blank" rel="noreferrer">
-                <MessageCircle size={18} />
-                {c.contact.whatsappLabel}
-              </a>
-              <a href={c.identity.github} target="_blank" rel="noreferrer">
-                <Github size={18} />
-                {c.contact.githubLabel}
-              </a>
-              <a href={`mailto:${c.identity.email}`}>
-                <Mail size={18} />
-                {c.contact.emailLabel}
-              </a>
-            </div>
+            <SocialLinks />
           </div>
           <form
             className="contact-form"
@@ -456,6 +442,9 @@ export default function App() {
         <small>
           © {new Date().getFullYear()} {c.footer.copyright}
         </small>
+        <div className="footer-social-row">
+          <SocialLinks footer />
+        </div>
       </footer>
       <nav className="mobile-bottom" aria-label="روابط سريعة">
         {c.navigation.slice(0, 4).map((link) => (

@@ -763,3 +763,16 @@
     transition: none;
   }
 }
+
+/* Document the contributor's role without changing the existing project cards. */
+.project-contribution {
+  margin-top: 24px;
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+}
+.project-contribution p {
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.9;
+  margin-top: 10px;
+}

@@ -397,7 +397,7 @@ export default function App() {
             >
               <img src={approvedLogoSrc} alt="" />
             </span>
-            <span>
+            <span className="portfolio-brand-text">
               <span className="portfolio-brand-label">
                 {givenName}{familyName && <> <span className="portfolio-brand-surname">{familyName}</span></>}
               </span>

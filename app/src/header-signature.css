@@ -1,0 +1,94 @@
+/* Approved Signature header from the independent three-option preview.
+ * Scope every change to the site header. The six-second SVG loader and
+ * the illustrated GIS logo itself are intentionally unchanged.
+ */
+.site-header .header-inner {
+  min-height: 94px;
+}
+.site-header .brand {
+  gap: 14px;
+  min-width: 0;
+}
+.site-header .portfolio-brand-mark {
+  flex: none;
+  position: relative;
+  isolation: isolate;
+  width: 83px;
+  height: 76px;
+  background: radial-gradient(ellipse at center, #0b42696b, transparent 68%);
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+}
+.site-header .portfolio-brand-mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 1px;
+  object-fit: contain;
+  filter: brightness(1.85) contrast(1.22) saturate(1.44)
+    drop-shadow(0 0 8px #0ab8ffa0);
+}
+.site-header .portfolio-brand-text {
+  min-width: 0;
+  border-inline-start: 2px solid #32b5ec90;
+  padding-inline-start: 13px;
+  white-space: nowrap;
+}
+.site-header .portfolio-brand-label {
+  font-size: clamp(16px, 1.7vw, 19px);
+  line-height: 1.25;
+}
+.site-header .portfolio-brand-text small {
+  margin-top: 8px;
+}
+:root[data-theme="light"] .site-header .portfolio-brand-mark {
+  background: radial-gradient(ellipse at center, #a6dcfc50, transparent 68%);
+}
+:root[data-theme="light"] .site-header .portfolio-brand-mark img {
+  filter: brightness(1.4) contrast(1.22) saturate(1.34)
+    drop-shadow(0 0 4px #0075d085);
+}
+:root[data-theme="light"] .site-header .portfolio-brand-text {
+  border-inline-start-color: #0877ca99;
+}
+@media (max-width: 1100px) {
+  .site-header .brand { gap: 10px; }
+  .site-header .portfolio-brand-mark { width: 74px; height: 70px; }
+  .site-header .portfolio-brand-text { padding-inline-start: 10px; }
+  .site-header .portfolio-brand-label { font-size: 16px; }
+}
+@media (max-width: 850px) {
+  .site-header .header-inner { min-height: 94px; }
+  .site-header .desktop-nav { top: 94px; }
+  .site-header .portfolio-brand-mark { width: 70px; height: 68px; }
+  .site-header .brand { gap: 8px; }
+}
+@media (max-width: 600px) {
+  .site-header .header-inner { min-height: 90px; gap: 8px; }
+  .site-header .desktop-nav { top: 90px; }
+  .site-header .portfolio-brand-mark { width: 61px; height: 63px; }
+  .site-header .portfolio-brand-text { padding-inline-start: 8px; }
+  .site-header .portfolio-brand-label { font-size: 15px; }
+  .site-header .portfolio-brand-text small { font-size: 7px; letter-spacing: 1px; }
+  .site-header .brand { gap: 7px; }
+  .site-header .header-actions { flex: none; }
+}
+@media (max-width: 420px) {
+  .site-header .portfolio-brand-mark { width: 56px; height: 58px; }
+  .site-header .portfolio-brand-text { padding-inline-start: 7px; }
+  .site-header .portfolio-brand-label { font-size: 14px; }
+  .site-header .portfolio-brand-text small { font-size: 7px; letter-spacing: .8px; }
+  .site-header .brand { gap: 6px; }
+}
+@media (max-width: 355px) {
+  .site-header .header-inner { min-height: 83px; gap: 5px; }
+  .site-header .desktop-nav { top: 83px; }
+  .site-header .portfolio-brand-mark { width: 49px; height: 52px; }
+  .site-header .portfolio-brand-text { padding-inline-start: 5px; }
+  .site-header .portfolio-brand-label { font-size: 12px; }
+  .site-header .portfolio-brand-text small { font-size: 6px; letter-spacing: .55px; }
+  .site-header .brand { gap: 5px; }
+  .site-header .header-actions { gap: 4px; }
+  .site-header .icon-button { width: 32px; height: 32px; }
+}

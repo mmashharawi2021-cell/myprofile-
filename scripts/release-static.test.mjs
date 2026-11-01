@@ -42,3 +42,16 @@ test("release: search verification, sitemap and share preview are preserved", ()
     assert.ok(existsSync(resolve(builtRoot, path)), "Missing release file: " + path);
   }
 });
+
+test("release: dedicated CV entry, source images and downloadable PDF", () => {
+  const cvHtml = readFileSync(resolve(builtRoot, "cv/index.html"), "utf8");
+  const assets = [...cvHtml.matchAll(/(?:src|href)="(\/myprofile-\/[^"]+)"/g)]
+    .map((m) => m[1]);
+  assert.ok(assets.some(p => /\/assets\/.*\.js$/.test(p)), "Missing CV JS bundle");
+  assert.ok(assets.some(p => /\/assets\/.*\.css$/.test(p)), "Missing CV CSS bundle");
+  for (const path of assets) assert.ok(existsSync(builtFile(path)), "CV asset missing: " + path);
+  const pdf = readFileSync(resolve(builtRoot, "cv/Mohanad-Almashharawi-CV.pdf"));
+  assert.equal(pdf.subarray(0, 8).toString("ascii"), "%PDF-1.4");
+  assert.ok(pdf.length > 3000, "CV PDF should contain professional history");
+  assert.match(pdf.toString("ascii"), /%%EOF/);
+});

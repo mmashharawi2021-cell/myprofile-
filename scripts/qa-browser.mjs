@@ -372,6 +372,61 @@ try {
     } finally { await context.close(); }
   });
 
+  await check("Circular theme reveal starts at the toggle on homepage and CV", async () => {
+    for (const route of ["", "cv/"]) {
+      for (const reducedMotion of ["no-preference", "reduce"]) {
+        const context = await browser.newContext({
+          viewport: { width: 390, height: 844 },
+          reducedMotion,
+        });
+        await context.addInitScript(() => {
+          sessionStorage.setItem("portfolio-traced-r13-intro-v2", "seen");
+          window.__themeReveal = null;
+          const originalAnimate = Element.prototype.animate;
+          Element.prototype.animate = function (frames, options) {
+            if (options?.pseudoElement === "::view-transition-new(root)") {
+              window.__themeReveal = { frames, options };
+            }
+            return originalAnimate.call(this, frames, options);
+          };
+        });
+        const page = await context.newPage();
+        const errors = [];
+        page.on("pageerror", error => errors.push(error.message));
+        try {
+          await page.goto(base + route, { waitUntil: "domcontentloaded" });
+          const button = page.locator(route ? ".cv-theme" : ".header-actions .icon-button").first();
+          await button.waitFor();
+          const bounds = await button.boundingBox();
+          assert.ok(bounds, "Theme button must be visible");
+          const supportsTransitions = await page.evaluate(() => typeof document.startViewTransition === "function");
+          await button.click();
+          await page.waitForFunction(() => document.documentElement.dataset.theme === "light");
+          if (reducedMotion === "no-preference" && supportsTransitions) {
+            await page.waitForFunction(() => window.__themeReveal !== null);
+            const details = await page.evaluate(() => window.__themeReveal);
+            const centerX = Math.round(bounds.x + bounds.width / 2);
+            const centerY = Math.round(bounds.y + bounds.height / 2);
+            assert.equal(details.frames[0].clipPath, `circle(0px at ${centerX}px ${centerY}px)`);
+            assert.match(details.frames[1].clipPath, /^circle\\(\\d+px at \\d+px \\d+px\\)$/);
+            assert.ok(details.options.duration >= 600, "Reveal should be smooth rather than instant");
+          } else {
+            assert.equal(await page.evaluate(() => window.__themeReveal), null,
+              "Reduced motion or unsupported browsers should switch without revealing");
+          }
+          assert.equal(await page.evaluate(() => localStorage.getItem("portfolio-theme-choice")), "light");
+          await page.reload({ waitUntil: "domcontentloaded" });
+          assert.equal(await page.locator("html").getAttribute("data-theme"), "light");
+          await button.click();
+          await page.waitForFunction(() => document.documentElement.dataset.theme === "dark");
+          assert.deepEqual(errors, []);
+        } finally {
+          await context.close();
+        }
+      }
+    }
+  });
+
   await check("Contact form validation and WhatsApp URL", async () => {
     const { context, page, errors } = await launchViewport(390, 844);
     try {

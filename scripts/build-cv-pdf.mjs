@@ -30,7 +30,7 @@ function newPage(first=false) {
 }
 function ensure(height) {if(y-height<56)newPage();}
 function section(name){
-  ensure(100); y-=8; text(name.toUpperCase(),left,y,12,"F2",blue); y-=10;line(left,y,right,y);y-=16;
+  ensure(85); y-=6; text(name.toUpperCase(),left,y,12,"F2",blue); y-=9;line(left,y,right,y);y-=13;
 }
 function wrap(str,limit=95) {
   const words=clean(str).split(" ");
@@ -43,7 +43,7 @@ function paragraph(str,indent=0,size=9.25){
   const lines=wrap(str,Math.floor(100*(10/size))-(indent?5:0));
   ensure(lines.length*14+5);
   for(const l of lines){text(l,left+indent,y,size,"F1",muted);y-=14;}
-  y-=6;
+  y-=3;
 }
 function entry(title,meta,bullets=[]) {
   const groups=bullets.map(s=>wrap(s,99));
@@ -57,7 +57,7 @@ function entry(title,meta,bullets=[]) {
       y-=12;
     }
   }
-  y-=12;
+  y-=7;
 }
 newPage(true);
 section("Professional profile");

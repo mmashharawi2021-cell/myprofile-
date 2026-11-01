@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync, readFileSync } from "node:fs";
 import { spawn } from "node:child_process";
 import { setTimeout as sleep } from "node:timers/promises";
 import { chromium } from "playwright";
@@ -137,6 +137,81 @@ try {
         await page.getByRole("link", { name: "العودة إلى الموقع الرئيسي" }).click();
         await page.waitForURL(base);
         assert.deepEqual(errors, []);
+      } finally { await context.close(); }
+    }
+  });
+
+  await check("CV bilingual content, keyboard switching, persistence and reduced motion", async () => {
+    const cv = JSON.parse(readFileSync("app/src/cv/data.json", "utf8"));
+    for (const width of [320, 390, 1280]) {
+      for (const reducedMotion of ["reduce", "no-preference"]) {
+        const context = await browser.newContext({ viewport: { width, height: 844 }, reducedMotion });
+        await context.addInitScript(() => {
+          window.__cvTransitions = 0;
+          const animate = Element.prototype.animate;
+          Element.prototype.animate = function (...args) {
+            if (this.id === "cv-main") window.__cvTransitions++;
+            return animate.apply(this, args);
+          };
+        });
+        const page = await context.newPage();
+        const errors = [];
+        page.on("pageerror", error => errors.push(error.message));
+        try {
+          await page.goto(base + "cv/");
+          await page.locator(".cv-language").waitFor();
+          for (const language of ["en", "ar"]) {
+            const suffix = language === "ar" ? "Ar" : "En";
+            const toggle = page.locator(".cv-language");
+            await toggle.focus();
+            await page.keyboard.press("Enter");
+            await page.waitForFunction(lang => document.documentElement.lang === lang, language);
+            assert.equal(await page.locator("html").getAttribute("dir"), language === "ar" ? "rtl" : "ltr");
+            assert.equal(await page.locator("#cv-name").textContent(), cv[`name${suffix}`]);
+            const content = await page.locator("main").textContent();
+            for (const collection of ["experience", "education", "projects", "skills"]) {
+              for (const entry of cv[collection]) {
+                for (const [key, value] of Object.entries(entry)) {
+                  if (!key.endsWith(suffix)) continue;
+                  for (const text of Array.isArray(value) ? value : [value]) assert.ok(content.includes(text), `Missing ${language}: ${text}`);
+                }
+              }
+            }
+            for (const text of cv[`languages${suffix}`]) assert.ok(content.includes(text));
+            assert.ok(content.includes(cv[`certificate${suffix}`]));
+            assert.equal(await page.locator(".cv-actions a").innerText(), cv.ui[language].download);
+            assert.equal(await page.locator(".cv-actions button").innerText(), cv.ui[language].print);
+            assert.equal(await page.locator(".cv-theme").getAttribute("aria-label"), cv.ui[language].light);
+            assert.equal(await page.locator(".cv-language").evaluate(el => el === document.activeElement), true);
+            assert.equal(await page.evaluate(() => window.__cvTransitions), reducedMotion === "reduce" ? 0 : 1);
+            if (reducedMotion === "reduce") assert.equal(await page.evaluate(() => document.getAnimations().length), 0);
+            assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false);
+            await page.reload();
+            await page.waitForFunction(lang => document.documentElement.lang === lang, language);
+            assert.equal(await page.locator("#cv-name").textContent(), cv[`name${suffix}`]);
+            await page.goto(base);
+            await page.goto(base + "cv/");
+            await page.waitForFunction(lang => document.documentElement.lang === lang, language);
+            if (reducedMotion === "reduce") await page.screenshot({ path: `${output}/cv-${language}-${width}.png`, fullPage: true });
+          }
+          assert.deepEqual(errors, []);
+        } finally { await context.close(); }
+      }
+    }
+    for (const storage of ["invalid", "blocked"]) {
+      const context = await browser.newContext({ reducedMotion: "reduce" });
+      await context.addInitScript(mode => {
+        if (mode === "invalid") localStorage.setItem("portfolio-cv-language", "fr");
+        else {
+          Storage.prototype.getItem = () => { throw new Error("Storage blocked"); };
+          Storage.prototype.setItem = () => { throw new Error("Storage blocked"); };
+        }
+      }, storage);
+      const page = await context.newPage();
+      try {
+        await page.goto(base + "cv/");
+        await page.getByRole("button", { name: "Switch to English" }).click();
+        await page.waitForFunction(() => document.documentElement.lang === "en");
       } finally { await context.close(); }
     }
   });

@@ -32,6 +32,7 @@ npm run dev
 
 - بيانات السيرة الذاتية: `app/src/cv/data.json` (منفصلة عن CMS الحالي؛ تُراجع قبل تغيير أي خبرة).
 - واجهة CV: `app/src/cv/main.tsx` و`app/src/cv/cv.css` و`app/cv/index.html`.
+- زر العربية / English يبدّل جميع أقسام CV ونصوص الواجهة من `data.json`، ويحدّث `lang` و`dir` ويحفظ الاختيار في `portfolio-cv-language`. العربية هي الافتراضية عند غياب اختيار صالح أو تعذّر التخزين. انتقال اللغة يحترم `prefers-reduced-motion`، والطباعة تستخدم اللغة المعروضة؛ ملف PDF المتاح يظل بالإنجليزية كما يوضح زر التنزيل.
 - `npm run build` يُنشئ تلقائيًا ملف PDF **باللغة الإنجليزية** من بيانات السيرة نفسها في `docs/cv/Mohanad-Almashharawi-CV.pdf` باستخدام `scripts/build-cv-pdf.mjs`، دون مكتبات إضافية.
 - تعمل الصفحة مباشرة على GitHub Pages وDocker. تخدم Docker الملفات `/myprofile-/cv/` و`/myprofile-/cv/Mohanad-Almashharawi-CV.pdf` دون API إضافي.
 - يستطيع محرك البحث الوصول إلى صفحة CV عبر Sitemap والرابط `canonical` المستقل.

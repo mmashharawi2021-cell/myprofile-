@@ -149,12 +149,56 @@
         "Remote Sensing",
         "Spatial Databases",
         "QA/QC"
+      ],
+      "itemsAr": [
+        "ArcGIS",
+        "ArcGIS Field Maps",
+        "QGIS",
+        "GeoMedia",
+        "ERDAS IMAGINE",
+        "GeoJSON",
+        "MapLibre GL JS",
+        "الاستشعار عن بعد",
+        "قواعد البيانات المكانية",
+        "ضمان الجودة ومراقبتها"
+      ],
+      "itemsEn": [
+        "ArcGIS",
+        "ArcGIS Field Maps",
+        "QGIS",
+        "GeoMedia",
+        "ERDAS IMAGINE",
+        "GeoJSON",
+        "MapLibre GL JS",
+        "Remote Sensing",
+        "Spatial Databases",
+        "QA/QC"
       ]
     },
     {
       "titleAr": "تطوير الأنظمة",
       "titleEn": "Web Engineering",
       "items": [
+        "React",
+        "TypeScript",
+        "JavaScript",
+        "HTML & CSS",
+        "Firebase",
+        "REST APIs",
+        "Dashboards",
+        "RTL Interfaces"
+      ],
+      "itemsAr": [
+        "React",
+        "TypeScript",
+        "JavaScript",
+        "HTML & CSS",
+        "Firebase",
+        "واجهات REST البرمجية",
+        "لوحات البيانات",
+        "واجهات من اليمين إلى اليسار"
+      ],
+      "itemsEn": [
         "React",
         "TypeScript",
         "JavaScript",
@@ -177,6 +221,26 @@
         "PDF/Excel Export",
         "AutoCAD",
         "SketchUp"
+      ],
+      "itemsAr": [
+        "Excel",
+        "Access",
+        "تدقيق البيانات",
+        "المتابعة الميدانية",
+        "تقارير مؤشرات الأداء",
+        "تصدير PDF/Excel",
+        "AutoCAD",
+        "SketchUp"
+      ],
+      "itemsEn": [
+        "Excel",
+        "Access",
+        "Data Validation",
+        "Field Monitoring",
+        "KPI Reports",
+        "PDF/Excel Export",
+        "AutoCAD",
+        "SketchUp"
       ]
     }
   ],
@@ -186,28 +250,36 @@
       "titleEn": "UN Field & Damage Assessment",
       "descriptionAr": "بيانات مسح ميداني مرتبطة بالخرائط وتدقيق السجلات ومؤشرات تقدم الفرق",
       "descriptionEn": "GIS field survey records, spatial QA and monitoring dashboards.",
-      "label": "FIELD GIS"
+      "label": "FIELD GIS",
+      "labelAr": "GIS ميداني",
+      "labelEn": "FIELD GIS"
     },
     {
       "titleAr": "منصة رِفق لرعاية الأيتام",
       "titleEn": "Rifq Sponsorship Platform",
       "descriptionAr": "نماذج التسجيل وإدارة الحالات والصلاحيات واستيراد Excel والتقارير",
       "descriptionEn": "Case management, role-based workflows and Excel import.",
-      "label": "WEB SYSTEM"
+      "label": "WEB SYSTEM",
+      "labelAr": "نظام ويب",
+      "labelEn": "WEB SYSTEM"
     },
     {
       "titleAr": "نظام تشغيل وتقارير المياه",
       "titleEn": "Water Operations Reporting",
       "descriptionAr": "متابعة الإنتاج والوقود والتشغيل اليومي وأرشفة التقارير وتصديرها",
       "descriptionEn": "Daily operating, water and fuel records with reporting exports.",
-      "label": "OPERATIONS"
+      "label": "OPERATIONS",
+      "labelAr": "التشغيل",
+      "labelEn": "OPERATIONS"
     },
     {
       "titleAr": "لوحات التتبع والخرائط التفاعلية",
       "titleEn": "GIS Monitoring & Data Tracker",
       "descriptionAr": "تتبع التقدم والجودة عبر لوحات بيانات وخرائط وواجهات تفاعلية",
       "descriptionEn": "Spatial monitoring, progress tracking and interactive dashboards.",
-      "label": "DATA & GIS"
+      "label": "DATA & GIS",
+      "labelAr": "البيانات وGIS",
+      "labelEn": "DATA & GIS"
     }
   ],
   "languages": [
@@ -215,5 +287,105 @@
     "English — Professional working proficiency"
   ],
   "certificateAr": "شهادة ICDL · رخصة قيادة فلسطينية سارية",
-  "certificateEn": "ICDL Certificate · Valid Palestinian Driving Licence"
+  "certificateEn": "ICDL Certificate · Valid Palestinian Driving Licence",
+  "ui": {
+    "ar": {
+      "switchLanguage": "Switch to English",
+      "languageName": "English",
+      "skip": "تخطي إلى السيرة الذاتية",
+      "homeLabel": "العودة إلى الموقع الرئيسي",
+      "shortName": "مهند المشهراوي",
+      "brand": "المعرض / السيرة الذاتية",
+      "home": "الموقع الرئيسي",
+      "light": "تفعيل الوضع الفاتح",
+      "dark": "تفعيل الوضع الداكن",
+      "kicker": "السيرة الذاتية الرقمية",
+      "hello": "مرحبًا، أنا",
+      "download": "تحميل السيرة الذاتية PDF (بالإنجليزية)",
+      "print": "طباعة الصفحة",
+      "location": "غزة، فلسطين",
+      "field": "GIS وتطوير الويب",
+      "portrait": "الصورة الشخصية لمهند المشهراوي",
+      "badge": "GIS · بيانات · ويب",
+      "discover": "اكتشف الخبرات",
+      "fields": "المجالات المهنية",
+      "gis": "نظم المعلومات الجغرافية",
+      "web": "تطوير الأنظمة",
+      "analytics": "التحليل ولوحات البيانات",
+      "experienceEyebrow": "01 / الخبرات",
+      "experienceTitle": "رحلتي المهنية",
+      "experienceCopy": "خبرة عملية تربط جمع البيانات الميدانية بالتدقيق والتحليل والأنظمة الرقمية",
+      "skillsEyebrow": "02 / المهارات",
+      "skillsTitle": "المهارات والأدوات",
+      "skillsCopy": "من معالجة البيانات الجغرافية إلى بناء تطبيقات ويب قابلة للاستخدام",
+      "projectsEyebrow": "03 / أعمال مختارة",
+      "projectsTitle": "مشاريع مختارة",
+      "projectsCopy": "نماذج من الأنظمة والتجارب التي عملت عليها",
+      "more": "استعرض جميع أعمالي",
+      "educationEyebrow": "04 / التعليم",
+      "educationTitle": "المؤهلات العلمية",
+      "languages": "اللغات",
+      "connect": "لنتواصل",
+      "contactTitle": "هل لديك فرصة عمل أو مشروع؟",
+      "contactCopy": "يسعدني مناقشة المشاريع المتعلقة بالبيانات الجغرافية وتطوير الأنظمة والحلول الرقمية.",
+      "email": "مراسلتي عبر البريد",
+      "linkedin": "لينكدإن",
+      "github": "جيت هب",
+      "back": "العودة إلى الموقع",
+      "pageTitle": "السيرة الذاتية | مهند المشهراوي"
+    },
+    "en": {
+      "switchLanguage": "التبديل إلى العربية",
+      "languageName": "العربية",
+      "skip": "Skip to CV",
+      "homeLabel": "Return to main website",
+      "shortName": "Mohanad Almashharawi",
+      "brand": "PORTFOLIO / CV",
+      "home": "Main website",
+      "light": "Enable light mode",
+      "dark": "Enable dark mode",
+      "kicker": "DIGITAL RESUME",
+      "hello": "Hello, I am",
+      "download": "Download CV PDF (English)",
+      "print": "Print page",
+      "location": "Gaza, Palestine",
+      "field": "GIS & Web Development",
+      "portrait": "Portrait of Mohanad Almashharawi",
+      "badge": "GIS · DATA · WEB",
+      "discover": "Explore experience",
+      "fields": "Professional fields",
+      "gis": "Geographic information systems",
+      "web": "Web engineering",
+      "analytics": "Analytics & dashboards",
+      "experienceEyebrow": "01 / EXPERIENCE",
+      "experienceTitle": "Professional journey",
+      "experienceCopy": "Practical experience connecting field data collection with verification, analysis and digital systems",
+      "skillsEyebrow": "02 / EXPERTISE",
+      "skillsTitle": "Skills & tools",
+      "skillsCopy": "From geographic data processing to building usable web applications",
+      "projectsEyebrow": "03 / SELECTED WORK",
+      "projectsTitle": "Selected projects",
+      "projectsCopy": "A selection of systems and projects I have worked on",
+      "more": "Explore all my work",
+      "educationEyebrow": "04 / EDUCATION",
+      "educationTitle": "Education",
+      "languages": "Languages",
+      "connect": "LET’S CONNECT",
+      "contactTitle": "Have an opportunity or project?",
+      "contactCopy": "I welcome discussions about geographic data, web engineering and digital solutions.",
+      "email": "Email me",
+      "linkedin": "LinkedIn",
+      "github": "GitHub",
+      "back": "Return to website",
+      "pageTitle": "CV | Mohanad Almashharawi"
+    }
+  },
+  "languagesAr": [
+    "العربية — اللغة الأم",
+    "الإنجليزية — إجادة مهنية في العمل"
+  ],
+  "languagesEn": [
+    "Arabic — Native",
+    "English — Professional working proficiency"
+  ]
 }

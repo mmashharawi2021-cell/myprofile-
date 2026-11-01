@@ -15,7 +15,7 @@ body { background:var(--cv-bg); color:var(--cv-text); }
 .cv-shell :focus-visible { outline:3px solid var(--cv-teal); outline-offset:4px; }
 .cv-topbar { height:82px; width:min(1160px,calc(100% - 40px)); position:relative; z-index:10; margin:15px auto 0; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:12px 21px; border:1px solid var(--cv-border); border-radius:22px; background:color-mix(in srgb,var(--cv-surface) 88%,transparent); box-shadow:0 12px 46px #0002; backdrop-filter:blur(18px); }
 .cv-home { display:flex; align-items:center; gap:12px; font-size:15px; font-weight:800; }
-.cv-home small { display:block; font-size:9px; letter-spacing:.13em; color:var(--cv-muted); font-weight:500; margin-top:4px; direction:ltr; text-align:right; }
+.cv-home small { display:block; font-size:9px; letter-spacing:.13em; color:var(--cv-muted); font-weight:500; margin-top:4px; direction:ltr; text-align:start; }
 .cv-home-mark { display:grid; place-items:center; width:47px; height:47px; border:1px solid #4e9eff88; background:#0c39794d; color:#6dc8ff; border-radius:14px; font-weight:900; font-family:system-ui,sans-serif; font-size:28px; box-shadow:0 0 25px #2a85fc24; }
 .cv-top-actions { display:flex; align-items:center; gap:12px; }
 .cv-nav-back { display:flex; gap:8px; align-items:center; color:var(--cv-muted); font-size:13px; padding:10px 12px; }
@@ -57,16 +57,16 @@ body { background:var(--cv-bg); color:var(--cv-text); }
 .cv-eyebrow { color:var(--cv-blue);font:700 12px system-ui,sans-serif;letter-spacing:.16em; }
 .cv-section-heading h2 { color:var(--cv-text);font-size:clamp(30px,4vw,43px);margin-top:14px;line-height:1.4; }
 .cv-section-heading p { font-size:14px;margin-top:8px; }
-.cv-timeline { position:relative; padding-right:28px; }
-.cv-timeline:before { content:"";position:absolute;top:20px;bottom:30px;right:7px;width:2px;background:linear-gradient(var(--cv-blue),#8356dc,#556b9e19); }
+.cv-timeline { position:relative; padding-inline-start:28px; }
+.cv-timeline:before { content:"";position:absolute;top:20px;bottom:30px;inset-inline-start:7px;width:2px;background:linear-gradient(var(--cv-blue),#8356dc,#556b9e19); }
 .cv-timeline-item { position:relative;border-radius:20px;border:1px solid var(--cv-border);padding:28px 30px;margin-bottom:18px;background:color-mix(in srgb,var(--cv-surface) 77%,transparent); }
-.cv-timeline-dot { position:absolute;right:-28px;top:31px;width:16px;height:16px;border:3px solid var(--cv-blue);background:var(--cv-bg);border-radius:50%;box-shadow:0 0 0 5px #1b83ee1a; }
+.cv-timeline-dot { position:absolute;inset-inline-start:-28px;top:31px;width:16px;height:16px;border:3px solid var(--cv-blue);background:var(--cv-bg);border-radius:50%;box-shadow:0 0 0 5px #1b83ee1a; }
 .cv-job-head { display:flex;gap:12px;justify-content:space-between;align-items:flex-start; }
 .cv-period { font-size:12px;color:var(--cv-teal);font-weight:700; }
 .cv-job-head h3 { font-size:19px;margin:11px 0 4px;line-height:1.5;color:var(--cv-text); }
 .cv-org { font-size:13px; }
 .cv-job-number {color:#849cbb67;font:700 24px system-ui,sans-serif; }
-.cv-timeline-item ul { padding-right:19px;margin:15px 0 0; color:var(--cv-muted);font-size:13px;line-height:2.2; }
+.cv-timeline-item ul { padding-inline-start:19px;margin:15px 0 0; color:var(--cv-muted);font-size:13px;line-height:2.2; }
 .cv-timeline-item li::marker { color:var(--cv-blue); }
 .cv-skills-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px; }
 .cv-skill-card,.cv-project-card,.cv-study { border:1px solid var(--cv-border);background:color-mix(in srgb,var(--cv-surface) 90%,transparent);border-radius:23px; }
@@ -74,7 +74,7 @@ body { background:var(--cv-bg); color:var(--cv-text); }
 .cv-skill-card:hover,.cv-project-card:hover { transform:translateY(-4px);border-color:#2e9fff80; }
 .cv-skill-counter { font:800 28px system-ui,sans-serif;color:var(--cv-blue);opacity:.72; }
 .cv-skill-card h3 { font-size:20px; margin:17px 0 4px;color:var(--cv-text); }
-.cv-skill-en { color:var(--cv-muted);font-size:11px;direction:ltr;display:block;text-align:right; }
+.cv-skill-en { color:var(--cv-muted);font-size:11px;direction:ltr;display:block;text-align:start; }
 .cv-tags { display:flex;gap:7px;flex-wrap:wrap;margin-top:22px; }
 .cv-tags span { padding:6px 9px;background:#2678db18;border:1px solid #5094ed26;border-radius:10px;font:500 11px system-ui,sans-serif;color:var(--cv-text); }
 .cv-projects-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;}
@@ -136,9 +136,9 @@ body { background:var(--cv-bg); color:var(--cv-text); }
  .cv-stat-strip {gap:12px;justify-content:flex-start;}
  .cv-stat-strip span {font-size:11px;}
  .cv-section {padding:70px 19px;}
- .cv-timeline {padding-right:20px;}
- .cv-timeline:before {right:4px;}
- .cv-timeline-dot {right:-23px;}
+ .cv-timeline {padding-inline-start:20px;}
+ .cv-timeline:before {inset-inline-start:4px;}
+ .cv-timeline-dot {inset-inline-start:-23px;}
  .cv-timeline-item {padding:22px 17px;}
  .cv-skills-grid,.cv-projects-grid {grid-template-columns:1fr;}
  .cv-contact {margin:58px 15px;padding:48px 18px;}
@@ -170,4 +170,17 @@ body { background:var(--cv-bg); color:var(--cv-text); }
  .cv-skill-card h3,.cv-project-card h3,.cv-study h3 {font-size:13px;}
  .cv-motion-ready .cv-reveal {opacity:1!important;transform:none!important;animation:none!important;}
  .cv-hero-copy,.cv-portrait-side {animation:none!important;}
+}
+
+.cv-language { min-height:42px; padding:8px 12px; border:1px solid var(--cv-border); border-radius:13px; background:var(--cv-surface); color:var(--cv-text); font-weight:700; }
+.cv-topbar { height:auto; min-height:82px; flex-wrap:wrap; }
+.cv-top-actions { flex-wrap:wrap; gap:8px; }
+.cv-home small { direction:inherit; }
+.cv-portrait-float { direction:inherit; }
+.cv-tags span { unicode-bidi:plaintext; }
+:root[dir="ltr"] .cv-nav-back svg,:root[dir="ltr"] .cv-more-work svg,:root[dir="ltr"] .cv-footer svg { transform:scaleX(-1); }
+@media(max-width:560px) { .cv-topbar { gap:8px; } .cv-top-actions { margin-inline-start:auto; } }
+@media(prefers-reduced-motion:reduce) {
+ html { scroll-behavior:auto; }
+ .cv-shell *, .cv-shell *::before, .cv-shell *::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; }
 }

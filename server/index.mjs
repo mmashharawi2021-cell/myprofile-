@@ -26,6 +26,7 @@ const mime = {
   ".svg": "image/svg+xml",
   ".ico": "image/x-icon",
   ".woff2": "font/woff2",
+  ".pdf": "application/pdf",
 };
 export async function createApp({
   dataDir,
@@ -330,6 +331,11 @@ export async function createApp({
         json(res, 405, { error: "غير مسموح." });
         return;
       }
+      if (path === `${base}cv`) {
+        res.writeHead(308, { Location: `${base}cv/` });
+        res.end();
+        return;
+      }
       if (!path.startsWith(base)) {
         json(res, 404, { error: "غير موجود." });
         return;
@@ -339,7 +345,7 @@ export async function createApp({
       const root = resolve(media ? resolve(dataDir, "media") : publicDir);
       const file = resolve(
         root,
-        (media ? relative.slice(6) : relative) || "index.html",
+        (media ? relative.slice(6) : relative === "cv/" ? "cv/index.html" : relative) || "index.html",
       );
       if (!file.startsWith(root + sep) || relative.includes("\\")) {
         json(res, 404, { error: "غير موجود." });

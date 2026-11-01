@@ -184,3 +184,7 @@ body { background:var(--cv-bg); color:var(--cv-text); }
  html { scroll-behavior:auto; }
  .cv-shell *, .cv-shell *::before, .cv-shell *::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; }
 }
+
+.cv-contact-value { display:block; font-size:12px; font-weight:400; margin-top:4px; overflow-wrap:anywhere; }
+.cv-contact-links a { max-width:100%; min-width:0; }
+.cv-contact-links a > span { min-width:0; }

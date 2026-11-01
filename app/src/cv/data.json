@@ -1,0 +1,219 @@
+{
+  "nameAr": "مهند أنور خليل المشهراوي",
+  "nameEn": "Mohanad Anwar Khalil Almashharawi",
+  "roleAr": "مهندس نظم معلومات جغرافية ومطور أنظمة ويب",
+  "roleEn": "GIS Engineer & Full-Stack Web Developer",
+  "location": "Gaza, Palestine",
+  "email": "mmashharawi2021@gmail.com",
+  "phone": "+972 599 876 261",
+  "github": "https://github.com/mmashharawi2021-cell",
+  "linkedin": "https://www.linkedin.com/in/mohanad-elmashharawi-a4bb23148",
+  "summaryAr": "أعمل على الربط بين البيانات الجغرافية والعمل الميداني وتطوير الأنظمة الرقمية. تشمل خبرتي قواعد البيانات المكانية، وتدقيق بيانات المباني والوحدات السكنية، وخرائط GIS ولوحات المتابعة، إلى جانب بناء تطبيقات ويب تساعد الفرق على اتخاذ قرارات قائمة على بيانات موثوقة.",
+  "summaryEn": "GIS and web development professional experienced in spatial databases, field assessment, data validation, monitoring dashboards and operational reporting. I connect field records with reliable geographic information and develop practical web systems that help teams turn complex data into clear decisions.",
+  "experience": [
+    {
+      "roleAr": "مهندس GIS وتدقيق بيانات الحصر الميداني",
+      "roleEn": "GIS Engineer | Field Assessment & Data Verification",
+      "companyAr": "الهيئة العربية الدولية للإعمار في فلسطين (AIOCP)",
+      "companyEn": "Arab International Organization for Construction in Palestine (AIOCP)",
+      "periodAr": "يناير 2025 – حتى الآن",
+      "periodEn": "Jan 2025 – Present",
+      "detailsAr": [
+        "تطوير وتدقيق قواعد بيانات المباني والوحدات السكنية وأضرارها وربط السجلات بالإحداثيات",
+        "متابعة مزامنة البيانات الميدانية ومعالجة الاختلافات والتحقق من جودة السجلات",
+        "إعداد خرائط ولوحات متابعة وإحصاءات وتقارير تدعم فرق المسح والإدارة"
+      ],
+      "detailsEn": [
+        "Maintain and validate spatial and descriptive records for building and housing-unit damage assessments.",
+        "Verify synchronized field data, resolve discrepancies and support survey quality assurance.",
+        "Create maps, dashboards, statistics and operational reporting for engineering teams."
+      ]
+    },
+    {
+      "roleAr": "مطور مستقل لأنظمة الويب وGIS",
+      "roleEn": "Freelance Web & GIS Developer",
+      "companyAr": "عمل مستقل",
+      "companyEn": "Independent",
+      "periodAr": "2020 – حتى الآن",
+      "periodEn": "2020 – Present",
+      "detailsAr": [
+        "تطوير تطبيقات ويب عربية ولوحات تحكم وواجهات خرائط تفاعلية",
+        "تصميم تدفقات عمل لتتبع البيانات والتقارير والصلاحيات وأرشفة السجلات"
+      ],
+      "detailsEn": [
+        "Develop responsive web interfaces, interactive GIS maps and digital dashboards.",
+        "Build record tracking, reporting and workflow management tools."
+      ]
+    },
+    {
+      "roleAr": "مهندس نظم معلومات جغرافية",
+      "roleEn": "GIS Engineer",
+      "companyAr": "مركز خبراء التطوير",
+      "companyEn": "Development Experts Center",
+      "periodAr": "2019",
+      "periodEn": "2019",
+      "detailsAr": [
+        "المساهمة في أعمال نظم المعلومات الجغرافية وتنظيم البيانات المكانية"
+      ],
+      "detailsEn": [
+        "Contributed to spatial data preparation and GIS operations."
+      ]
+    },
+    {
+      "roleAr": "مهندس GIS وإدخال بيانات",
+      "roleEn": "GIS Engineer & Data Entry Engineer",
+      "companyAr": "شركة توزيع كهرباء محافظات غزة",
+      "companyEn": "Electricity Distribution Company – Gaza Governorates",
+      "periodAr": "2018",
+      "periodEn": "2018",
+      "detailsAr": [
+        "تدقيق بيانات شبكات الكهرباء والسجلات الفنية والجغرافية وتحديثها"
+      ],
+      "detailsEn": [
+        "Supported utility GIS records, data cleaning and network documentation."
+      ]
+    },
+    {
+      "roleAr": "دعم بيانات جغرافية وفنية",
+      "roleEn": "GIS & Data Support",
+      "companyAr": "وزارة الزراعة",
+      "companyEn": "Ministry of Agriculture",
+      "periodAr": "2017 – 2018",
+      "periodEn": "2017 – 2018",
+      "detailsAr": [
+        "المساعدة في إعداد السجلات والخرائط وتدقيق البيانات"
+      ],
+      "detailsEn": [
+        "Supported mapping, records quality and technical documentation."
+      ]
+    },
+    {
+      "roleAr": "مهندس GIS ومحاضر مساعد",
+      "roleEn": "GIS Engineer & Teaching Assistant",
+      "companyAr": "الكلية الجامعية للعلوم التطبيقية (UCAS)",
+      "companyEn": "University College of Applied Sciences (UCAS)",
+      "periodAr": "2016 – 2017",
+      "periodEn": "2016 – 2017",
+      "detailsAr": [
+        "تدريس مفاهيم وتطبيقات GIS والخرائط والبيانات المكانية وإعداد مواد عملية"
+      ],
+      "detailsEn": [
+        "Delivered applied GIS, mapping and spatial-data instruction."
+      ]
+    },
+    {
+      "roleAr": "إدخال بيانات ودعم GIS",
+      "roleEn": "Data Entry & GIS Support",
+      "companyAr": "سلطة جودة البيئة",
+      "companyEn": "Environmental Quality Authority",
+      "periodAr": "2016",
+      "periodEn": "2016",
+      "detailsAr": [
+        "المساعدة في توثيق السجلات والبيانات الجغرافية"
+      ],
+      "detailsEn": [
+        "Supported geographic records, data entry and documentation."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degreeAr": "بكالوريوس نظم المعلومات الجغرافية (قيد الدراسة)",
+      "degreeEn": "Bachelor's Degree in GIS (In Progress)",
+      "schoolAr": "الكلية الجامعية للعلوم التطبيقية (UCAS)",
+      "schoolEn": "University College of Applied Sciences (UCAS)",
+      "detailAr": "استكمال الدراسة الجامعية بعد الدبلوم",
+      "detailEn": "Continuing bachelor studies following an intermediate diploma."
+    },
+    {
+      "degreeAr": "دبلوم متوسط في نظم المعلومات الجغرافية",
+      "degreeEn": "Intermediate Diploma in Geographic Information Systems",
+      "schoolAr": "الكلية الجامعية للعلوم التطبيقية (UCAS)",
+      "schoolEn": "University College of Applied Sciences (UCAS)",
+      "detailAr": "2016 · معدل 92.24% · ممتاز مع مرتبة الشرف",
+      "detailEn": "2016 · 92.24% · Excellent with Honors"
+    }
+  ],
+  "skills": [
+    {
+      "titleAr": "نظم المعلومات الجغرافية",
+      "titleEn": "GIS & Mapping",
+      "items": [
+        "ArcGIS",
+        "ArcGIS Field Maps",
+        "QGIS",
+        "GeoMedia",
+        "ERDAS IMAGINE",
+        "GeoJSON",
+        "MapLibre GL JS",
+        "Remote Sensing",
+        "Spatial Databases",
+        "QA/QC"
+      ]
+    },
+    {
+      "titleAr": "تطوير الأنظمة",
+      "titleEn": "Web Engineering",
+      "items": [
+        "React",
+        "TypeScript",
+        "JavaScript",
+        "HTML & CSS",
+        "Firebase",
+        "REST APIs",
+        "Dashboards",
+        "RTL Interfaces"
+      ]
+    },
+    {
+      "titleAr": "البيانات والتقارير",
+      "titleEn": "Data & Reporting",
+      "items": [
+        "Excel",
+        "Access",
+        "Data Validation",
+        "Field Monitoring",
+        "KPI Reports",
+        "PDF/Excel Export",
+        "AutoCAD",
+        "SketchUp"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "titleAr": "UN Field والحصر الميداني",
+      "titleEn": "UN Field & Damage Assessment",
+      "descriptionAr": "بيانات مسح ميداني مرتبطة بالخرائط وتدقيق السجلات ومؤشرات تقدم الفرق",
+      "descriptionEn": "GIS field survey records, spatial QA and monitoring dashboards.",
+      "label": "FIELD GIS"
+    },
+    {
+      "titleAr": "منصة رِفق لرعاية الأيتام",
+      "titleEn": "Rifq Sponsorship Platform",
+      "descriptionAr": "نماذج التسجيل وإدارة الحالات والصلاحيات واستيراد Excel والتقارير",
+      "descriptionEn": "Case management, role-based workflows and Excel import.",
+      "label": "WEB SYSTEM"
+    },
+    {
+      "titleAr": "نظام تشغيل وتقارير المياه",
+      "titleEn": "Water Operations Reporting",
+      "descriptionAr": "متابعة الإنتاج والوقود والتشغيل اليومي وأرشفة التقارير وتصديرها",
+      "descriptionEn": "Daily operating, water and fuel records with reporting exports.",
+      "label": "OPERATIONS"
+    },
+    {
+      "titleAr": "لوحات التتبع والخرائط التفاعلية",
+      "titleEn": "GIS Monitoring & Data Tracker",
+      "descriptionAr": "تتبع التقدم والجودة عبر لوحات بيانات وخرائط وواجهات تفاعلية",
+      "descriptionEn": "Spatial monitoring, progress tracking and interactive dashboards.",
+      "label": "DATA & GIS"
+    }
+  ],
+  "languages": [
+    "العربية — اللغة الأم",
+    "English — Professional working proficiency"
+  ],
+  "certificateAr": "شهادة ICDL · رخصة قيادة فلسطينية سارية",
+  "certificateEn": "ICDL Certificate · Valid Palestinian Driving Licence"
+}

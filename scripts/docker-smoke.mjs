@@ -76,6 +76,17 @@ try {
   assert.equal(script.status, 200);
   assert.match(script.headers.get("content-type") ?? "", /javascript/);
 
+  const cvRedirect = await fetch(origin + "/myprofile-/cv", { redirect: "manual" });
+  assert.equal(cvRedirect.status, 308);
+  const cvPage = await fetch(origin + "/myprofile-/cv/");
+  assert.equal(cvPage.status, 200, "Standalone CV must open directly on Docker");
+  const cvHtml = await cvPage.text();
+  assert.match(cvHtml, /<title>السيرة الذاتية/);
+  const cvPdf = await fetch(origin + "/myprofile-/cv/Mohanad-Almashharawi-CV.pdf");
+  assert.equal(cvPdf.status, 200);
+  assert.match(cvPdf.headers.get("content-type") ?? "", /application\/pdf/);
+  assert.equal((await cvPdf.arrayBuffer()).byteLength > 3000, true);
+
   const initialResponse = await json("/myprofile-/api/content");
   assert.equal(initialResponse.status, 200);
   const initial = await initialResponse.json();

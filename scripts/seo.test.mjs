@@ -79,9 +79,18 @@ test("SEO: JSON-LD describes actual person, website and page", () => {
 });
 test("SEO: sitemap contains only actual canonical page", () => {
   const urls = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(match => match[1]);
-  assert.deepEqual(urls, [site]);
+  assert.deepEqual(urls, [site, site + "cv/"]);
   assert.match(sitemap, /^<\?xml version="1\.0" encoding="UTF-8"\?>/);
   assert.ok(link("sitemap").includes('href="/myprofile-/sitemap.xml"'));
   assert.equal(config.projects[0].id, "un-field");
   assert.ok(readFileSync("docs/assets/projects/un-field.webp").length > 1000);
+});
+
+test("SEO: dedicated CV route exposes canonical and unique metadata", () => {
+  const cvHtml = readFileSync("docs/cv/index.html", "utf8");
+  assert.match(cvHtml, /<html lang="ar" dir="rtl">/);
+  assert.match(cvHtml, /<title>السيرة الذاتية \| مهند المشهراوي<\/title>/);
+  assert.ok(cvHtml.includes('rel="canonical" href="' + site + 'cv/"'));
+  assert.ok(cvHtml.includes('property="og:url" content="' + site + 'cv/"'));
+  assert.ok(!/noindex/i.test(cvHtml));
 });

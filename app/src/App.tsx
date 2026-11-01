@@ -182,7 +182,7 @@ export default function App() {
               <small>{c.hero.mapText}</small>
             </div>
           </div>
-          <div className="glass-note developer-note">
+          <a className="glass-note developer-note cv-entry" href={import.meta.env.BASE_URL + "cv/"} aria-label="اطّلع على السيرة الذاتية لمهند المشهراوي">
             <img src={assetUrl(c.identity.portrait)} alt={c.identity.name} loading="lazy" decoding="async" />
             <div>
               <strong>{c.identity.name}</strong>
@@ -191,7 +191,7 @@ export default function App() {
             <span className="note-check">
               <Check size={14} />
             </span>
-          </div>
+          </a>
           <span className="visual-bottom">{c.hero.caption}</span>
         </div>
         <a className="scroll-cue" href="#projects">

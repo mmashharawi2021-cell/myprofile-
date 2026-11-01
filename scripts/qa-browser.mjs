@@ -598,7 +598,7 @@ try {
     } finally {await context.close();}
   });
 
-  await check("Accelerated r13 loader preserves SVG segments, map roads and both pins", async () => {
+  await check("Five-second r13 loader preserves SVG segments, map roads and both pins", async () => {
     const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:"no-preference"});
     const page=await context.newPage();
     const errors=[];
@@ -608,7 +608,7 @@ try {
       const overlay=page.locator(".brand-intro-overlay.reference-intro");
       await overlay.waitFor({state:"visible"});
       await page.waitForFunction(()=>document.querySelector(".reference-intro.is-running")!==null);
-      // Collect all overlay-dependent data at once: the introduction lasts only 1.35s.
+      // Collect all overlay-dependent data at once: the introduction lasts five seconds.
       const snapshot=await overlay.evaluate(el=>{
         const style=getComputedStyle(el.querySelector(".edge-segment"));
         return {
@@ -649,13 +649,13 @@ try {
       assert.equal(asset.parseError,false);
       assert.equal(asset.curve,snapshot.shape);
       assert.equal(asset.pin,1);
-      await overlay.waitFor({state:"detached",timeout:2500});
+      await overlay.waitFor({state:"detached",timeout:7000});
       assert.notEqual(await page.locator("html").evaluate(el=>el.style.overflow),"hidden");
       assert.deepEqual(errors,[]);
     } finally {await context.close();}
   });
 
-  await check("One-second SVG stroke timings preserve progressive drawing", async () => {
+  await check("Five-second SVG stroke timings preserve progressive drawing", async () => {
     const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:"no-preference"});
     const page=await context.newPage();
     const errors=[];
@@ -670,17 +670,17 @@ try {
         delay:parseFloat(getComputedStyle(el).animationDelay),
         source:el.getAttribute("d"),
       }));
-      assert.ok(map.duration>=0.085 && map.duration<=0.12,"Original stroke duration should scale by six: "+map.duration);
-      assert.ok(map.delay>=0.26 && map.delay<=0.29,"Original stroke delay should scale by six: "+map.delay);
+      assert.ok(map.duration>=0.39 && map.duration<=0.56,"Stroke duration should scale to 4.65 seconds: "+map.duration);
+      assert.ok(map.delay>=1.20 && map.delay<=1.36,"Stroke delay should scale to 4.65 seconds: "+map.delay);
       assert.ok(map.source?.startsWith("M"));
-      await page.waitForTimeout(490);
+      await page.waitForTimeout(2300);
       const drawn=await overlay.evaluate(el=>({
         edges:[...el.querySelectorAll(".edge-segment")].filter(p=>parseFloat(getComputedStyle(p).strokeDashoffset)<2).length,
         total:el.querySelectorAll(".edge-segment").length,
       }));
-      assert.ok(drawn.edges>=drawn.total*.7,"Contour should be substantially drawn within 0.5s");
+      assert.ok(drawn.edges>=drawn.total*.7,"Contour should be substantially drawn within 2.3s");
       await page.screenshot({path:output+"/approved-trace-mid.png",animations:"allow"});
-      await overlay.waitFor({state:"detached",timeout:2500});
+      await overlay.waitFor({state:"detached",timeout:7000});
       assert.deepEqual(errors,[]);
     } finally {await context.close();}
   });
@@ -702,13 +702,13 @@ try {
         assert.ok(metrics.left>=0&&metrics.right<=metrics.w&&metrics.top>=0&&metrics.bottom<=metrics.h,
           "Approved M must fit viewport: "+JSON.stringify(metrics));
         await page.screenshot({path:output+"/approved-traced-intro-"+width+".png"});
-        await overlay.waitFor({state:"detached",timeout:2500});
+        await overlay.waitFor({state:"detached",timeout:7000});
         assert.deepEqual(errors,[]);
       } finally {await context.close();}
     }
   });
 
-  await check("One-second drawing hands a single matching M to the header", async () => {
+  await check("Five-second drawing hands a single matching M to the header", async () => {
     for(const width of [390,1280]) {
       const context=await browser.newContext({viewport:{width,height:800},reducedMotion:"no-preference"});
       const page=await context.newPage();
@@ -720,9 +720,9 @@ try {
         await overlay.waitFor({state:"visible"});
         const began=Date.now();
         await page.waitForFunction(()=>document.querySelector(".reference-intro-flight")!==null,
-          {timeout:2500});
+          {timeout:7000});
         const time=Date.now()-began;
-        assert.ok(time>=600&&time<1600,"Flight should start after about 1s, measured "+time);
+        assert.ok(time>=4100&&time<5000,"Flight should start after about 4.65s, measured "+time);
         const flight=await page.evaluate(()=>{
           const source=document.querySelector(".reference-intro-symbol");
           const img=document.querySelector(".reference-intro-flight");
@@ -765,7 +765,7 @@ try {
       const overlay=page.locator(".reference-intro");
       await overlay.waitFor({state:"visible"});
       await page.getByRole("button",{name:/تخطي المقدمة/}).click();
-      await overlay.waitFor({state:"detached",timeout:2500});
+      await overlay.waitFor({state:"detached",timeout:7000});
       assert.notEqual(await page.locator("html").evaluate(el=>el.style.overflow),"hidden");
     } finally {await context.close();}
   });

@@ -20,7 +20,6 @@ export default function ProjectsSection({
 }) {
   const {
     content: { projects, projectsHeading: copy },
-    draft,
   } = useSite();
   const [filter, setFilter] = useState("الكل");
   const filterPill = useHoverPill<HTMLDivElement>("button.active", filter);
@@ -137,20 +136,6 @@ export default function ProjectsSection({
                       : "عرض الفكرة والواجهة"}
                 </small>
               </div>
-              {draft && (
-                <button
-                  className="cms-edit-card"
-                  onClick={() =>
-                    window.dispatchEvent(
-                      new CustomEvent("cms-edit-project", {
-                        detail: project.id,
-                      }),
-                    )
-                  }
-                >
-                  تحرير هذه البطاقة
-                </button>
-              )}
             </div>
           </article>
         ))}

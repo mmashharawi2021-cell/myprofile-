@@ -1,4 +1,4 @@
-﻿import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
+﻿import { useCallback, useEffect, useRef, useState } from "react";
 import ReferenceIntro from "./ReferenceIntro";
 import { revealThemeFromButton } from "./theme-reveal";
 import { approvedLogoSrc } from "./brandAsset";
@@ -26,12 +26,10 @@ import {
   Menu,
   MessageCircle,
   Moon,
-  Pencil,
   Sun,
   X,
 } from "lucide-react";
 import { useSite, assetUrl, type Project } from "./content/SiteContent";
-const Editor = lazy(() => import("./editor/Editor"));
 const icons = {
   code: Braces,
   layers: Layers,
@@ -41,7 +39,7 @@ const icons = {
   check: Check,
 };
 export default function App() {
-  const { content: c, whatsapp, generalWhatsApp, connected } = useSite();
+  const { content: c, whatsapp, generalWhatsApp } = useSite();
   const [theme, setTheme] = useState(() => {
     try {
       return localStorage.getItem("portfolio-theme-choice");
@@ -74,7 +72,6 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const navPill = useHoverPill<HTMLElement>(undefined, menuOpen);
   const [selected, setSelected] = useState<Project | null>(null);
-  const [editing, setEditing] = useState(false);
   const first = c.projects[0];
   const socialLinks = [
     { key: "linkedin", label: "LinkedIn", href: "https://www.linkedin.com/in/mohanad-elmashharawi-a4bb23148", Icon: Linkedin },
@@ -491,25 +488,6 @@ export default function App() {
       )}
       {showIntro && (
         <ReferenceIntro targetRef={brandAnchorRef} onComplete={completeIntro} />
-      )}
-      {connected && (
-        <button
-          className="editor-launch"
-          onClick={() => setEditing(true)}
-        >
-          <Pencil size={16} /> تحرير
-        </button>
-      )}
-      {editing && (
-        <Suspense
-          fallback={
-            <div className="editor-loading" role="status">
-              جارٍ فتح لوحة التحرير…
-            </div>
-          }
-        >
-          <Editor onClose={() => setEditing(false)} />
-        </Suspense>
       )}
     </div>
   );

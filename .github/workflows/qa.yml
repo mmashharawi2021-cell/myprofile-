@@ -58,10 +58,6 @@ jobs:
         run: |
           set -o pipefail
           node --test scripts/seo.test.mjs 2>&1 | tee qa-artifacts/seo-tests.log
-      - name: CMS API integration tests
-        run: |
-          set -o pipefail
-          node --test server/editor.test.mjs 2>&1 | tee qa-artifacts/cms-tests.log
       # Install Playwright separately: npm install in the root re-resolves
       # unrelated Rollup packages and can fail on registry replication.
       - name: Install browser test runtime
@@ -90,28 +86,3 @@ jobs:
           if-no-files-found: ignore
           retention-days: 30
 
-  docker-cms:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout source
-        uses: actions/checkout@v4
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-      - name: Real Docker CMS release smoke
-        run: |
-          mkdir -p qa-artifacts
-          set -o pipefail
-          node scripts/docker-smoke.mjs 2>&1 | tee qa-artifacts/docker-smoke.log
-      - name: Upload Docker smoke log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: portfolio-docker-smoke
-          path: qa-artifacts/
-          if-no-files-found: ignore
-          retention-days: 30

@@ -223,7 +223,7 @@ try {
     }
   });
 
-  await check("Static build has no CMS API requests or editor button", async () => {
+  await check("Static build has no API requests or editor button", async () => {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: "reduce" });
     const page = await context.newPage();
     const apiRequests = [];

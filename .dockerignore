@@ -1,7 +1,0 @@
-﻿node_modules
-.git
-docs
-.secrets
-runtime
-.env*
-*.log

@@ -13,22 +13,17 @@
 | Vite + TypeScript | `npm run build` | اكتمال البناء |
 | الملفات الثابتة | `node --test scripts/release-static.test.mjs` | الروابط الداخلية لملفات HTML، جميع صور المشاريع الافتراضية، Sitemap وملف Google وPNG المشاركة |
 | SEO | `node --test scripts/seo.test.mjs` | عنوان الصفحة وCanonical وOpen Graph وJSON-LD وSitemap |
-| CMS server | `node --test server/editor.test.mjs` | المصادقة والحفظ والتاريخ وحماية الجلسات وSQLite |
-| تجربة المستخدم | `node scripts/qa-browser.mjs` | مقاسات الأجهزة والمشاريع والصور والمقدمة والتصفح والوضع الداكن وCMS المعطل على Pages |
-| صورة Docker الفعلية | `node scripts/docker-smoke.mjs` | بناء الصورة ثم تشغيلها بقيود read-only وبيانات اعتماد اختبار مؤقتة والتحقق من Health وJS وLogin وSave وLogout |
+| تجربة المستخدم | `node scripts/qa-browser.mjs` | مقاسات الأجهزة والمشاريع والصور والمقدمة والتصفح والوضع الداكن وغياب أي طلبات API |
 
-ينفذ GitHub Actions الوظائف `qa` و`docker-cms` بشكل مستقل. استخدم **نتيجتي الوظيفتين** كشرط للموافقة على PR؛ فنجاح واحدة وحدها غير كافٍ.
-
-اختبار Docker يولد كلمة مرور وملفًا مؤقتين، ولا يستخدم `.secrets/` الحقيقي أو بيانات تشغيل CMS. ويُحذف حاويته وصورته وملفه بعد انتهاء الاختبار.
+ينفذ GitHub Actions الوظيفة `qa`، واستخدم نجاحها شرطًا للموافقة على PR.
 
 ## قائمة مراجعة الإطلاق
 
 - [ ] نجاح جميع الفحوص على PR المرحلة السادسة دون تجاوز أخطاء.
 - [ ] مراجعة Artifact `portfolio-qa` بما فيه لقطات 320 و390 و768 و1280 بكسل، و`performance-baseline.json`.
-- [ ] نجاح Artifact `portfolio-docker-smoke` وحفظ سجل الحاوية.
 - [ ] التأكد بصريًا من سلامة الشعارات والصور وشريط التنقل وأزرار التواصل وحالة RTL والوضعين الفاتح والداكن.
 - [ ] التأكد من أن المقدمة تقارب 1–1.5 ثانية على الأجهزة العادية، وتُتخطى في وضع تقليل الحركة.
-- [ ] مراجعة قواعد حماية `main`: Require PR وRequire checks `qa` و`docker-cms`.
+- [ ] مراجعة قواعد حماية `main`: Require PR وRequire check `qa`.
 - [ ] بعد اعتماد PR ودمجه، التأكد من نجاح **Deploy portfolio to GitHub Pages** على commit الدمج.
 - [ ] فتح الموقع المنشور وفحص `/myprofile-/` و`/myprofile-/sitemap.xml` و`/myprofile-/google99f895784bf51371.html` و`/myprofile-/og-preview.png`.
 - [ ] فحص Network: عدم وجود طلبات `/myprofile-/api/` أو زر `.editor-launch` في Pages.
@@ -43,8 +38,8 @@
 
 1. حدد SHA الخاص بالدمج الذي سبب المشكلة في سجل `main`.
 2. أنشئ فرع إصلاح من `main`، ثم نفّذ `git revert <merge-commit-sha>` (قد يتطلب Revert للـ merge تحديد parent بحسب طريقة الدمج).
-3. افتح PR للتراجع، وشغّل `qa` و`docker-cms` ثم ادمجه بعد المراجعة.
-4. تحقّق من نشر النسخة الجديدة عبر GitHub Actions، ثم أعد فحص الموقع. لا تستخدم `git reset --hard` على `main` المنشور ولا تحذف بيانات Docker/SQLite في عملية التراجع.
+3. افتح PR للتراجع، وشغّل `qa` ثم ادمجه بعد المراجعة.
+4. تحقّق من نشر النسخة الجديدة عبر GitHub Actions، ثم أعد فحص الموقع. لا تستخدم `git reset --hard` على `main` المنشور.
 
 ## الأوامر المحلية
 
@@ -53,9 +48,7 @@ npm ci
 npm run build
 node --test scripts/release-static.test.mjs
 node --test scripts/seo.test.mjs
-node --test server/editor.test.mjs
 node scripts/qa-browser.mjs
-node scripts/docker-smoke.mjs
 ```
 
-يتطلب الاختبار الأخير Docker وتشغيل Docker Engine، بينما يحتاج اختبار المتصفح Playwright وChromium كما توفرهما بيئة CI. يعمل `scripts/docker-smoke.mjs` على منفذ محلي اختباري 18080، ولا يغيّر البيانات الدائمة لـ CMS.
+يحتاج اختبار المتصفح Playwright وChromium كما توفرهما بيئة CI.

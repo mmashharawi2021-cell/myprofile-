@@ -25,6 +25,20 @@ npm run dev
 
 على Windows، قد تحتاج إلى `npm.cmd` بدل `npm` في PowerShell. عند تشغيل Vite، تمر طلبات `/myprofile-/api` و`/myprofile-/media` إلى خادم Docker المحلي على المنفذ 8080؛ تشغيل الموقع للعرض لا يتطلب الخادم، لكن التحرير والحفظ يتطلبانه.
 
+## السيرة الذاتية التفاعلية
+
+تفتح البطاقة الصغيرة ذات الصورة الشخصية أسفل معاينة المشروع الرئيسية صفحة CV مستقلة على `/myprofile-/cv/`.
+الصفحة عربية ومتجاوبة، وتعرض الخبرات المهنية والتقنية والمشاريع والمهارات والمؤهلات مع دخول متدرج وعناصر تظهر عند التمرير. تحترم `prefers-reduced-motion` وتوفر زر طباعة.
+
+- بيانات السيرة الذاتية: `app/src/cv/data.json` (منفصلة عن CMS الحالي؛ تُراجع قبل تغيير أي خبرة).
+- واجهة CV: `app/src/cv/main.tsx` و`app/src/cv/cv.css` و`app/cv/index.html`.
+- `npm run build` يُنشئ تلقائيًا ملف PDF **باللغة الإنجليزية** من بيانات السيرة نفسها في `docs/cv/Mohanad-Almashharawi-CV.pdf` باستخدام `scripts/build-cv-pdf.mjs`، دون مكتبات إضافية.
+- تعمل الصفحة مباشرة على GitHub Pages وDocker. تخدم Docker الملفات `/myprofile-/cv/` و`/myprofile-/cv/Mohanad-Almashharawi-CV.pdf` دون API إضافي.
+- يستطيع محرك البحث الوصول إلى صفحة CV عبر Sitemap والرابط `canonical` المستقل.
+- اختبارات `scripts/qa-browser.mjs` و`scripts/seo.test.mjs` و`scripts/release-static.test.mjs` و`scripts/docker-smoke.mjs` تشمل المسار الجديد.
+
+**ملاحظة:** تعديل السيرة الذاتية التفاعلية يتم حاليًا في ملف `data.json` ويحتاج بناءً ونشرًا جديدين؛ لا تعرض لوحة CMS القديمة تحريرها، حتى لا نضيف صلاحيات أو مخطط قاعدة بيانات جديدًا بلا مراجعة.
+
 ## البناء والنشر العام
 
 ```sh

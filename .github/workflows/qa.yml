@@ -75,6 +75,12 @@ jobs:
         run: |
           set -o pipefail
           node scripts/qa-browser.mjs 2>&1 | tee qa-artifacts/browser-tests.log
+      - name: Preserve generated CV PDF for review
+        if: always()
+        run: |
+          if [ -f docs/cv/Mohanad-Almashharawi-CV.pdf ]; then
+            cp docs/cv/Mohanad-Almashharawi-CV.pdf qa-artifacts/Mohanad-Almashharawi-CV.pdf
+          fi
       - name: Upload QA report and mobile/desktop screenshots
         if: always()
         uses: actions/upload-artifact@v4

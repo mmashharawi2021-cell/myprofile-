@@ -488,6 +488,10 @@ body {
   left: 3px;
   transform: rotate(-3deg);
 }
+.cv-entry { cursor: pointer; color: inherit; text-decoration: none; transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+.cv-entry:hover { transform: rotate(-3deg) translateY(-5px); border-color: #3a9aff99; box-shadow: 0 14px 35px #0b55bb35, var(--shadow); }
+.cv-entry:focus-visible { outline: 3px solid var(--accent); outline-offset: 5px; }
+@media (prefers-reduced-motion: reduce) { .cv-entry { transition: none; } }
 .developer-note > img {
   width: 46px;
   height: 46px;

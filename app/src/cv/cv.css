@@ -17,6 +17,7 @@ body { background:var(--cv-bg); color:var(--cv-text); }
 .cv-home { display:flex; align-items:center; gap:12px; font-size:15px; font-weight:800; }
 .cv-home small { display:block; font-size:9px; letter-spacing:.13em; color:var(--cv-muted); font-weight:500; margin-top:4px; direction:ltr; text-align:start; }
 .cv-home-mark { display:grid; place-items:center; width:47px; height:47px; border:1px solid #4e9eff88; background:#0c39794d; color:#6dc8ff; border-radius:14px; font-weight:900; font-family:system-ui,sans-serif; font-size:28px; box-shadow:0 0 25px #2a85fc24; }
+.cv-home-mark img { display:block; width:100%; height:100%; padding:3px; object-fit:contain; }
 .cv-top-actions { display:flex; align-items:center; gap:12px; }
 .cv-nav-back { display:flex; gap:8px; align-items:center; color:var(--cv-muted); font-size:13px; padding:10px 12px; }
 .cv-nav-back:hover,.cv-footer a:hover { color:var(--cv-blue); }

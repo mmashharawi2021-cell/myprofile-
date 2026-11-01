@@ -7,13 +7,13 @@ type Props = {
   onComplete: () => void;
 };
 
-const DRAW_DURATION_MS = 1000;
+const DRAW_DURATION_MS = 4650;
 const FLIGHT_DURATION_MS = 350;
 
 /**
  * The approved standalone preview's SVG, segment timing, map details and pin are
- * reused without changing the artwork. The one-second drawing then flies
- * into the header, completing the intro in about 1.35 seconds.
+ * reused without changing the artwork. The 4.65-second drawing then flies
+ * into the header, completing the intro in 5 seconds.
  */
 export default function ReferenceIntro({ targetRef, onComplete }: Props) {
   const [running, setRunning] = useState(false);
@@ -51,7 +51,7 @@ export default function ReferenceIntro({ targetRef, onComplete }: Props) {
       const target = targetRef.current?.getBoundingClientRect();
       const supported = typeof document.createElement("div").animate === "function";
       if (!source || !target || target.width < 8 || target.height < 8 || !supported) {
-        finish();
+        later(finish, FLIGHT_DURATION_MS);
         return;
       }
 

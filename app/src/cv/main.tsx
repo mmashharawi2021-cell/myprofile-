@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { ArrowDown, ArrowLeft, Facebook, Instagram, Linkedin, MessageCircle, Music2, Phone, BriefcaseBusiness, CheckCircle2, ChevronLeft, Download, GraduationCap, Github, Globe2, Mail, MapPin, Moon, Printer, Sparkles, Sun } from "lucide-react";
 import cv from "./data.json";
 import { revealThemeFromButton } from "../theme-reveal";
+import { approvedLogoSrc } from "../brandAsset";
 import "../styles.css";
 import "./cv.css";
 
@@ -58,7 +59,7 @@ function App() {
   return <div className="cv-shell">
     <a className="skip-link" href="#cv-main">{t.skip}</a>
     <header className="cv-topbar">
-      <a className="cv-home" href={base} aria-label={t.homeLabel}><span className="cv-home-mark">M</span><span>{t.shortName} <small>{t.brand}</small></span></a>
+      <a className="cv-home" href={base} aria-label={t.homeLabel}><span className="cv-home-mark"><img src={approvedLogoSrc} alt="" aria-hidden="true" /></span><span>{t.shortName} <small>{t.brand}</small></span></a>
       <div className="cv-top-actions">
         <button type="button" className="cv-language" lang={language === "ar" ? "en" : "ar"} aria-label={t.switchLanguage} onClick={() => setLanguage(language === "ar" ? "en" : "ar")}>{t.languageName}</button>
         <a href={base} className="cv-nav-back"><ArrowLeft size={16} aria-hidden="true" /> {t.home}</a>

@@ -1,5 +1,6 @@
 ﻿import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import ReferenceIntro from "./ReferenceIntro";
+import { revealThemeFromButton } from "./theme-reveal";
 import { approvedLogoSrc } from "./brandAsset";
 import ProjectsSection from "./ProjectsSection";
 import ProjectDialog from "./ProjectDialog";
@@ -86,12 +87,9 @@ export default function App() {
   useEffect(() => {
     document.documentElement.dataset.theme = mode;
   }, [mode]);
-  const toggleTheme = () => {
+  const toggleTheme = (event: React.MouseEvent<HTMLButtonElement>) => {
     const next = mode === "dark" ? "light" : "dark";
-    setTheme(next);
-    try {
-      localStorage.setItem("portfolio-theme-choice", next);
-    } catch {}
+    revealThemeFromButton(event.currentTarget, next, () => setTheme(next));
   };
   useEffect(() => {
     document.title = c.seo.title;

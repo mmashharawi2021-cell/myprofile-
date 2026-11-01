@@ -2,6 +2,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { ArrowDown, ArrowLeft, Facebook, Instagram, Linkedin, MessageCircle, Music2, Phone, BriefcaseBusiness, CheckCircle2, ChevronLeft, Download, GraduationCap, Github, Globe2, Mail, MapPin, Moon, Printer, Sparkles, Sun } from "lucide-react";
 import cv from "./data.json";
+import { revealThemeFromButton } from "../theme-reveal";
 import "../styles.css";
 import "./cv.css";
 
@@ -61,7 +62,7 @@ function App() {
       <div className="cv-top-actions">
         <button type="button" className="cv-language" lang={language === "ar" ? "en" : "ar"} aria-label={t.switchLanguage} onClick={() => setLanguage(language === "ar" ? "en" : "ar")}>{t.languageName}</button>
         <a href={base} className="cv-nav-back"><ArrowLeft size={16} aria-hidden="true" /> {t.home}</a>
-        <button className="cv-theme" onClick={() => setMode(mode === "dark" ? "light" : "dark")} aria-label={mode === "dark" ? t.light : t.dark}>{mode === "dark" ? <Sun size={19}/> : <Moon size={19}/>}</button>
+        <button className="cv-theme" onClick={(event) => { const next = mode === "dark" ? "light" : "dark"; revealThemeFromButton(event.currentTarget, next, () => setMode(next)); }} aria-label={mode === "dark" ? t.light : t.dark}>{mode === "dark" ? <Sun size={19}/> : <Moon size={19}/>}</button>
       </div>
     </header>
     <main ref={mainRef} id="cv-main" tabIndex={-1}>

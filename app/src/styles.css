@@ -1550,3 +1550,17 @@ h2 {
     margin: 8px 0 18px;
   }
 }
+
+/* The new palette expands from the pressed theme button across the viewport.
+   Disable the browser's default crossfade; the circular mask is animated in JS. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 2;
+}

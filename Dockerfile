@@ -5,6 +5,7 @@ RUN npm ci
 COPY app ./app
 COPY shared ./shared
 COPY tsconfig.json vite.config.ts ./
+COPY scripts/build-cv-pdf.mjs ./scripts/build-cv-pdf.mjs
 ENV VITE_CMS=true
 RUN npm run build
 

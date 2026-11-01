@@ -16,17 +16,17 @@
       "roleEn": "GIS Engineer | Field Assessment & Data Verification",
       "companyAr": "الهيئة العربية الدولية للإعمار في فلسطين (AIOCP)",
       "companyEn": "Arab International Organization for Construction in Palestine (AIOCP)",
-      "periodAr": "يناير 2025 – حتى الآن",
-      "periodEn": "Jan 2025 – Present",
+      "periodAr": "يناير 2025 – 8 أكتوبر 2026",
+      "periodEn": "Jan 2025 – 8 Oct 2026",
       "detailsAr": [
         "تطوير وتدقيق قواعد بيانات المباني والوحدات السكنية وأضرارها وربط السجلات بالإحداثيات",
         "متابعة مزامنة البيانات الميدانية ومعالجة الاختلافات والتحقق من جودة السجلات",
         "إعداد خرائط ولوحات متابعة وإحصاءات وتقارير تدعم فرق المسح والإدارة"
       ],
       "detailsEn": [
-        "Maintain and validate spatial and descriptive records for building and housing-unit damage assessments.",
-        "Verify synchronized field data, resolve discrepancies and support survey quality assurance.",
-        "Create maps, dashboards, statistics and operational reporting for engineering teams."
+        "Maintained and validated spatial and descriptive records for building and housing-unit damage assessments.",
+        "Verified synchronized field data, resolved discrepancies and supported survey quality assurance.",
+        "Created maps, dashboards, statistics and operational reporting for engineering teams."
       ]
     },
     {
@@ -122,8 +122,8 @@
       "degreeEn": "Bachelor's Degree in GIS (In Progress)",
       "schoolAr": "الكلية الجامعية للعلوم التطبيقية (UCAS)",
       "schoolEn": "University College of Applied Sciences (UCAS)",
-      "detailAr": "استكمال الدراسة الجامعية بعد الدبلوم",
-      "detailEn": "Continuing bachelor studies following an intermediate diploma."
+      "detailAr": "الفصل الدراسي الأول من البكالوريوس بعد الدبلوم",
+      "detailEn": "First semester of bachelor studies following an intermediate diploma."
     },
     {
       "degreeAr": "دبلوم متوسط في نظم المعلومات الجغرافية",
@@ -283,8 +283,8 @@
     }
   ],
   "languages": [
-    "العربية — اللغة الأم",
-    "English — Professional working proficiency"
+    "Arabic — Native",
+    "English — Intermediate speaking, excellent reading"
   ],
   "certificateAr": "شهادة ICDL · رخصة قيادة فلسطينية سارية",
   "certificateEn": "ICDL Certificate · Valid Palestinian Driving Licence",
@@ -382,11 +382,11 @@
   },
   "languagesAr": [
     "العربية — اللغة الأم",
-    "الإنجليزية — إجادة مهنية في العمل"
+    "الإنجليزية — متوسط في المحادثة، ممتاز في القراءة"
   ],
   "languagesEn": [
     "Arabic — Native",
-    "English — Professional working proficiency"
+    "English — Intermediate speaking, excellent reading"
   ],
   "contacts": [
     {

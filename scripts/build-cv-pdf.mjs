@@ -73,7 +73,7 @@ section("Education & certification");
 for(const ed of cv.education){entry(ed.degreeEn,ed.schoolEn,[ed.detailEn]);}
 paragraph(cv.certificateEn);
 section("Languages & links");
-paragraph("Arabic: Native. English: Professional working proficiency.");
+for (const language of cv.languagesEn) paragraph(language);
 for (const contact of cv.contacts) paragraph(contact.labelEn+": "+(contact.value ?? contact.href));
 pages.push(ops.join("\n"));
 const objects = [null];

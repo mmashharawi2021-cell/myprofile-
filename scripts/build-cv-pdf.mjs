@@ -7,7 +7,7 @@ const target = resolve("docs/cv/Mohanad-Almashharawi-CV.pdf");
 const W = 595.28, H = 841.89, left = 46, right = W - 46;
 const pages = [];
 let ops = [], y = H - 53;
-const clean = (str) => String(str).normalize("NFKD").replace(/[^\x20-\x7e]/g, " ").replace(/\s+/g," ").trim();
+const clean = (str) => String(str).replace(/[–—]/g, " - ").normalize("NFKD").replace(/[^\x20-\x7e]/g, " ").replace(/\s+/g," ").trim();
 const esc = (str) => clean(str).replace(/\\/g,"\\\\").replace(/\(/g,"\\(").replace(/\)/g,"\\)");
 const ink = "0.11 0.19 0.32", muted = "0.29 0.38 0.49", blue = "0.06 0.38 0.78";
 function text(str, x, y0, size = 10, font = "F1", color = ink) {
@@ -30,7 +30,7 @@ function newPage(first=false) {
 }
 function ensure(height) {if(y-height<56)newPage();}
 function section(name){
-  ensure(40); y-=8; text(name.toUpperCase(),left,y,12,"F2",blue); y-=10;line(left,y,right,y);y-=16;
+  ensure(100); y-=8; text(name.toUpperCase(),left,y,12,"F2",blue); y-=10;line(left,y,right,y);y-=16;
 }
 function wrap(str,limit=95) {
   const words=clean(str).split(" ");
@@ -46,11 +46,17 @@ function paragraph(str,indent=0,size=9.25){
   y-=6;
 }
 function entry(title,meta,bullets=[]) {
-  const lines=bullets.flatMap(s=>wrap(s,99));
-  ensure(42+lines.length*12);
+  const groups=bullets.map(s=>wrap(s,99));
+  const lineCount=groups.reduce((sum,group)=>sum+group.length,0);
+  ensure(42+lineCount*12);
   text(title,left,y,10.5,"F2",ink);y-=16;
   text(meta,left,y,9,"F1",blue);y-=17;
-  for(const lineText of lines){text("- "+lineText,left+7,y,8.8,"F1",muted);y-=12;}
+  for(const group of groups){
+    for(let i=0;i<group.length;i++){
+      text((i===0?"- ":"  ")+group[i],left+7+(i>0?7:0),y,8.8,"F1",muted);
+      y-=12;
+    }
+  }
   y-=12;
 }
 newPage(true);

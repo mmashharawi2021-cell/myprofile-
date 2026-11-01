@@ -181,6 +181,13 @@ try {
             assert.ok(content.includes(cv[`certificate${suffix}`]));
             assert.equal(await page.locator(".cv-actions a").innerText(), cv.ui[language].download);
             assert.equal(await page.locator(".cv-actions button").innerText(), cv.ui[language].print);
+            assert.equal(await page.locator(".cv-contact-links a").count(), cv.contacts.length);
+            for (const contact of cv.contacts) {
+              const link = page.locator(`.cv-contact-links a[href="${contact.href}"]`);
+              assert.ok((await link.innerText()).includes(contact[`label${suffix}`]));
+              assert.equal(await link.getAttribute("target"), contact.href.startsWith("https://") ? "_blank" : null);
+              if (contact.href.startsWith("https://")) assert.equal(await link.getAttribute("rel"), "noopener noreferrer");
+            }
             assert.equal(await page.locator(".cv-theme").getAttribute("aria-label"), cv.ui[language].light);
             assert.equal(await page.locator(".cv-language").evaluate(el => el === document.activeElement), true);
             assert.equal(await page.evaluate(() => window.__cvTransitions), reducedMotion === "reduce" ? 0 : 1);

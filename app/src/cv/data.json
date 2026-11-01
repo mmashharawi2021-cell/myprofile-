@@ -266,8 +266,8 @@
     {
       "titleAr": "نظام تشغيل وتقارير المياه",
       "titleEn": "Water Operations Reporting",
-      "descriptionAr": "متابعة الإنتاج والوقود والتشغيل اليومي وأرشفة التقارير وتصديرها",
-      "descriptionEn": "Daily operating, water and fuel records with reporting exports.",
+      "descriptionAr": "نظام قيد التطوير لمتابعة الإنتاج والوقود والتشغيل اليومي وأرشفة التقارير وتصديرها",
+      "descriptionEn": "System in development for daily operations, water and fuel records, report archiving and exports.",
       "label": "OPERATIONS",
       "labelAr": "التشغيل",
       "labelEn": "OPERATIONS"
@@ -313,7 +313,7 @@
       "web": "تطوير الأنظمة",
       "analytics": "التحليل ولوحات البيانات",
       "experienceEyebrow": "01 / الخبرات",
-      "experienceTitle": "رحلتي المهنية",
+      "experienceTitle": "الخبرات المهنية",
       "experienceCopy": "خبرة عملية تربط جمع البيانات الميدانية بالتدقيق والتحليل والأنظمة الرقمية",
       "skillsEyebrow": "02 / المهارات",
       "skillsTitle": "المهارات والأدوات",
@@ -358,7 +358,7 @@
       "web": "Web engineering",
       "analytics": "Analytics & dashboards",
       "experienceEyebrow": "01 / EXPERIENCE",
-      "experienceTitle": "Professional journey",
+      "experienceTitle": "Professional experience",
       "experienceCopy": "Practical experience connecting field data collection with verification, analysis and digital systems",
       "skillsEyebrow": "02 / EXPERTISE",
       "skillsTitle": "Skills & tools",
@@ -387,5 +387,58 @@
   "languagesEn": [
     "Arabic — Native",
     "English — Professional working proficiency"
+  ],
+  "contacts": [
+    {
+      "id": "email",
+      "labelAr": "البريد الإلكتروني",
+      "labelEn": "Email",
+      "href": "mailto:mmashharawi2021@gmail.com",
+      "value": "mmashharawi2021@gmail.com"
+    },
+    {
+      "id": "phone",
+      "labelAr": "اتصال هاتفي",
+      "labelEn": "Phone",
+      "href": "tel:+972599876261",
+      "value": "+972 599 876 261"
+    },
+    {
+      "id": "whatsapp",
+      "labelAr": "واتساب",
+      "labelEn": "WhatsApp",
+      "href": "https://wa.me/972599876261",
+      "value": "+972 599 876 261"
+    },
+    {
+      "id": "linkedin",
+      "labelAr": "لينكدإن",
+      "labelEn": "LinkedIn",
+      "href": "https://www.linkedin.com/in/mohanad-elmashharawi-a4bb23148"
+    },
+    {
+      "id": "github",
+      "labelAr": "جيت هب",
+      "labelEn": "GitHub",
+      "href": "https://github.com/mmashharawi2021-cell"
+    },
+    {
+      "id": "facebook",
+      "labelAr": "فيسبوك",
+      "labelEn": "Facebook",
+      "href": "https://www.facebook.com/share/18ytFS2SDE/"
+    },
+    {
+      "id": "instagram",
+      "labelAr": "إنستغرام",
+      "labelEn": "Instagram",
+      "href": "https://www.instagram.com/mohanad.mashharawi/"
+    },
+    {
+      "id": "tiktok",
+      "labelAr": "تيك توك",
+      "labelEn": "TikTok",
+      "href": "https://www.tiktok.com/@mohanad.mashharawi"
+    }
   ]
 }

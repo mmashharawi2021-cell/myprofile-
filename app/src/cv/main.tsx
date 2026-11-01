@@ -1,9 +1,11 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom/client";
-import { ArrowDown, ArrowLeft, ArrowUpLeft, BriefcaseBusiness, CheckCircle2, ChevronLeft, Download, GraduationCap, Github, Globe2, Mail, MapPin, Moon, Printer, Sparkles, Sun } from "lucide-react";
+import { ArrowDown, ArrowLeft, Facebook, Instagram, Linkedin, MessageCircle, Music2, Phone, BriefcaseBusiness, CheckCircle2, ChevronLeft, Download, GraduationCap, Github, Globe2, Mail, MapPin, Moon, Printer, Sparkles, Sun } from "lucide-react";
 import cv from "./data.json";
 import "../styles.css";
 import "./cv.css";
+
+const contactIcons = { email: Mail, phone: Phone, whatsapp: MessageCircle, linkedin: Linkedin, github: Github, facebook: Facebook, instagram: Instagram, tiktok: Music2 };
 
 const base = import.meta.env.BASE_URL;
 const pdf = base + "cv/Mohanad-Almashharawi-CV.pdf";
@@ -110,7 +112,11 @@ function App() {
         <p className="cv-extra cv-reveal">{cv[`certificate${suffix}`]}</p>
         <div className="cv-languages cv-reveal"><strong>{t.languages}</strong>{cv[`languages${suffix}`].map((l) => <span key={l}>{l}</span>)}</div>
       </section>
-      <section className="cv-contact cv-reveal" id="contact"><span className="cv-eyebrow">{t.connect}</span><h2>{t.contactTitle}</h2><p>{t.contactCopy}</p><div className="cv-contact-links"><a href={"mailto:" + cv.email}><Mail size={18}/> {t.email}</a><a href={cv.linkedin} target="_blank" rel="noopener noreferrer">{t.linkedin} <ArrowUpLeft size={16}/></a><a href={cv.github} target="_blank" rel="noopener noreferrer"><Github size={18}/> {t.github}</a></div></section>
+      <section className="cv-contact cv-reveal" id="contact"><span className="cv-eyebrow">{t.connect}</span><h2>{t.contactTitle}</h2><p>{t.contactCopy}</p><div className="cv-contact-links">{cv.contacts.map((contact) => {
+        const Icon = contactIcons[contact.id as keyof typeof contactIcons];
+        const external = contact.href.startsWith("https://");
+        return <a key={contact.id} href={contact.href} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined}><Icon size={18} aria-hidden="true"/><span>{contact[`label${suffix}`]}{"value" in contact && <bdi className="cv-contact-value" dir="ltr">{contact.value}</bdi>}</span></a>;
+      })}</div></section>
     </main>
     <footer className="cv-footer"><span>© 2026 · {cv[`name${suffix}`]}</span><a href={base}>{t.back} <ArrowLeft size={15} /></a></footer>
   </div>;

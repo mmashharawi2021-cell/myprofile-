@@ -408,7 +408,7 @@ try {
             const centerX = Math.round(bounds.x + bounds.width / 2);
             const centerY = Math.round(bounds.y + bounds.height / 2);
             assert.equal(details.frames[0].clipPath, `circle(0px at ${centerX}px ${centerY}px)`);
-            assert.match(details.frames[1].clipPath, /^circle\\(\\d+px at \\d+px \\d+px\\)$/);
+            assert.match(details.frames[1].clipPath, /^circle\(\d+px at \d+px \d+px\)$/);
             assert.ok(details.options.duration >= 600, "Reveal should be smooth rather than instant");
           } else {
             assert.equal(await page.evaluate(() => window.__themeReveal), null,

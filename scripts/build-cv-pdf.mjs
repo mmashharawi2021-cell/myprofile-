@@ -30,6 +30,7 @@ function newPage(first=false) {
 }
 function ensure(height) {if(y-height<56)newPage();}
 function section(name){
+  if (name === "Selected projects" && y < 240) newPage();
   ensure(85); y-=6; text(name.toUpperCase(),left,y,12,"F2",blue); y-=9;line(left,y,right,y);y-=13;
 }
 function wrap(str,limit=95) {

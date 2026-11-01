@@ -115,6 +115,32 @@ try {
     }, null, 2));
   });
 
+  await check("CV hero card, deep link, PDF and responsive page", async () => {
+    for (const width of [390, 1280]) {
+      const { context, page, errors } = await launchViewport(width, 844);
+      try {
+        const card = page.getByRole("link", { name: "اطّلع على السيرة الذاتية لمهند المشهراوي" });
+        await card.click();
+        await page.waitForURL(base + "cv/");
+        await page.locator("h1#cv-name").waitFor();
+        assert.equal(await page.locator(".cv-timeline-item").count(), 7);
+        assert.equal(await page.locator(".cv-skill-card").count(), 3);
+        assert.equal(await page.locator(".cv-project-card").count(), 4);
+        const pdf = await page.locator('a[download="Mohanad-Almashharawi-CV.pdf"]').getAttribute("href");
+        assert.equal(pdf, "/myprofile-/cv/Mohanad-Almashharawi-CV.pdf");
+        const response = await page.request.get(base + "cv/Mohanad-Almashharawi-CV.pdf");
+        assert.equal(response.status(), 200);
+        assert.equal((await response.body()).subarray(0, 4).toString(), "%PDF");
+        const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1);
+        assert.equal(overflow, false, "CV layout must not overflow viewport at " + width + "px");
+        await page.screenshot({ path: output + "/cv-" + width + ".png", fullPage: true });
+        await page.getByRole("link", { name: "العودة إلى الموقع الرئيسي" }).click();
+        await page.waitForURL(base);
+        assert.deepEqual(errors, []);
+      } finally { await context.close(); }
+    }
+  });
+
   await check("Static build has no CMS API requests or editor button", async () => {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: "reduce" });
     const page = await context.newPage();
